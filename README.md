@@ -1,2 +1,16 @@
-# s1-256kB
-Can Sonic 1 fit into 256kB?
+# Sonic the Hedgehog in 256kB
+
+Can I get Sonic the Hedgehog to fit into 256kB?
+
+## Rules
+
+* Must be hardware compatible.
+* Normal gameplay must appear the same. Debug mode can go.
+* Extra loading time is allowed.
+
+## Progress
+
+Description | Size | Difference
+----------- | ---- | ----------
+Start | 524288 | 0
+Target | 262144 | 
