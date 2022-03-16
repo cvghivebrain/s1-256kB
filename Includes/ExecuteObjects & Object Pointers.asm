@@ -74,14 +74,12 @@ Obj_Index:
 		ptr CollapseLedge
 		ptr WaterSurface
 		ptr Scenery					; $1C
-		ptr MagicSwitch
 		ptr BallHog
 		ptr Crabmeat
 		ptr Cannonball					; $20
 		ptr HUD
 		ptr BuzzBomber
 		ptr Missile
-		ptr MissileDissolve				; $24
 		ptr Rings
 		ptr Monitor
 		ptr ExplosionItem
@@ -114,12 +112,10 @@ Obj_Index:
 		ptr Newtron
 		ptr Roller
 		ptr EdgeWalls					; $44
-		ptr SideStomp
 		ptr MarbleBrick
 		ptr Bumper
 		ptr BossBall					; $48
 		ptr WaterSound
-		ptr VanishSonic
 		ptr GiantRing
 		ptr GeyserMaker					; $4C
 		ptr LavaGeyser

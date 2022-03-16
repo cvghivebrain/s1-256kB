@@ -247,7 +247,7 @@ sfxfile_\name	include	"sound/sfx/\name\.s"		; include the sfx file itself
 
 		; Don't let Sega sample cross $8000-byte boundary (DAC driver doesn't switch banks automatically)
 		if (*&$7FFF) + filesize("\SegaPCM_File") > $8000
-			align $8000
+			;align $8000
 		endif
 ; ---------------------------------------------------------------------------
 

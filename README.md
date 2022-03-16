@@ -14,5 +14,6 @@ Description | Size | Difference
 ----------- | ---- | ----------
 Start | 524288 | 0
 Removed unused demo, graphics and padding. | 519364 | -4924
-Removed unused warp PLC, Special Stage graphics, blank objects | 518520 | -844
+Removed unused warp PLC, Special Stage graphics, blank objects. | 518520 | -844
+Removed unused objects, temporarily disabled padding for Sega PCM (this will be fixed later). | 516036 | -2484
 Target | 262144 | 

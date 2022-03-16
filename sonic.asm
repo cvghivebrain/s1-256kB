@@ -442,9 +442,6 @@ Ledge_SlopeData:
 		include "Objects\GHZ Bridge Stump & SLZ Fireball Launcher.asm" ; Scenery
 		include "Objects\SLZ Fireball Launcher [Mappings].asm" ; Map_Scen
 
-		include "Objects\Unused Switch.asm"		; MagicSwitch
-		include "Objects\Unused Switch [Mappings].asm"	; Map_Switch
-
 		include "Objects\SBZ Door.asm"			; AutoDoor
 		include "Objects\SBZ Door [Mappings].asm"	; Map_ADoor
 
@@ -454,12 +451,9 @@ Ledge_SlopeData:
 		include "Objects\Ball Hog.asm"			; BallHog
 		include "Objects\Ball Hog Cannonball.asm"	; Cannonball
 
-		include "Objects\Buzz Bomber Missile Vanishing.asm" ; MissileDissolve
-
 		include "Objects\Explosions.asm"		; ExplosionItem & ExplosionBomb
 		include_BallHog_animation
 		include "Objects\Ball Hog [Mappings].asm"	; Map_Hog
-		include "Objects\Buzz Bomber Missile Vanishing [Mappings].asm" ; Map_MisDissolve
 		include "Objects\Explosions [Mappings].asm"	; Map_ExplodeItem & Map_ExplodeBomb
 
 		include "Objects\Animals.asm"			; Animals
@@ -531,9 +525,7 @@ LGrass_Coll_Sloped:
 		include "Objects\MZ Green Glass Blocks [Mappings].asm" ; Map_Glass
 
 		include "Objects\MZ Chain Stompers.asm"		; ChainStomp
-		include "Objects\MZ Unused Sideways Stomper.asm" ; SideStomp
 		include "Objects\MZ Chain Stompers [Mappings].asm" ; Map_CStom
-		include "Objects\MZ Unused Sideways Stomper [Mappings].asm" ; Map_SStom
 
 		include "Objects\Button.asm"			; Button
 		include "Objects\Button [Mappings].asm"		; Map_But
@@ -718,12 +710,9 @@ See_DataFlat:	incbin	"Collision\SLZ Seesaw Heightmap (Flat).bin" ; used by Seesa
 		include "Objects\LZ Sonic's Drowning Face [Mappings].asm" ; Map_Drown
 
 		include "Objects\Shield & Invincibility.asm"	; ShieldItem
-		include "Objects\Unused Special Stage Warp.asm"	; VanishSonic
 		include "Objects\LZ Water Splash.asm"		; Splash
 		include_ShieldItem_animation
 		include "Objects\Shield & Invincibility [Mappings].asm" ; Map_Shield
-		include_VanishSonic_animation
-		include "Objects\Unused Special Stage Warp [Mappings].asm" ; Map_Vanish
 		include_Splash_animation
 		include "Objects\LZ Water Splash [Mappings].asm" ; Map_Splash
 
