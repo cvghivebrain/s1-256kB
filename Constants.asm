@@ -238,8 +238,7 @@ afEnd:		equ $FF	; return to beginning of animation
 afBack:		equ $FE	; go back (specified number) bytes
 afChange:	equ $FD	; run specified animation
 afRoutine:	equ $FC	; increment routine counter
-afReset:	equ $FB	; reset animation and 2nd object routine counter
-af2ndRoutine:	equ $FA	; increment 2nd routine counter
+af2ndRoutine:	equ $FB	; increment 2nd routine counter
 afxflip:	equ $20
 afyflip:	equ $40
 

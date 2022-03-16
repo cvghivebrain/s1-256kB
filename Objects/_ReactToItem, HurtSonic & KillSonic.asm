@@ -55,8 +55,6 @@ id_col_custom:	equ $C0						; enemies with spikes (yadrin, caterkiller), SYZ bum
 
 React_Sizes:	;   width, height
 col_20x20:	colid  $14, $14					; $01 - GHZ ball
-col_12x20:	colid   $C, $14					; $02
-col_20x12:	colid  $14,  $C					; $03
 col_4x16:	colid	4,  $10					; $04 - GHZ spike pole, SYZ boss spike
 col_12x18:	colid   $C, $12					; $05 - Ball Hog, Burrobot
 col_16x16:	colid  $10, $10					; $06 - SBZ spikeball, Crabmeat, Monitor, SYZ spikeball, Prison
@@ -87,7 +85,6 @@ col_4x8:	colid	4,    8					; $1E - LZ harpoon
 col_4x24:	colid	4,  $18					; $1F - LZ harpoon
 col_4x40:	colid	4,  $28					; $20 - LZ harpoon
 col_4x32:	colid	4,  $20					; $21 - LZ pole
-col_24x24_2:	colid  $18, $18					; $22 - SBZ saw
 col_12x24:	colid   $C, $18					; $23 - SBZ flamethrower
 col_72x8:	colid  $48,   8					; $24 - SBZ electric
 ; ===========================================================================
@@ -342,7 +339,6 @@ KillSonic:
 		move.w	#-$700,ost_y_vel(a0)			; move Sonic up
 		move.w	#0,ost_x_vel(a0)
 		move.w	#0,ost_inertia(a0)
-		move.w	ost_y_pos(a0),$38(a0)			; unused
 		move.b	#id_Death,ost_anim(a0)
 		bset	#tile_hi_bit,ost_tile(a0)
 		move.w	#sfx_Death,d0				; play normal death sound

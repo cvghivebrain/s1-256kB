@@ -12,18 +12,17 @@
 ; ---------------------------------------------------------------------------
 
 MoveWithPlatform:
-		lea	(v_ost_player).w,a1
 		move.w	ost_y_pos(a0),d0
 		sub.w	d3,d0					; d0 = y position of top of platform
 		bra.s	MWP_MoveSonic
 
 
 MoveWithPlatform2:						; jump here to use standard height (9)
-		lea	(v_ost_player).w,a1
 		move.w	ost_y_pos(a0),d0
 		subi.w	#9,d0					; d0 = y position of top of platform
 
 	MWP_MoveSonic:
+		lea	(v_ost_player).w,a1
 		tst.b	(v_lock_multi).w			; is object collision disabled?
 		bmi.s	@exit					; if yes, branch
 		cmpi.b	#id_Sonic_Death,(v_ost_player+ost_routine).w ; is Sonic dying?

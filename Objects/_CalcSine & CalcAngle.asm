@@ -19,49 +19,6 @@ CalcSine:
 		rts
 
 ; ---------------------------------------------------------------------------
-; Subroutine to calculate the square root of a number (0 to $FFFF)
-
-; input:
-;	d0 = number
-
-; output:
-;	d0 = square root of number
-; ---------------------------------------------------------------------------
-
-include_CalcAngle:	macro
-
-		if Revision=0
-CalcSqrt:
-			movem.l	d1-d2,-(sp)			; preserve d1 and d2 in stack
-			move.w	d0,d1
-			swap	d1				; copy input to high word of d1
-			moveq	#0,d0
-			move.w	d0,d1				; clear low word of d1
-			moveq	#8-1,d2				; number of loops
-
-	@loop:
-			rol.l	#2,d1
-			add.w	d0,d0
-			addq.w	#1,d0
-			sub.w	d0,d1
-			bcc.s	@loc_2C9A
-			add.w	d0,d1
-			subq.w	#1,d0
-			dbf	d2,@loop
-			lsr.w	#1,d0
-			movem.l	(sp)+,d1-d2			; retrieve d1 and d2 from stack
-			rts	
-; ===========================================================================
-
-	@loc_2C9A:
-			addq.w	#1,d0
-			dbf	d2,@loop
-			lsr.w	#1,d0
-			movem.l	(sp)+,d1-d2
-			rts
-		endc
-
-; ---------------------------------------------------------------------------
 ; Subroutine to convert x/y distance to an angle
 
 ; input:
@@ -71,6 +28,8 @@ CalcSqrt:
 ; output:
 ;	d0 = angle
 ; ---------------------------------------------------------------------------
+
+include_CalcAngle:	macro
 
 CalcAngle:
 		movem.l	d3-d4,-(sp)

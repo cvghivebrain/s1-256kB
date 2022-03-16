@@ -17,4 +17,5 @@ Removed unused demo, graphics and padding. | 519364 | -4924
 Removed unused warp PLC, Special Stage graphics, blank objects. | 518520 | -844
 Removed unused objects, temporarily disabled padding for Sega PCM (this will be fixed later). | 516036 | -2484
 Removed debug mode and cheat codes. Press A+Start for level select. | 512196 | -3840
+Cleaned up some subroutines, removed padding. | 511870 | -326
 Target | 262144 | 

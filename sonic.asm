@@ -1415,11 +1415,8 @@ Level_End:	incbin	"Level Layouts\ending.bin"
 		even
 byte_6A320:	dc.b 0,	0, 0, 0
 
-
 Art_BigRing:	incbin	"Graphics\Giant Ring.bin"
 		even
-
-		align	$100,$FF
 
 ; ---------------------------------------------------------------------------
 ; Object position index

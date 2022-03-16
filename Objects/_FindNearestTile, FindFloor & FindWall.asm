@@ -106,34 +106,7 @@ FindFloor:
 		move.b	(a2,d0.w),d0				; get collision heightmap id
 		andi.w	#$FF,d0					; heightmap id is 1 byte
 		beq.s	@isblank				; branch if 0
-		lea	(AngleMap).l,a2
-		move.b	(a2,d0.w),(a4)				; get collision angle value
-		lsl.w	#4,d0					; d0 = heightmap id * $10 (the width of a heightmap for 1 tile)
-		move.w	d3,d1					; get x pos of object
-		btst	#tilemap_xflip_bit,d4			; is tile flipped horizontally?
-		beq.s	@no_xflip				; if not, branch
-		not.w	d1
-		neg.b	(a4)					; xflip angle
-
-	@no_xflip:
-		btst	#tilemap_yflip_bit,d4			; is tile flipped vertically?
-		beq.s	@no_yflip				; if not, branch
-		addi.b	#$40,(a4)
-		neg.b	(a4)
-		subi.b	#$40,(a4)				; yflip angle
-
-	@no_yflip:
-		andi.w	#$F,d1					; read only low nybble of x pos (i.e. x pos within 16x16 tile)
-		add.w	d0,d1					; (id * $10) + x pos. = place in heightmap data
-		lea	(CollArray1).l,a2
-		move.b	(a2,d1.w),d0				; get actual height value from heightmap
-		ext.w	d0
-		eor.w	d6,d4					; apply x/yflip (allows for double-flip cancellation)
-		btst	#tilemap_yflip_bit,d4			; is block flipped vertically?
-		beq.s	@no_yflip2				; if not, branch
-		neg.w	d0
-
-	@no_yflip2:
+		bsr.w	FindFloor_sub
 		tst.w	d0
 		beq.s	@isblank				; branch if height is 0
 		bmi.s	@negfloor				; branch if height is negative
@@ -186,34 +159,7 @@ FindFloor2:
 		move.b	(a2,d0.w),d0
 		andi.w	#$FF,d0
 		beq.s	@isblank2
-		lea	(AngleMap).l,a2
-		move.b	(a2,d0.w),(a4)
-		lsl.w	#4,d0
-		move.w	d3,d1
-		btst	#tilemap_xflip_bit,d4
-		beq.s	@no_xflip
-		not.w	d1
-		neg.b	(a4)
-
-	@no_xflip:
-		btst	#tilemap_yflip_bit,d4
-		beq.s	@no_yflip
-		addi.b	#$40,(a4)
-		neg.b	(a4)
-		subi.b	#$40,(a4)
-
-	@no_yflip:
-		andi.w	#$F,d1
-		add.w	d0,d1
-		lea	(CollArray1).l,a2
-		move.b	(a2,d1.w),d0
-		ext.w	d0
-		eor.w	d6,d4
-		btst	#tilemap_yflip_bit,d4
-		beq.s	@no_yflip2
-		neg.w	d0
-
-	@no_yflip2:
+		bsr.s	FindFloor_sub
 		tst.w	d0
 		beq.s	@isblank2
 		bmi.s	@negfloor
@@ -231,6 +177,36 @@ FindFloor2:
 		add.w	d1,d0
 		bpl.w	@isblank2
 		not.w	d1
+		rts
+
+FindFloor_sub:
+		lea	(AngleMap).l,a2
+		move.b	(a2,d0.w),(a4)				; get collision angle value
+		lsl.w	#4,d0					; d0 = heightmap id * $10 (the width of a heightmap for 1 tile)
+		move.w	d3,d1					; get x pos of object
+		btst	#tilemap_xflip_bit,d4			; is tile flipped horizontally?
+		beq.s	@no_xflip				; if not, branch
+		not.w	d1
+		neg.b	(a4)					; xflip angle
+
+	@no_xflip:
+		btst	#tilemap_yflip_bit,d4			; is tile flipped vertically?
+		beq.s	@no_yflip				; if not, branch
+		addi.b	#$40,(a4)
+		neg.b	(a4)
+		subi.b	#$40,(a4)				; yflip angle
+
+	@no_yflip:
+		andi.w	#$F,d1					; read only low nybble of x pos (i.e. x pos within 16x16 tile)
+		add.w	d0,d1					; (id * $10) + x pos. = place in heightmap data
+		lea	(CollArray1).l,a2
+		move.b	(a2,d1.w),d0				; get actual height value from heightmap
+		ext.w	d0
+		eor.w	d6,d4					; apply x/yflip (allows for double-flip cancellation)
+		btst	#tilemap_yflip_bit,d4			; is block flipped vertically?
+		beq.s	@no_yflip2				; if not, branch
+		neg.w	d0
+	@no_yflip2:
 		rts
 
 ; ---------------------------------------------------------------------------
@@ -274,34 +250,7 @@ FindWall:
 		move.b	(a2,d0.w),d0				; get collision heightmap id
 		andi.w	#$FF,d0					; heightmap id is 1 byte
 		beq.s	@isblank				; branch if 0
-		lea	(AngleMap).l,a2
-		move.b	(a2,d0.w),(a4)				; get collision angle value
-		lsl.w	#4,d0					; d0 = heightmap id * $10 (the width of a heightmap for 1 tile)
-		move.w	d2,d1					; get y pos of object
-		btst	#tilemap_yflip_bit,d4			; is block flipped vertically?
-		beq.s	@no_yflip				; if not, branch
-		not.w	d1
-		addi.b	#$40,(a4)
-		neg.b	(a4)
-		subi.b	#$40,(a4)				; yflip angle
-
-	@no_yflip:
-		btst	#tilemap_xflip_bit,d4			; is block flipped horizontally?
-		beq.s	@no_xflip				; if not, branch
-		neg.b	(a4)					; xflip angle
-
-	@no_xflip:
-		andi.w	#$F,d1					; read only low nybble of x pos (i.e. x pos within 16x16 tile)
-		add.w	d0,d1					; (id * $10) + x pos. = place in heightmap data
-		lea	(CollArray2).l,a2
-		move.b	(a2,d1.w),d0				; get actual height value from heightmap
-		ext.w	d0
-		eor.w	d6,d4					; apply x/yflip (allows for double-flip cancellation)
-		btst	#tilemap_xflip_bit,d4			; is block flipped horizontally?
-		beq.s	@no_xflip2				; if not, branch
-		neg.w	d0
-
-	@no_xflip2:
+		bsr.w	FindWall_sub
 		tst.w	d0
 		beq.s	@isblank				; branch if height is 0
 		bmi.s	@negfloor				; branch if height is negative
@@ -354,6 +303,27 @@ FindWall2:
 		move.b	(a2,d0.w),d0
 		andi.w	#$FF,d0
 		beq.s	@isblank
+		bsr.s	FindWall_sub
+		tst.w	d0
+		beq.s	@isblank
+		bmi.s	@negfloor
+		move.w	d3,d1
+		andi.w	#$F,d1
+		add.w	d1,d0
+		move.w	#$F,d1
+		sub.w	d0,d1
+		rts	
+; ===========================================================================
+
+@negfloor:
+		move.w	d3,d1
+		andi.w	#$F,d1
+		add.w	d1,d0
+		bpl.w	@isblank
+		not.w	d1
+		rts
+
+FindWall_sub:
 		lea	(AngleMap).l,a2
 		move.b	(a2,d0.w),(a4)
 		lsl.w	#4,d0
@@ -382,21 +352,4 @@ FindWall2:
 		neg.w	d0
 
 	@no_xflip2:
-		tst.w	d0
-		beq.s	@isblank
-		bmi.s	@negfloor
-		move.w	d3,d1
-		andi.w	#$F,d1
-		add.w	d1,d0
-		move.w	#$F,d1
-		sub.w	d0,d1
-		rts	
-; ===========================================================================
-
-@negfloor:
-		move.w	d3,d1
-		andi.w	#$F,d1
-		add.w	d1,d0
-		bpl.w	@isblank
-		not.w	d1
 		rts

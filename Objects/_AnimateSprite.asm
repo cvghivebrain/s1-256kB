@@ -74,12 +74,7 @@ Anim_End_FC:
 		bne.s	Anim_End_FB				; if not, branch
 		addq.b	#2,ost_routine(a0)			; jump to next routine
 
-Anim_End_FB:	; unused
-		addq.b	#1,d0					; is the end flag = $FB	?
-		bne.s	Anim_End_FA				; if not, branch
-		move.b	#0,ost_anim_frame(a0)			; reset animation
-		clr.b	ost_routine2(a0)			; reset 2nd routine counter
-
+Anim_End_FB:
 Anim_End_FA:	; only used by EndSonic
 		addq.b	#1,d0					; is the end flag = $FA	?
 		bne.s	Anim_End				; if not, branch

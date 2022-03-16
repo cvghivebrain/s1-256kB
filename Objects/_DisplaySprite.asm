@@ -32,16 +32,8 @@ DisplaySprite:
 ; ---------------------------------------------------------------------------
 
 DisplaySprite_a1:
-		lea	(v_sprite_queue).w,a2
-		move.w	ost_priority(a1),d0
-		lsr.w	#1,d0
-		andi.w	#$380,d0
-		adda.w	d0,a2
-		cmpi.w	#sizeof_priority-2,(a2)
-		bcc.s	@full
-		addq.w	#2,(a2)
-		adda.w	(a2),a2
-		move.w	a1,(a2)
-
-	@full:
+		move.l	a0,-(sp)				; save a0 to stack
+		lea	(a1),a0					; temporarily make a1 current object
+		bsr.s	DisplaySprite
+		move.l	(sp)+,a0				; restore a0 from stack
 		rts

@@ -18,6 +18,7 @@
 SolidObject:
 		tst.b	ost_solid(a0)				; is Sonic standing on the object?
 		beq.w	Solid_ChkCollision			; if not, branch
+SolidObject2:
 		move.w	d1,d2
 		add.w	d2,d2
 		lea	(v_ost_player).w,a1
@@ -50,30 +51,7 @@ SolidObject:
 SolidObject_NoRenderChk:
 		tst.b	ost_solid(a0)
 		beq.w	Solid_SkipRenderChk
-		move.w	d1,d2
-		add.w	d2,d2
-		lea	(v_ost_player).w,a1
-		btst	#status_air_bit,ost_status(a1)
-		bne.s	@leave
-		move.w	ost_x_pos(a1),d0
-		sub.w	ost_x_pos(a0),d0
-		add.w	d1,d0
-		bmi.s	@leave
-		cmp.w	d2,d0
-		bcs.s	@stand
-
-	@leave:
-		bclr	#status_platform_bit,ost_status(a1)
-		bclr	#status_platform_bit,ost_status(a0)
-		clr.b	ost_solid(a0)
-		moveq	#0,d4
-		rts	
-
-	@stand:
-		move.w	d4,d2
-		bsr.w	MoveWithPlatform
-		moveq	#0,d4
-		rts	
+		bra.s	SolidObject2
 
 ; ---------------------------------------------------------------------------
 ; Solid	object with heightmap subroutine (MZ grass platforms)

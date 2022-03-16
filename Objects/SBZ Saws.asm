@@ -31,7 +31,7 @@ Saw_Main:	; Routine 0
 		move.w	ost_y_pos(a0),ost_saw_y_start(a0)
 		cmpi.b	#id_Saw_Ground_Right,ost_subtype(a0)	; is object a ground saw?
 		bcc.s	Saw_Action				; if yes, branch
-		move.b	#id_col_24x24_2+id_col_hurt,ost_col_type(a0)
+		move.b	#id_col_24x24+id_col_hurt,ost_col_type(a0)
 
 Saw_Action:	; Routine 2
 		moveq	#0,d0
@@ -143,7 +143,7 @@ Saw_Ground_Right:
 
 		move.b	#1,ost_saw_flag(a0)			; flag object as already loaded
 		move.w	#$600,ost_x_vel(a0)			; move object to the right
-		move.b	#id_col_24x24_2+id_col_hurt,ost_col_type(a0)
+		move.b	#id_col_24x24+id_col_hurt,ost_col_type(a0)
 		move.b	#id_frame_saw_groundsaw1,ost_frame(a0)
 		play.w	1, jsr, sfx_Saw				; play saw sound
 
@@ -185,7 +185,7 @@ Saw_Ground_Left:
 
 		move.b	#1,ost_saw_flag(a0)			; flag object as already loaded
 		move.w	#-$600,ost_x_vel(a0)			; move object to the left
-		move.b	#id_col_24x24_2+id_col_hurt,ost_col_type(a0)
+		move.b	#id_col_24x24+id_col_hurt,ost_col_type(a0)
 		move.b	#id_frame_saw_groundsaw1,ost_frame(a0)
 		play.w	1, jsr, sfx_Saw				; play saw sound
 
