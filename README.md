@@ -14,4 +14,5 @@ Description | Size | Difference
 ----------- | ---- | ----------
 Start | 524288 | 0
 Removed unused demo, graphics and padding. | 519364 | -4924
+Removed unused warp PLC, Special Stage graphics, blank objects | 518520 | -844
 Target | 262144 | 

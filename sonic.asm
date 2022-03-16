@@ -422,9 +422,6 @@ Demo_EndGHZ2:	incbin	"Demos\Ending - GHZ2.bin"
 		include "Objects\Platforms.asm"			; BasicPlatform
 		include "Objects\Platforms [Mappings].asm"	; Map_Plat_Unused, Map_Plat_GHZ, Map_Plat_SYZ, Map_Plat_SLZ
 
-Obj19:
-		rts						; blank object
-		
 		include "Objects\GHZ Giant Ball [Mappings].asm"	; Map_GBall
 
 		include "Objects\GHZ Collapsing Ledge.asm"	; CollapseLedge
@@ -627,9 +624,6 @@ NullObject:
 		include "Objects\_DespawnObject.asm"
 		include_MotoBug_1
 		include "Objects\Moto Bug [Mappings].asm"	; Map_Moto
-
-Obj4F:
-		rts						; blank object
 
 		include "Objects\Yadrin.asm"			; Yadrin
 		include "Objects\Yadrin [Mappings].asm"		; Map_Yad
@@ -880,9 +874,9 @@ SS_ItemIndex:
 		ss_sprite Map_SSWalls,tile_Nem_SSWalls+tile_pal4,0
 	SS_ItemIndex_wall_end:
 SS_Item_Bumper:	ss_sprite Map_Bump,tile_Nem_Bumper_SS,0		; $25 - bumper
-		ss_sprite Map_SS_R,tile_Nem_SSWBlock,0		; $26 - W
+		ss_sprite Map_SS_R,0,0		; $26 - W
 SS_Item_GOAL:	ss_sprite Map_SS_R,tile_Nem_SSGOAL,0		; $27 - GOAL
-SS_Item_1Up:	ss_sprite Map_SS_R,tile_Nem_SS1UpBlock,0	; $28 - 1UP
+SS_Item_1Up:	ss_sprite Map_SS_R,0,0	; $28 - 1UP
 SS_Item_Up:	ss_sprite Map_SS_Up,tile_Nem_SSUpDown,0		; $29 - Up
 SS_Item_Down:	ss_sprite Map_SS_Down,tile_Nem_SSUpDown,0	; $2A - Down
 SS_Item_R:	ss_sprite Map_SS_R,tile_Nem_SSRBlock+tile_pal2,0 ; $2B - R
@@ -894,12 +888,12 @@ SS_Item_Glass4:	ss_sprite Map_SS_Glass,tile_Nem_SSGlass+tile_pal3,0
 SS_Item_R2:	ss_sprite Map_SS_R,tile_Nem_SSRBlock,0		; $31 - R
 SS_Item_Bump1:	ss_sprite Map_Bump,tile_Nem_Bumper_SS,id_frame_bump_bumped1
 SS_Item_Bump2:	ss_sprite Map_Bump,tile_Nem_Bumper_SS,id_frame_bump_bumped2
-		ss_sprite Map_SS_R,tile_Nem_SSZone1,0		; $34 - Zone 1
-		ss_sprite Map_SS_R,tile_Nem_SSZone2,0		; $35 - Zone 2
-		ss_sprite Map_SS_R,tile_Nem_SSZone3,0		; $36 - Zone 3
-		ss_sprite Map_SS_R,tile_Nem_SSZone1,0		; $37 - Zone 4
-		ss_sprite Map_SS_R,tile_Nem_SSZone2,0		; $38 - Zone 5
-		ss_sprite Map_SS_R,tile_Nem_SSZone3,0		; $39 - Zone 6
+		ss_sprite Map_SS_R,0,0		; $34 - Zone 1
+		ss_sprite Map_SS_R,0,0		; $35 - Zone 2
+		ss_sprite Map_SS_R,0,0		; $36 - Zone 3
+		ss_sprite Map_SS_R,0,0		; $37 - Zone 4
+		ss_sprite Map_SS_R,0,0		; $38 - Zone 5
+		ss_sprite Map_SS_R,0,0		; $39 - Zone 6
 SS_Item_Ring:	ss_sprite Map_Ring,tile_Nem_Ring+tile_pal2,0	; $3A - ring
 SS_Item_Em1:	ss_sprite Map_SS_Chaos3,tile_Nem_SSEmerald,0	; $3B - emerald
 SS_Item_Em2:	ss_sprite Map_SS_Chaos3,tile_Nem_SSEmerald+tile_pal2,0 ; $3C - emerald
@@ -930,9 +924,6 @@ SS_Item_Glass8:	ss_sprite Map_SS_Glass,tile_Nem_SSGlass+tile_pal3,0 ; $4E
 		include "Objects\Special Stage Chaos Emeralds [Mappings].asm" ; Map_SS_Chaos1, Map_SS_Chaos2 & Map_SS_Chaos3
 
 		include "Objects\Special Stage Sonic.asm"	; SonicSpecial
-
-Obj10:
-		rts						; blank object
 
 		include "Includes\AnimateLevelGfx.asm"
 
@@ -996,19 +987,11 @@ Eni_SSBg2:	incbin	"Tilemaps\SS Background 2.eni"		; special stage background (ma
 		nemfile	Nem_SSBgCloud
 		nemfile	Nem_SSGOAL
 		nemfile	Nem_SSRBlock
-		nemfile	Nem_SS1UpBlock
 		nemfile	Nem_SSEmStars
 		nemfile	Nem_SSRedWhite
-		nemfile	Nem_SSZone1
-		nemfile	Nem_SSZone2
-		nemfile	Nem_SSZone3
-		nemfile	Nem_SSZone4
-		nemfile	Nem_SSZone5
-		nemfile	Nem_SSZone6
 		nemfile	Nem_SSUpDown
 		nemfile	Nem_SSEmerald
 		nemfile	Nem_SSGhost
-		nemfile	Nem_SSWBlock
 		nemfile	Nem_SSGlass
 		nemfile	Nem_ResultEm
 ; ---------------------------------------------------------------------------

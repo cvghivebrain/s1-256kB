@@ -257,7 +257,6 @@ DebugList_GHZ:
 		dbug	Map_Spring,	Springs,	type_spring_red+type_spring_up,	0,	tile_Nem_HSpring
 		dbug	Map_Newt,	Newtron,	0,	0,	tile_Nem_Newtron+tile_pal2
 		dbug	Map_Edge,	EdgeWalls,	type_edge_shadow,	0,	tile_Nem_GhzWall2+tile_pal3
-		dbug	Map_GBall,	Obj19,		0,	0,	tile_Nem_Ball+tile_pal3
 		dbug	Map_Lamp,	Lamppost,	1,	0,	tile_Nem_Lamp
 		dbug	Map_GRing,	GiantRing,	0,	0,	(vram_giantring/sizeof_cell)+tile_pal2
 		dbug	Map_Bonus,	HiddenBonus,	type_bonus_10k,	id_frame_bonus_10000,	tile_Nem_Bonus+tile_hi

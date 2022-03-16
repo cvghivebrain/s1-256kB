@@ -24,7 +24,6 @@ PLC_Levels:
 		ptr PLC_TitleCard
 		ptr PLC_Boss
 		ptr PLC_Signpost
-		ptr PLC_Warp
 		ptr PLC_SpecialStage
 PLC_Animals:
 		ptr PLC_GHZAnimals
@@ -145,9 +144,6 @@ PLC_LZ2:	plcheader
 		plcm	Nem_LzDoor2				; large	horizontal door ($7CC0)
 		plcm	Nem_LzWheel				; wheel ($7EC0)
 		plcm	Nem_Gargoyle, $5D20			; gargoyle head
-		if Revision=0
-		plcm	Nem_LzSonic, $8800			; Sonic	holding	his breath
-		endc
 		plcm	Nem_LzPlatfm, $89E0			; rising platform
 		plcm	Nem_Orbinaut,,LZ			; orbinaut enemy ($8CE0)
 		plcm	Nem_Jaws				; jaws enemy ($90C0)
@@ -168,7 +164,6 @@ PLC_MZ:		plcheader
 		plcm	Nem_MzGlass				; green	glassy block ($71C0)
 		plcm	Nem_Lava				; lava ($7500)
 		plcm	Nem_Buzz, vram_buzz			; buzz bomber enemy ($8880)
-		plcm	Nem_Yadrin, vram_yadrin			; yadrin enemy ($8F60)
 		plcm	Nem_Batbrain				; basaran enemy ($9700)
 		plcm	Nem_Cater, vram_cater			; caterkiller enemy ($9FE0)
 	PLC_MZ_end:
@@ -218,7 +213,6 @@ PLC_SYZ2:	plcheader
 		plcm	Nem_Bumper, $7000			; bumper
 		plcm	Nem_BigSpike				; large	spikeball ($72C0)
 		plcm	Nem_SmallSpike				; small	spikeball ($7740)
-		plcm	Nem_Cater, vram_cater			; caterkiller enemy ($9FE0)
 		plcm	Nem_LzSwitch, vram_button		; button ($A1E0)
 		plcm	Nem_Spikes, vram_spikes			; spikes ($A360)
 		plcm	Nem_HSpring, vram_hspring		; horizontal spring ($A460)
@@ -245,7 +239,6 @@ PLC_SBZ:	plcheader
 PLC_SBZ2:	plcheader
 		plcm	Nem_Cater, $5600, SBZ			; caterkiller enemy
 		plcm	Nem_Bomb, vram_bomb			; bomb enemy ($8000)
-		plcm	Nem_Orbinaut, vram_orbinaut		; orbinaut enemy ($8520)
 		plcm	Nem_SlideFloor, $8C00			; floor	that slides away
 		plcm	Nem_SbzDoor2				; horizontal door ($8DE0)
 		plcm	Nem_Electric				; electric orb ($8FC0)
@@ -283,16 +276,6 @@ PLC_Signpost:	plcheader
 		plcm	Nem_BigFlash, $8C40			; giant	ring flash effect
 	PLC_Signpost_end:
 ; ---------------------------------------------------------------------------
-; Pattern load cues - beta special stage warp effect
-; ---------------------------------------------------------------------------
-		if Revision=0
-PLC_Warp:	plcheader
-		plcm	Nem_Warp, $A820
-		else
-PLC_Warp:
-		endc
-	PLC_Warp_end:
-; ---------------------------------------------------------------------------
 ; Pattern load cues - special stage
 ; ---------------------------------------------------------------------------
 PLC_SpecialStage:	plcheader
@@ -303,20 +286,12 @@ PLC_SpecialStage:	plcheader
 		plcm	Nem_SSGOAL				; GOAL block ($4A20)
 		plcm	Nem_SSUpDown				; UP and DOWN blocks ($4C60)
 		plcm	Nem_SSRBlock, $5E00			; R block
-		plcm	Nem_SS1UpBlock, $6E00			; 1UP block
 		plcm	Nem_SSEmStars, $7E00			; emerald collection stars
 		plcm	Nem_SSRedWhite, $8E00			; red and white	block
 		plcm	Nem_SSGhost, $9E00			; ghost	block
-		plcm	Nem_SSWBlock, $AE00			; W block
 		plcm	Nem_SSGlass, $BE00			; glass	block
 		plcm	Nem_SSEmerald, $EE00			; emeralds
-		plcm	Nem_SSZone1, $F2E0			; ZONE 1 block
-		plcm	Nem_SSZone2				; ZONE 2 block ($F400)
-		plcm	Nem_SSZone3				; ZONE 3 block ($F520)
 	PLC_SpecialStage_end:
-		plcm	Nem_SSZone4, $F2E0			; ZONE 4 block
-		plcm	Nem_SSZone5				; ZONE 5 block ($F400)
-		plcm	Nem_SSZone6				; ZONE 6 block ($F520)
 ; ---------------------------------------------------------------------------
 ; Pattern load cues - GHZ animals
 ; ---------------------------------------------------------------------------
@@ -376,9 +351,6 @@ PLC_Ending:	plcheader
 		plcm	Nem_EndFlower, $7400			; flowers
 		plcm	Nem_EndEm				; emeralds ($78A0)
 		plcm	Nem_EndSonic				; Sonic ($7C20)
-		if Revision=0
-		plcm	Nem_EndEggman, $A480			; Eggman's death (unused)
-		endc
 		plcm	Nem_Rabbit, $AA60, End			; rabbit
 		plcm	Nem_Chicken,, End			; chicken ($ACA0)
 		plcm	Nem_BlackBird,, End			; blackbird ($AE60)

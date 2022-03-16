@@ -55,12 +55,6 @@ Obj_Index:
 		index.l 0,1					; longword, absolute (relative to 0), start ids at 1
 		
 		ptr SonicPlayer					; $01
-		ptr NullObject
-		ptr NullObject
-		ptr NullObject					; $04
-		ptr NullObject
-		ptr NullObject
-		ptr NullObject
 		ptr Splash					; $08
 		ptr SonicSpecial
 		ptr DrownCount
@@ -69,7 +63,6 @@ Obj_Index:
 		ptr Signpost
 		ptr TitleSonic
 		ptr PSBTM
-		ptr Obj10					; $10
 		ptr Bridge
 		ptr SpinningLight
 		ptr FireMaker
@@ -78,7 +71,6 @@ Obj_Index:
 		ptr Harpoon
 		ptr Helix
 		ptr BasicPlatform				; $18
-		ptr Obj19
 		ptr CollapseLedge
 		ptr WaterSurface
 		ptr Scenery					; $1C
@@ -132,7 +124,6 @@ Obj_Index:
 		ptr GeyserMaker					; $4C
 		ptr LavaGeyser
 		ptr LavaWall
-		ptr Obj4F
 		ptr Yadrin					; $50
 		ptr SmashBlock
 		ptr MovingBlock

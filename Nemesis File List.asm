@@ -1,11 +1,7 @@
 ; ---------------------------------------------------------------------------
 ; Labels and file names for Nemesis-compressed graphics
 ; ---------------------------------------------------------------------------
-		if Revision=0
-		nemesis	Nem_SegaLogo,"Sega Logo"; large Sega logo
-		else
 		nemesis	Nem_SegaLogo,"Sega Logo (JP1)"; large Sega logo
-		endc
 		nemesis	Nem_TitleFg,"Title Screen Foreground"
 		nemesis	Nem_TitleSonic,"Title Screen Sonic"
 		nemesis	Nem_TitleTM,"Title Screen TM"
@@ -20,19 +16,11 @@
 		nemesis Nem_SSBgCloud,"Special Stage Clouds" ; special stage clouds background
 		nemesis Nem_SSGOAL,"Special Stage GOAL" ; special stage GOAL block
 		nemesis Nem_SSRBlock,"Special Stage R" ; special stage R block
-		nemesis Nem_SS1UpBlock,"Special Stage 1UP" ; special stage 1UP block
 		nemesis Nem_SSEmStars,"Special Stage Emerald Twinkle" ; special stage stars from a collected emerald
 		nemesis Nem_SSRedWhite,"Special Stage Red-White" ; special stage red/white block
-		nemesis Nem_SSZone1,"Special Stage ZONE1" ; special stage ZONE1 block
-		nemesis Nem_SSZone2,"Special Stage ZONE2" ; ZONE2 block
-		nemesis Nem_SSZone3,"Special Stage ZONE3" ; ZONE3 block
-		nemesis Nem_SSZone4,"Special Stage ZONE4" ; ZONE4 block
-		nemesis Nem_SSZone5,"Special Stage ZONE5" ; ZONE5 block
-		nemesis Nem_SSZone6,"Special Stage ZONE6" ; ZONE6 block
 		nemesis Nem_SSUpDown,"Special Stage UP-DOWN" ; special stage UP/DOWN block
 		nemesis Nem_SSEmerald,"Special Stage Emeralds" ; special stage chaos emeralds
 		nemesis Nem_SSGhost,"Special Stage Ghost" ; special stage ghost block
-		nemesis Nem_SSWBlock,"Special Stage W" ; special stage W block
 		nemesis Nem_SSGlass,"Special Stage Glass" ; special stage destroyable glass block
 		nemesis Nem_ResultEm,"Special Stage Result Emeralds" ; chaos emeralds on special stage results screen
 		
