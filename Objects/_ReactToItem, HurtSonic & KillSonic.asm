@@ -280,7 +280,7 @@ HurtSonic:
 		tst.b	(v_shield).w
 		bne.s	@hasshield				; branch if Sonic has a shield
 		tst.w	(v_rings).w
-		beq.w	@norings				; branch if Sonic has no rings
+		beq.w	KillSonic				; branch if Sonic has no rings
 
 		jsr	(FindFreeObj).l				; find free OST slot
 		bne.s	@hasshield				; branch if not found
@@ -321,14 +321,7 @@ HurtSonic:
 	@sound:
 		jsr	(PlaySound1).l
 		moveq	#-1,d0
-		rts	
-; ===========================================================================
-
-@norings:
-		tst.w	(f_debug_enable).w			; is debug mode	cheat on?
-		bne.w	@hasshield				; if yes, branch
-
-; continue straight into KillSonic
+		rts
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to	kill Sonic
@@ -342,8 +335,6 @@ HurtSonic:
 ; ---------------------------------------------------------------------------
 
 KillSonic:
-		tst.w	(v_debug_active).w			; is debug mode	active?
-		bne.s	@dontdie				; if yes, branch
 		move.b	#0,(v_invincibility).w			; remove invincibility
 		move.b	#id_Sonic_Death,ost_routine(a0)		; run death animation/action
 		bsr.w	Sonic_ResetOnFloor			; reset several of Sonic's flags

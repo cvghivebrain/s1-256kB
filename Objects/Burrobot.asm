@@ -136,8 +136,6 @@ Burro_ChkSonic:
 		bcc.s	@exit					; branch is Sonic is right of burrobot
 		cmpi.w	#-$80,d0
 		bcs.s	@exit					; branch if Sonic is more than $80px away
-		tst.w	(v_debug_active).w			; is debug mode	on?
-		bne.s	@exit					; if yes, branch
 		subq.b	#2,ost_routine2(a0)			; goto Burro_Jump next
 		move.w	d1,ost_x_vel(a0)
 		move.w	#-$400,ost_y_vel(a0)			; burrobot jumps

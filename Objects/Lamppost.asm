@@ -57,8 +57,6 @@ Lamp_Main:	; Routine 0
 ; ===========================================================================
 
 Lamp_Blue:	; Routine 2
-		tst.w	(v_debug_active).w			; is debug mode	being used?
-		bne.w	@donothing				; if yes, branch
 		tst.b	(v_lock_multi).w			; is object collision enabled?
 		bmi.w	@donothing				; if not, branch
 		move.b	(v_last_lamppost).w,d1

@@ -3,12 +3,6 @@
 ; ---------------------------------------------------------------------------
 
 SonicSpecial:
-		tst.w	(v_debug_active).w			; is debug mode	being used?
-		beq.s	SSS_Normal				; if not, branch
-		bsr.w	SS_FixCamera
-		bra.w	DebugMode
-; ===========================================================================
-
 SSS_Normal:
 		moveq	#0,d0
 		move.b	ost_routine(a0),d0
@@ -42,13 +36,6 @@ SSS_Main:	; Routine 0
 		bset	#status_air_bit,ost_status(a0)
 
 SSS_ChkDebug:	; Routine 2
-		tst.w	(f_debug_enable).w			; is debug mode	cheat enabled?
-		beq.s	@not_debug				; if not, branch
-		btst	#bitB,(v_joypad_press_actual).w		; is button B pressed?
-		beq.s	@not_debug				; if not, branch
-		move.w	#1,(v_debug_active).w			; change Sonic into a ring
-
-	@not_debug:
 		move.b	#0,ost_ss_item(a0)
 		moveq	#0,d0
 		move.b	ost_status(a0),d0

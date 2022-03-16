@@ -144,8 +144,6 @@ Edge_ChkCollision:
 		bmi.s	Edge_Ignore				; if yes, branch
 		cmpi.b	#id_Sonic_Death,(v_ost_player+ost_routine).w ; is Sonic dying?
 		bhs.s	Edge_Ignore				; if yes, branch
-		tst.w	(v_debug_active).w			; is debug mode being used?
-		bne.s	Edge_Ignore				; if yes, branch
 		move.w	d0,d5
 		cmp.w	d0,d1					; is Sonic right of centre of object?
 		bhs.s	@isright				; if yes, branch

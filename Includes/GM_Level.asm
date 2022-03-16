@@ -182,13 +182,6 @@ Level_Skip_TtlCard:
 		move.b	#id_HUD,(v_ost_hud).w			; load HUD object
 
 	@skip_hud:
-		tst.b	(f_debug_cheat).w			; has debug cheat been entered?
-		beq.s	@skip_debug				; if not, branch
-		btst	#bitA,(v_joypad_hold_actual).w		; is A button held?
-		beq.s	@skip_debug				; if not, branch
-		move.b	#1,(f_debug_enable).w			; enable debug mode
-
-	@skip_debug:
 		move.w	#0,(v_joypad_hold).w
 		move.w	#0,(v_joypad_hold_actual).w
 		cmpi.b	#id_LZ,(v_zone).w			; is level LZ?
@@ -215,7 +208,6 @@ Level_Skip_TtlCard:
 		move.b	d0,(v_invincibility).w			; clear invincibility
 		move.b	d0,(v_shoes).w				; clear speed shoes
 		move.b	d0,(v_unused_powerup).w
-		move.w	d0,(v_debug_active).w
 		move.w	d0,(f_restart).w
 		move.w	d0,(v_frame_counter).w
 		bsr.w	OscillateNumInit
@@ -301,13 +293,8 @@ Level_MainLoop:
 		bsr.w	MoveSonicInDemo
 		bsr.w	LZWaterFeatures
 		jsr	(ExecuteObjects).l
-		if Revision=0
-		else
-			tst.w	(f_restart).w			; is level restart flag set?
-			bne.w	GM_Level			; if yes, branch
-		endc
-		tst.w	(v_debug_active).w			; is debug mode being used?
-		bne.s	@skip_death				; if yes, branch
+		tst.w	(f_restart).w				; is level restart flag set?
+		bne.w	GM_Level				; if yes, branch
 		cmpi.b	#id_Sonic_Death,(v_ost_player+ost_routine).w ; has Sonic just died?
 		bhs.s	@skip_scroll				; if yes, branch
 
@@ -325,11 +312,6 @@ Level_MainLoop:
 
 		cmpi.b	#id_Demo,(v_gamemode).w			; is this a demo?
 		beq.s	Level_Demo				; if yes, branch
-		if Revision=0
-			tst.w	(f_restart).w			; is level restart flag set?
-			bne.w	GM_Level			; if yes, branch
-		else
-		endc
 		cmpi.b	#id_Level,(v_gamemode).w
 		beq.w	Level_MainLoop				; if gamemode is still $C (level), branch
 		rts	
@@ -409,8 +391,6 @@ ColPointers:	dc.l Col_GHZ
 include_Level_signpost:	macro
 
 SignpostArtLoad:
-		tst.w	(v_debug_active).w			; is debug mode	being used?
-		bne.w	@exit					; if yes, branch
 		cmpi.b	#2,(v_act).w				; is act number 02 (act 3)?
 		beq.s	@exit					; if yes, branch
 

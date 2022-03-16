@@ -105,8 +105,6 @@ Sign_SparkPos:	; x pos, y pos
 ; ===========================================================================
 
 Sign_SonicRun:	; Routine 6
-		tst.w	(v_debug_active).w			; is debug mode	on?
-		bne.w	Sign_SonicRun_Exit			; if yes, branch
 		btst	#status_air_bit,(v_ost_player+ost_status).w ; is Sonic in the air?
 		bne.s	@wait_to_land				; if yes, branch
 		move.b	#1,(f_lock_controls).w			; lock controls

@@ -6,11 +6,6 @@
 ; ---------------------------------------------------------------------------
 
 SonicPlayer:
-		tst.w	(v_debug_active).w			; is debug mode	being used?
-		beq.s	Sonic_Normal				; if not, branch
-		jmp	(DebugMode).l
-; ===========================================================================
-
 Sonic_Normal:
 		moveq	#0,d0
 		move.b	ost_routine(a0),d0
@@ -39,16 +34,6 @@ Sonic_Main:	; Routine 0
 		move.w	#sonic_deceleration,(v_sonic_deceleration).w ; Sonic's deceleration
 
 Sonic_Control:	; Routine 2
-		tst.w	(f_debug_enable).w			; is debug cheat enabled?
-		beq.s	@no_debug				; if not, branch
-		btst	#bitB,(v_joypad_press_actual).w		; is button B pressed?
-		beq.s	@no_debug				; if not, branch
-		move.w	#1,(v_debug_active).w			; change Sonic into a ring/item
-		clr.b	(f_lock_controls).w
-		rts	
-; ===========================================================================
-
-@no_debug:
 		tst.b	(f_lock_controls).w			; are controls locked?
 		bne.s	@lock					; if yes, branch
 		move.w	(v_joypad_hold_actual).w,(v_joypad_hold).w ; enable joypad control

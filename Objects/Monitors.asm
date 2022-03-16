@@ -218,8 +218,6 @@ Mon_Solid_Detect:
 		bmi.s	@no_collision				; branch if object collision is disabled
 		cmpi.b	#id_Sonic_Death,(v_ost_player+ost_routine).w
 		bcc.s	@no_collision				; branch if Sonic is dead
-		tst.w	(v_debug_active).w
-		bne.s	@no_collision				; branch if debug mode is in use
 		
 		cmp.w	d0,d1					; is Sonic between left side & middle of monitor?
 		bcc.s	@left_hit				; if yes, branch

@@ -304,8 +304,6 @@ DynWater_SBZ3:
 ; ---------------------------------------------------------------------------
 
 LZWindTunnels:
-		tst.w	(v_debug_active).w
-		bne.w	@exit					; branch if debug mode is currently in use
 		lea	(LZWind_Data+8).l,a2			; address of list of tunnel area boundaries
 		moveq	#0,d0
 		move.b	(v_act).w,d0				; get act number

@@ -75,15 +75,7 @@ GM_Special:
 		subq.b	#1,(v_demo_input_time).w
 		clr.w	(v_rings).w
 		clr.b	(v_ring_reward).w
-		move.w	#0,(v_debug_active).w
 		move.w	#1800,(v_countdown).w			; set timer to 30 seconds (used for demo)
-		tst.b	(f_debug_cheat).w			; has debug cheat been entered?
-		beq.s	SS_NoDebug				; if not, branch
-		btst	#bitA,(v_joypad_hold_actual).w		; is A button pressed?
-		beq.s	SS_NoDebug				; if not, branch
-		move.b	#1,(f_debug_enable).w			; enable debug mode
-
-	SS_NoDebug:
 		enable_display
 		bsr.w	PaletteWhiteIn
 

@@ -55,8 +55,6 @@ Bat_DropChk:
 		bcs.s	@nodrop					; branch if Sonic is above the batbrain
 		cmpi.w	#$80,d0
 		bcc.s	@nodrop					; branch if Sonic is > 128px below the batbrain
-		tst.w	(v_debug_active).w
-		bne.s	@nodrop					; branch if debug mode is in use
 
 		move.b	(v_vblank_counter_byte).w,d0		; get byte that increments every frame
 		add.b	d7,d0					; add OST index number (so each batbrain updates on a different frame)

@@ -5,7 +5,6 @@
 		nemesis	Nem_TitleFg,"Title Screen Foreground"
 		nemesis	Nem_TitleSonic,"Title Screen Sonic"
 		nemesis	Nem_TitleTM,"Title Screen TM"
-		nemesis	Nem_JapNames,"Hidden Japanese Credits"
 		
 		nemesis Nem_Shield,"Shield"
 		nemesis Nem_Stars,"Invincibility"

@@ -70,11 +70,6 @@ GM_Ending:
 		moveq	#id_Pal_Sonic,d0
 		bsr.w	PalLoad_Next				; load Sonic's palette
 		play.w	0, bsr.w, mus_Ending			; play ending sequence music
-		btst	#bitA,(v_joypad_hold_actual).w		; is button A being held?
-		beq.s	@no_debug				; if not, branch
-		move.b	#1,(f_debug_enable).w			; enable debug mode
-
-	@no_debug:
 		move.b	#id_SonicPlayer,(v_ost_player).w	; load Sonic object
 		bset	#status_xflip_bit,(v_ost_player+ost_status).w ; make Sonic face left
 		move.b	#1,(f_lock_controls).w			; lock controls
@@ -92,7 +87,6 @@ GM_Ending:
 		move.b	d0,(v_invincibility).w
 		move.b	d0,(v_shoes).w
 		move.b	d0,(v_unused_powerup).w
-		move.w	d0,(v_debug_active).w
 		move.w	d0,(f_restart).w
 		move.w	d0,(v_frame_counter).w
 		bsr.w	OscillateNumInit

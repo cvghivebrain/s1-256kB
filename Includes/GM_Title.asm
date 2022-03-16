@@ -27,18 +27,9 @@ GM_Title:
 		move.l	d0,(a1)+
 		dbf	d1,@clear_ost				; fill OST ($D000-$EFFF) with 0
 
-		locVRAM	0
-		lea	(Nem_JapNames).l,a0			; load Japanese credits
-		bsr.w	NemDec
 		locVRAM	vram_title_credits			; $14C0
 		lea	(Nem_CreditText).l,a0			; load alphabet
 		bsr.w	NemDec
-		lea	($FF0000).l,a1
-		lea	(Eni_JapNames).l,a0			; load mappings for Japanese credits
-		move.w	#0,d0
-		bsr.w	EniDec
-
-		copyTilemap	$FF0000,vram_fg,0,0,$28,$1C	; copy Japanese credits mappings to fg nametable in VRAM
 
 		lea	(v_pal_dry_next).w,a1
 		moveq	#cBlack,d0
@@ -75,7 +66,6 @@ GM_Title:
 		dbf	d1,@load_text				; load level select font
 
 		move.b	#0,(v_last_lamppost).w			; clear lamppost counter
-		move.w	#0,(v_debug_active).w			; disable debug item placement mode
 		move.w	#0,(v_demo_mode).w			; disable debug mode
 		move.w	#0,(v_title_unused).w			; unused variable
 		move.w	#(id_GHZ<<8),(v_zone).w			; set level to GHZ act 1 (0000)
@@ -112,7 +102,6 @@ GM_Title:
 		moveq	#id_Pal_Title,d0			; load title screen palette
 		bsr.w	PalLoad_Next
 		play.b	1, bsr.w, mus_TitleScreen		; play title screen music
-		move.b	#0,(f_debug_enable).w			; disable debug mode
 		move.w	#$178,(v_countdown).w			; run title screen for $178 frames
 		lea	(v_ost_psb).w,a1
 		moveq	#0,d0
@@ -124,13 +113,9 @@ GM_Title:
 
 		move.b	#id_TitleSonic,(v_ost_titlesonic).w	; load big Sonic object
 		move.b	#id_PSBTM,(v_ost_psb).w			; load "PRESS START BUTTON" object
-		;clr.b	(v_ost_psb+ost_routine).w		; The 'Mega Games 10' version of Sonic 1 added this line, to fix the "PRESS START BUTTON" object not appearing
 
-		if Revision=0
-		else
-			tst.b   (v_console_region).w		; is console Japanese?
-			bpl.s   @isjap				; if yes, branch
-		endc
+		tst.b   (v_console_region).w		; is console Japanese?
+		bpl.s   @isjap				; if yes, branch
 
 		move.b	#id_PSBTM,(v_ost_tm).w			; load "TM" object
 		move.b	#id_frame_psb_tm,(v_ost_tm+ost_frame).w
@@ -142,8 +127,6 @@ GM_Title:
 		jsr	(BuildSprites).l
 		moveq	#id_PLC_Main,d0				; load lamppost, HUD, lives, ring & points graphics
 		bsr.w	NewPLC					; do it over the next few frames
-		move.w	#0,(v_title_d_count).w			; reset d-pad counter
-		move.w	#0,(v_title_c_count).w			; reset C button counter
 		enable_display
 		bsr.w	PaletteFadeIn				; fade in to title screen from black
 
@@ -163,71 +146,19 @@ Title_MainLoop:
 		addq.w	#2,d0
 		move.w	d0,(v_ost_player+ost_x_pos).w		; move dummy 2px to the right
 		cmpi.w	#$1C00,d0
-		blo.s	Title_Cheat				; branch if dummy is still left of $1C00
+		blo.s	Title_ChkStart				; branch if dummy is still left of $1C00
 
 		move.b	#id_Sega,(v_gamemode).w			; go to Sega screen (takes approx. 1 min for dummy to reach $1C00)
 		rts	
 ; ===========================================================================
 
-Title_Cheat:
-		tst.b	(v_console_region).w			; check	if the machine is US/EU or Japanese
-		bpl.s	@japanese				; if Japanese, branch
-
-		lea	(LevSelCode_US).l,a0			; load US/EU code
-		bra.s	@overseas
-
-	@japanese:
-		lea	(LevSelCode_J).l,a0			; load JP code
-
-	@overseas:
-		move.w	(v_title_d_count).w,d0			; get number of times d-pad has been pressed in correct order
-		adda.w	d0,a0					; jump to relevant position in sequence
-		move.b	(v_joypad_press_actual).w,d0		; get button press
-		andi.b	#btnDir,d0				; read only UDLR buttons
-		cmp.b	(a0),d0					; does button press match the cheat code?
-		bne.s	@reset_cheat				; if not, branch
-		addq.w	#1,(v_title_d_count).w			; next button press
-		tst.b	d0					; is d-pad currently pressed?
-		bne.s	@count_c				; if yes, branch
-
-		lea	(f_levelselect_cheat).w,a0		; cheat flag array
-		move.w	(v_title_c_count).w,d1			; d1 = number of times C was pressed
-		lsr.w	#1,d1					; divide by 2
-		andi.w	#3,d1					; read only bits 0/1
-		beq.s	@levelselect_only			; branch if 0
-		tst.b	(v_console_region).w
-		bpl.s	@levelselect_only			; branch if region is Japanese
-		moveq	#1,d1
-		move.b	d1,1(a0,d1.w)				; enable debug mode (C is pressed 2 or more times)
-
-	@levelselect_only:
-		move.b	#1,(a0,d1.w)				; activate cheat: no C = level select; CC+ = slowmo (US/EU); CC = slowmo (JP); CCCC = debug (JP); CCCCCC = hidden credits (JP)
-		play.b	1, bsr.w, sfx_Ring			; play ring sound when code is entered
-		bra.s	@count_c
-; ===========================================================================
-
-@reset_cheat:
-		tst.b	d0					; is d-pad currently pressed?
-		beq.s	@count_c				; if not, branch
-		cmpi.w	#9,(v_title_d_count).w
-		beq.s	@count_c
-		move.w	#0,(v_title_d_count).w			; reset UDLR counter
-
-@count_c:
-		move.b	(v_joypad_press_actual).w,d0
-		andi.b	#btnC,d0				; is C button pressed?
-		beq.s	@c_not_pressed				; if not, branch
-		addq.w	#1,(v_title_c_count).w			; increment C counter
-
-	@c_not_pressed:
+Title_ChkStart:
 		tst.w	(v_countdown).w				; has counter hit 0? (started at $178)
 		beq.w	PlayDemo				; if yes, branch
 		andi.b	#btnStart,(v_joypad_press_actual).w	; check if Start is pressed
 		beq.w	Title_MainLoop				; if not, branch
 
 Title_PressedStart:
-		tst.b	(f_levelselect_cheat).w			; check if level select code is on
-		beq.w	PlayLevel				; if not, play level
 		btst	#bitA,(v_joypad_hold_actual).w		; check if A is pressed
 		beq.w	PlayLevel				; if not, play level
 
@@ -272,12 +203,6 @@ LevelSelect:
 
 		move.w	(v_levelselect_sound).w,d0
 		addi.w	#$80,d0
-		tst.b	(f_credits_cheat).w			; is Japanese credits cheat on?
-		beq.s	@nocheat				; if not, branch
-		cmpi.w	#$9F,d0					; is sound $9F being played?
-		beq.s	LevSel_Ending				; if yes, branch
-		cmpi.w	#$9E,d0					; is sound $9E being played?
-		beq.s	LevSel_Credits				; if yes, branch
 
 	@nocheat:
 		; This is a workaround for a bug, see Sound_ChkValue for more.
@@ -290,19 +215,6 @@ LevelSelect:
 	@play:
 		bsr.w	PlaySound1
 		bra.s	LevelSelect
-; ===========================================================================
-
-LevSel_Ending:
-		move.b	#id_Ending,(v_gamemode).w		; set gamemode to $18 (Ending)
-		move.w	#(id_EndZ<<8),(v_zone).w		; set level to 0600 (Ending)
-		rts	
-; ===========================================================================
-
-LevSel_Credits:
-		move.b	#id_Credits,(v_gamemode).w		; set gamemode to $1C (Credits)
-		play.b	1, bsr.w, mus_Credits			; play credits music
-		move.w	#0,(v_credits_num).w
-		rts	
 ; ===========================================================================
 
 LevSel_Level_SS:

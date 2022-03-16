@@ -36,8 +36,6 @@ Bonus_Main:	; Routine 0
 		cmp.w	d3,d1					; is Sonic within item's height?
 		bcc.s	@chkdel					; if not, branch
 
-		tst.w	(v_debug_active).w			; is debug in use?
-		bne.s	@chkdel					; if yes, branch
 		tst.b	(f_giantring_collected).w		; has giant ring been collected?
 		bne.s	@chkdel					; if yes, branch
 

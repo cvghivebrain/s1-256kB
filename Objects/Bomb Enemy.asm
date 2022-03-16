@@ -117,8 +117,6 @@ Bom_ChkDist:
 	@isabove:
 		cmpi.w	#$60,d0
 		bcc.s	@outofrange
-		tst.w	(v_debug_active).w
-		bne.s	@outofrange
 
 		move.b	#id_Bom_Action_Explode,ost_routine2(a0)
 		move.w	#143,ost_bomb_fuse_time(a0)		; set fuse time

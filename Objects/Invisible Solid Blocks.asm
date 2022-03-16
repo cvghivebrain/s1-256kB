@@ -21,9 +21,6 @@ Invis_Index:	index *,,2
 
 Invis_Main:	; Routine 0
 		addq.b	#2,ost_routine(a0)			; goto Invis_Solid next
-		move.l	#Map_Invis,ost_mappings(a0)
-		move.w	#tile_Nem_Monitors+tile_hi,ost_tile(a0)
-		ori.b	#render_rel,ost_render(a0)
 		move.b	ost_subtype(a0),d0			; get object type
 		move.b	d0,d1
 		andi.w	#$F0,d0					; read only the	high nybble
@@ -49,13 +46,5 @@ Invis_Solid:	; Routine 2
 		bsr.w	SolidObject_NoRenderChk
 
 @chkdel:
-		out_of_range.s	@delete
-		tst.w	(v_debug_active).w			; are you using	debug mode?
-		beq.s	@nodisplay				; if not, branch
-		jmp	(DisplaySprite).l			; if yes, display the object
-
-	@nodisplay:
-		rts	
-
-	@delete:
-		jmp	(DeleteObject).l
+		out_of_range	DeleteObject
+		rts

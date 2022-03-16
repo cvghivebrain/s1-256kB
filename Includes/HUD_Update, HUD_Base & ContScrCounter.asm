@@ -11,8 +11,6 @@ hudVRAM:	macro loc
 		endm
 
 HUD_Update:
-		tst.w	(f_debug_enable).w			; is debug mode	on?
-		bne.w	HudDebug				; if yes, branch
 		tst.b	(f_hud_score_update).w			; does the score need updating?
 		beq.s	@chkrings				; if not, branch
 
@@ -94,46 +92,6 @@ TimeOver:
 		movea.l	a0,a2					; a2 = object killing Sonic (himself in this case)
 		bsr.w	KillSonic				; kill Sonic
 		move.b	#1,(f_time_over).w			; flag for GAME OVER object to use correct frame
-		rts	
-; ===========================================================================
-
-HudDebug:
-		bsr.w	HudDb_XY
-		tst.b	(v_hud_rings_update).w			; does the ring	counter	need updating?
-		beq.s	@objcounter				; if not, branch
-		bpl.s	@notzero
-		bsr.w	Hud_ZeroRings				; reset rings to 0 if Sonic is hit
-
-	@notzero:
-		clr.b	(v_hud_rings_update).w
-		hudVRAM	$DF40					; set VRAM address
-		moveq	#0,d1
-		move.w	(v_rings).w,d1				; load number of rings
-		bsr.w	Hud_Rings
-
-	@objcounter:
-		hudVRAM	$DEC0					; set VRAM address
-		moveq	#0,d1
-		move.b	(v_spritecount).w,d1			; load "number of objects" counter
-		bsr.w	Hud_Secs
-		tst.b	(f_hud_lives_update).w			; does the lives counter need updating?
-		beq.s	@chkbonus				; if not, branch
-		clr.b	(f_hud_lives_update).w
-		bsr.w	Hud_Lives
-
-	@chkbonus:
-		tst.b	(f_pass_bonus_update).w			; does the ring/time bonus counter need updating?
-		beq.s	@finish					; if not, branch
-		clr.b	(f_pass_bonus_update).w
-		locVRAM	$AE00					; set VRAM address
-		moveq	#0,d1
-		move.w	(v_time_bonus).w,d1			; load time bonus
-		bsr.w	Hud_TimeRingBonus
-		moveq	#0,d1
-		move.w	(v_ring_bonus).w,d1			; load ring bonus
-		bsr.w	Hud_TimeRingBonus
-
-	@finish:
 		rts
 
 ; ---------------------------------------------------------------------------
@@ -197,48 +155,6 @@ Hud_TilesBase:	dc.b $16, $FF, $FF, $FF, $FF, $FF, $FF,	0	; "E      0" in score
 		dc.b 0, $14, 0, 0				; "0:00" in time
 Hud_TilesRings:	dc.b $FF, $FF, 0				; "  0" in rings
 		even
-
-; ---------------------------------------------------------------------------
-; Subroutine to	load debug mode	numbers	patterns
-
-; input:
-;	a6 = vdp_data_port ($C00000)
-
-;	uses d1, d2, d6, a1, a3
-; ---------------------------------------------------------------------------
-
-HudDb_XY:
-		locVRAM	$DC40					; VRAM address, starts at "E" in score
-		move.w	(v_camera_x_pos).w,d1
-		swap	d1					; camera x pos in high word
-		move.w	(v_ost_player+ost_x_pos).w,d1		; Sonic x pos in low word
-		bsr.s	HudDb_XY2
-		move.w	(v_camera_y_pos).w,d1
-		swap	d1					; camera y pos in high word
-		move.w	(v_ost_player+ost_y_pos).w,d1		; Sonic y pos in low word
-
-HudDb_XY2:
-		moveq	#8-1,d6					; number of digits
-		lea	(Art_Text).l,a1				; debug number gfx
-
-	@loop:
-		rol.w	#4,d1
-		move.w	d1,d2					; copy nybble to d2
-		andi.w	#$F,d2
-		cmpi.w	#$A,d2
-		bcs.s	@is_0to9				; branch if 0-9
-		addq.w	#7,d2					; use later tile for A-F
-
-	@is_0to9:
-		lsl.w	#5,d2					; multiply by $20
-		lea	(a1,d2.w),a3				; jump to relevant tile in gfx
-		rept sizeof_cell/4
-		move.l	(a3)+,(a6)				; copy tile to VRAM
-		endr
-		swap	d1
-		dbf	d6,@loop				; repeat for all digits stored in d1
-
-		rts
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to	load rings numbers patterns

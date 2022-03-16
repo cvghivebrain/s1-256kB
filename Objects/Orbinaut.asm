@@ -109,8 +109,6 @@ Orb_ChkSonic:	; Routine 2
 	@sonic_below:
 		cmpi.w	#80,d0
 		bcc.s	@animate				; branch if Sonic is > 80px from orbinaut
-		tst.w	(v_debug_active).w			; is debug mode	on?
-		bne.s	@animate				; if yes, branch
 		move.b	#id_ani_orb_angry,ost_anim(a0)		; use "angry" animation
 
 @animate:

@@ -23,7 +23,6 @@
 		include "Constants.asm"
 		include "RAM Addresses.asm"
 		include	"Start Positions.asm"
-		include "Includes\Compatibility.asm"
 
 		cpu	68000
 
@@ -662,7 +661,6 @@ NullObject:
 		include "Objects\LZ Flapping Door [Mappings].asm" ; Map_Flap
 
 		include "Objects\Invisible Solid Blocks.asm"	; Invisibarrier
-		include "Objects\Invisible Solid Blocks [Mappings].asm" ; Map_Invis
 
 		include "Objects\SLZ Fans.asm"			; Fan
 		include "Objects\SLZ Fans [Mappings].asm"	; Map_Fan
@@ -931,8 +929,6 @@ Art_Hud:	incbin	"Graphics\HUD Numbers.bin"		; 8x16 pixel numbers on HUD
 Art_LivesNums:	incbin	"Graphics\Lives Counter Numbers.bin"	; 8x8 pixel numbers on lives counter
 		even
 
-		include "Objects\_DebugMode.asm"
-
 		include_levelheaders				; Includes\LevelDataLoad, LevelLayoutLoad & LevelHeaders.asm
 		include "Pattern Load Cues.asm"
 
@@ -944,9 +940,6 @@ Eni_Title:	incbin	"Tilemaps\Title Screen.eni"		; title screen foreground (mappin
 		nemfile	Nem_TitleFg
 		nemfile	Nem_TitleSonic
 		nemfile	Nem_TitleTM
-Eni_JapNames:	incbin	"Tilemaps\Hidden Japanese Credits.eni"	; Japanese credits (mappings)
-		even
-		nemfile	Nem_JapNames
 
 		include "Objects\Sonic [Mappings].asm"		; Map_Sonic
 		include "Objects\Sonic DPLCs.asm"		; SonicDynPLC
