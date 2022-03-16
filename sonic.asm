@@ -70,20 +70,7 @@ Vectors:	dc.l v_stack_pointer&$FFFFFF			; Initial stack pointer value
 		dc.l ErrorTrap					; IRQ level 7
 		dcb.l 16,ErrorTrap				; TRAP #00..#15 exceptions
 		dcb.l 8,ErrorTrap				; Unused (reserved)
-		if Revision<>2
-			dcb.l 8,ErrorTrap			; Unused (reserved)
-		else
-	Spike_Bugfix:
-								; Relocated code from Spike_Hurt. REVXB was a nasty hex-edit.
-			move.l	ost_y_pos(a0),d3
-			move.w	ost_y_vel(a0),d0
-			ext.l	d0
-			asl.l	#8,d0
-			jmp	(Spike_Resume).l
-
-			dc.w ErrorTrap
-			dcb.l 3,ErrorTrap
-		endc
+		dcb.l 8,ErrorTrap				; Unused (reserved)
 Console:	dc.b "SEGA MEGA DRIVE "				; Hardware system ID (Console name)
 Date:		dc.b "(C)SEGA 1991.APR"				; Copyright holder and release date (generally year)
 Title_Local:	dc.b "SONIC THE               HEDGEHOG                " ; Domestic name
@@ -324,12 +311,6 @@ DemoEndDataPtr:	dc.l Demo_EndGHZ1				; demos run during the credits
 		dc.l Demo_EndSBZ1
 		dc.l Demo_EndSBZ2
 		dc.l Demo_EndGHZ2
-
-		; unused demo data
-		dc.b   0, $8B,   8, $37,   0, $42,   8, $5C,   0, $6A,   8, $5F,   0, $2F,   8, $2C
-		dc.b   0, $21,   8,   3, $28, $30,   8,   8,   0, $2E,   8, $15,   0,  $F,   8, $46
-		dc.b   0, $1A,   8, $FF,   8, $CA,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0
-		even
 
 		include_Level_colptrs				; Includes\GM_Level.asm
 		include "Includes\OscillateNumInit & OscillateNumDo.asm"
@@ -975,17 +956,9 @@ Art_LivesNums:	incbin	"Graphics\Lives Counter Numbers.bin"	; 8x8 pixel numbers o
 		include_levelheaders				; Includes\LevelDataLoad, LevelLayoutLoad & LevelHeaders.asm
 		include "Pattern Load Cues.asm"
 
-		align	$200,$FF
-		if Revision=0
-			nemfile	Nem_SegaLogo
-	Eni_SegaLogo:	incbin	"Tilemaps\Sega Logo.eni"	; large Sega logo (mappings)
-			even
-		else
-			dcb.b	$300,$FF
-			nemfile	Nem_SegaLogo
-	Eni_SegaLogo:	incbin	"Tilemaps\Sega Logo (JP1).eni"	; large Sega logo (mappings)
-			even
-		endc
+		nemfile	Nem_SegaLogo
+Eni_SegaLogo:	incbin	"Tilemaps\Sega Logo (JP1).eni"		; large Sega logo (mappings)
+		even
 Eni_Title:	incbin	"Tilemaps\Title Screen.eni"		; title screen foreground (mappings)
 		even
 		nemfile	Nem_TitleFg
@@ -1006,18 +979,8 @@ Art_Sonic:	incbin	"Graphics\Sonic.bin"			; Sonic
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - various
 ; ---------------------------------------------------------------------------
-		if Revision=0
-			nemfile	Nem_Smoke
-			nemfile	Nem_SyzSparkle
-		endc
 		nemfile	Nem_Shield
 		nemfile	Nem_Stars
-		if Revision=0
-			nemfile	Nem_LzSonic
-			nemfile	Nem_UnkFire
-			nemfile	Nem_Warp
-			nemfile	Nem_Goggle
-		endc
 
 		include "Objects\Special Stage Walls [Mappings].asm" ; Map_SSWalls
 
@@ -1054,10 +1017,8 @@ Eni_SSBg2:	incbin	"Tilemaps\SS Background 2.eni"		; special stage background (ma
 		nemfile	Nem_Stalk
 		nemfile	Nem_Swing
 		nemfile	Nem_Bridge
-		nemfile	Nem_GhzUnkBlock
 		nemfile	Nem_Ball
 		nemfile	Nem_Spikes
-		nemfile	Nem_GhzLog
 		nemfile	Nem_SpikePole
 		nemfile	Nem_PplRock
 		nemfile	Nem_GhzWall1
@@ -1087,11 +1048,9 @@ Eni_SSBg2:	incbin	"Tilemaps\SS Background 2.eni"		; special stage background (ma
 		nemfile	Nem_MzMetal
 		nemfile	Nem_MzSwitch
 		nemfile	Nem_MzGlass
-		nemfile	Nem_UnkGrass
 		nemfile	Nem_Fireball
 		nemfile	Nem_Lava
 		nemfile	Nem_MzBlock
-		nemfile	Nem_MzUnkBlock
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - SLZ stuff
 ; ---------------------------------------------------------------------------
@@ -1133,7 +1092,6 @@ Eni_SSBg2:	incbin	"Tilemaps\SS Background 2.eni"		; special stage background (ma
 		nemfile	Nem_BallHog
 		nemfile	Nem_Crabmeat
 		nemfile	Nem_Buzz
-		nemfile	Nem_UnkExplode
 		nemfile	Nem_Burrobot
 		nemfile	Nem_Chopper
 		nemfile	Nem_Jaws
@@ -1142,7 +1100,6 @@ Eni_SSBg2:	incbin	"Tilemaps\SS Background 2.eni"		; special stage background (ma
 		nemfile	Nem_Newtron
 		nemfile	Nem_Yadrin
 		nemfile	Nem_Batbrain
-		nemfile	Nem_Splats
 		nemfile	Nem_Bomb
 		nemfile	Nem_Orbinaut
 		nemfile	Nem_Cater
@@ -1195,11 +1152,7 @@ Blk256_LZ:	incbin	"256x256 Mappings\LZ.kos"
 Blk16_MZ:	incbin	"16x16 Mappings\MZ.eni"
 		even
 		nemfile	Nem_MZ
-Blk256_MZ:	if Revision=0
-			incbin	"256x256 Mappings\MZ.kos"
-		else
-			incbin	"256x256 Mappings\MZ (JP1).kos"
-		endc
+Blk256_MZ:	incbin	"256x256 Mappings\MZ (JP1).kos"
 		even
 Blk16_SLZ:	incbin	"16x16 Mappings\SLZ.eni"
 		even
@@ -1214,11 +1167,7 @@ Blk256_SYZ:	incbin	"256x256 Mappings\SYZ.kos"
 Blk16_SBZ:	incbin	"16x16 Mappings\SBZ.eni"
 		even
 		nemfile	Nem_SBZ
-Blk256_SBZ:	if Revision=0
-			incbin	"256x256 Mappings\SBZ.kos"
-		else
-			incbin	"256x256 Mappings\SBZ (JP1).kos"
-		endc
+Blk256_SBZ:	incbin	"256x256 Mappings\SBZ (JP1).kos"
 		even
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - bosses and ending sequence
@@ -1233,20 +1182,11 @@ Blk256_SBZ:	if Revision=0
 		nemfile	Nem_EndEm
 		nemfile	Nem_EndSonic
 		nemfile	Nem_TryAgain
-		if Revision=0
-			nemfile	Nem_EndEggman
-		endc
 Kos_EndFlowers:	incbin	"Graphics - Compressed\Ending Flowers.kos" ; ending sequence animated flowers
 		even
 		nemfile	Nem_EndFlower
 		nemfile	Nem_CreditText
 		nemfile	Nem_EndStH
-
-		if Revision=0
-			dcb.b $104,$FF				; why?
-		else
-			dcb.b $40,$FF
-		endc
 ; ---------------------------------------------------------------------------
 ; Collision data
 ; ---------------------------------------------------------------------------
@@ -1279,15 +1219,9 @@ SS_3:		incbin	"Special Stage Layouts\3.eni"
 		even
 SS_4:		incbin	"Special Stage Layouts\4.eni"
 		even
-		if Revision=0
-	SS_5:		incbin	"Special Stage Layouts\5.eni"
-			even
-	SS_6:		incbin	"Special Stage Layouts\6.eni"
-		else
-	SS_5:		incbin	"Special Stage Layouts\5 (JP1).eni"
-			even
-	SS_6:		incbin	"Special Stage Layouts\6 (JP1).eni"
-		endc
+SS_5:		incbin	"Special Stage Layouts\5 (JP1).eni"
+		even
+SS_6:		incbin	"Special Stage Layouts\6 (JP1).eni"
 		even
 ; ---------------------------------------------------------------------------
 ; Animated uncompressed graphics
@@ -1635,13 +1569,6 @@ ObjPosSBZPlatform_Index:
 		include	"Object Placement\SBZ Platforms.asm"
 		include	"Object Placement\Ending.asm"
 ObjPos_Null:	endobj
-
-		if Revision=0
-			dcb.b $62A,$FF
-		else
-			dcb.b $63C,$FF
-		endc
-		;dcb.b ($10000-(*%$10000))-(EndOfRom-SoundDriver),$FF
 
 ; ---------------------------------------------------------------------------
 ; Sound driver data

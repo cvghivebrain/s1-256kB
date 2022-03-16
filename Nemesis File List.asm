@@ -11,18 +11,8 @@
 		nemesis	Nem_TitleTM,"Title Screen TM"
 		nemesis	Nem_JapNames,"Hidden Japanese Credits"
 		
-		if Revision=0
-		nemesis Nem_Smoke,"Unused - Smoke"
-		nemesis Nem_SyzSparkle,"Unused - SYZ Sparkles"
-		endc
 		nemesis Nem_Shield,"Shield"
 		nemesis Nem_Stars,"Invincibility"
-		if Revision=0
-		nemesis Nem_LzSonic,"Unused - LZ Sonic Holding Breath" ; Sonic holding his breath
-		nemesis Nem_UnkFire,"Unused - Fireball" ; unused fireball
-		nemesis Nem_Warp,"Unused - Special Stage Warp" ; entry to special stage flash
-		nemesis Nem_Goggle,"Unused - Goggles" ; unused goggles
-		endc
 		
 		; Special Stage
 		nemesis Nem_SSWalls,"Special Stage Walls" ; special stage walls
@@ -50,10 +40,8 @@
 		nemesis Nem_Stalk,"GHZ Flower Stalk"
 		nemesis Nem_Swing,"GHZ Swinging Platform"
 		nemesis Nem_Bridge,"GHZ Bridge"
-		nemesis Nem_GhzUnkBlock,"Unused - GHZ Block"
 		nemesis Nem_Ball,"GHZ Giant Ball"
 		nemesis Nem_Spikes,"Spikes"
-		nemesis Nem_GhzLog,"Unused - GHZ Log"
 		nemesis Nem_SpikePole,"GHZ Spiked Helix Pole"
 		nemesis Nem_PplRock,"GHZ Purple Rock"
 		nemesis Nem_GhzWall1,"GHZ Smashable Wall"
@@ -81,11 +69,9 @@
 		nemesis Nem_MzMetal,"MZ Metal Blocks"
 		nemesis Nem_MzSwitch,"MZ Switch"
 		nemesis Nem_MzGlass,"MZ Green Glass Block"
-		nemesis Nem_UnkGrass,"Unused - MZ Grass"
 		nemesis Nem_Fireball,"Fireballs"
 		nemesis Nem_Lava,"MZ Lava"
 		nemesis Nem_MzBlock,"MZ Green Pushable Block"
-		nemesis Nem_MzUnkBlock,"Unused - MZ Background"
 		
 		; SLZ
 		nemesis Nem_Seesaw,"SLZ Seesaw"
@@ -123,7 +109,6 @@
 		nemesis Nem_BallHog,"Ball Hog"
 		nemesis Nem_Crabmeat,"Crabmeat"
 		nemesis Nem_Buzz,"Buzz Bomber"
-		nemesis Nem_UnkExplode,"Unused - Explosion"
 		nemesis Nem_Burrobot,"Burrobot"
 		nemesis Nem_Chopper,"Chopper"
 		nemesis Nem_Jaws,"Jaws"
@@ -132,7 +117,6 @@
 		nemesis Nem_Newtron,"Newtron"
 		nemesis Nem_Yadrin,"Yadrin"
 		nemesis Nem_Batbrain,"Batbrain"
-		nemesis Nem_Splats,"Unused - Splats Enemy"
 		nemesis Nem_Bomb,"Bomb Enemy"
 		nemesis Nem_Orbinaut,"Orbinaut"
 		nemesis Nem_Cater,"Caterkiller"
@@ -186,9 +170,6 @@
 		nemesis Nem_EndEm,"Ending - Emeralds"
 		nemesis Nem_EndSonic,"Ending - Sonic"
 		nemesis Nem_TryAgain,"Ending - Try Again"
-		if Revision=0
-		nemesis	Nem_EndEggman,"Unused - Eggman Ending"
-		endc
 		nemesis Nem_EndFlower,"Ending - Flowers"
 		nemesis Nem_CreditText,"Ending - Credits"
 		nemesis Nem_EndStH,"Ending - StH Logo"

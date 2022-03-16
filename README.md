@@ -13,4 +13,5 @@ Can I get Sonic the Hedgehog to fit into 256kB?
 Description | Size | Difference
 ----------- | ---- | ----------
 Start | 524288 | 0
+Removed unused demo, graphics and padding. | 519364 | -4924
 Target | 262144 | 
