@@ -6,7 +6,7 @@ type "sound\errors.txt"
 IF NOT EXIST "sound\DAC Driver.unc" PAUSE & EXIT 2
 
 rem compress kosinski files
-for %%f in ("256x256 Mappings\*.unc") do kosinski_compress "%%f" "256x256 Mappings\%%~nf.kos"
+for %%f in ("256x256 Mappings\*.unc") do koscmp "%%f" "256x256 Mappings\%%~nf.kos"
 kosinski_compress "Graphics - Compressed\Ending Flowers.unc" "Graphics - Compressed\Ending Flowers.kos"
 kosinski_compress "sound\DAC Driver.unc" "sound\DAC Driver.kos"
 

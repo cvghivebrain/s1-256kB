@@ -18,4 +18,10 @@ Removed unused warp PLC, Special Stage graphics, blank objects. | 518520 | -844
 Removed unused objects, temporarily disabled padding for Sega PCM (this will be fixed later). | 516036 | -2484
 Removed debug mode and cheat codes. Press A+Start for level select. | 512196 | -3840
 Cleaned up some subroutines, removed padding. | 511870 | -326
+Used mdcomp for 256x256 mappings. | 508298 | -3572
 Target | 262144 | 
+
+## Credits
+
+* [Clownacy](https://github.com/Clownacy) for [the accurate Kosinski compressor](https://github.com/Clownacy/accurate-kosinski)
+* [flamewing](https://github.com/flamewing) for [mdcomp](https://github.com/flamewing/mdcomp)
