@@ -10,6 +10,7 @@ for %%f in ("256x256 Mappings\*.unc") do koscmp "%%f" "256x256 Mappings\%%~nf.ko
 for %%f in ("kosdata\*.unc") do koscmp "%%f" "kosdata\%%~nf.kos"
 kosinski_compress "sound\DAC Driver.unc" "sound\DAC Driver.kos"
 for %%f in ("Graphics - Compressed\Decompressed\*.bin") do nemcmp "%%f" "Graphics - Compressed\%%~nf.nem"
+for %%f in ("16x16 Mappings\*.bin") do enicmp "%%f" "16x16 Mappings\%%~nf.eni"
 
 rem assemble final rom
 IF EXIST s1built.bin move /Y s1built.bin s1built.prev.bin >NUL

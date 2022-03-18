@@ -21,6 +21,7 @@ Cleaned up some subroutines, removed padding. | 511870 | -326
 Used mdcomp for 256x256 mappings. | 508298 | -3572
 Removed unused code from batbrain and drowning objects. Used mdcomp for ending flowers. | 508200 | -98
 Used mdcomp for Nemesis graphics. | 504518 | -3682
+Used mdcomp for 16x16 mappings. | 503240 | -1278
 Target | 262144 | 
 
 ## Credits
