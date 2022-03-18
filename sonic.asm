@@ -705,7 +705,6 @@ See_DataFlat:	incbin	"Collision\SLZ Seesaw Heightmap (Flat).bin" ; used by Seesa
 		include "Objects\_ResumeMusic.asm"
 
 		include_DrownCount_animation
-		include "Objects\LZ Sonic's Drowning Face [Mappings].asm" ; Map_Drown
 
 		include "Objects\Shield & Invincibility.asm"	; ShieldItem
 		include "Objects\LZ Water Splash.asm"		; Splash
@@ -1147,7 +1146,7 @@ Blk256_SBZ:	incbin	"256x256 Mappings\SBZ (JP1).kos"
 		nemfile	Nem_EndEm
 		nemfile	Nem_EndSonic
 		nemfile	Nem_TryAgain
-Kos_EndFlowers:	incbin	"Graphics - Compressed\Ending Flowers.kos" ; ending sequence animated flowers
+Kos_EndFlowers:	incbin	"kosdata\Ending Flowers.kos"		; ending sequence animated flowers
 		even
 		nemfile	Nem_EndFlower
 		nemfile	Nem_CreditText

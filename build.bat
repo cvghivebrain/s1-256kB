@@ -7,7 +7,7 @@ IF NOT EXIST "sound\DAC Driver.unc" PAUSE & EXIT 2
 
 rem compress kosinski files
 for %%f in ("256x256 Mappings\*.unc") do koscmp "%%f" "256x256 Mappings\%%~nf.kos"
-kosinski_compress "Graphics - Compressed\Ending Flowers.unc" "Graphics - Compressed\Ending Flowers.kos"
+for %%f in ("kosdata\*.unc") do koscmp "%%f" "kosdata\%%~nf.kos"
 kosinski_compress "sound\DAC Driver.unc" "sound\DAC Driver.kos"
 
 rem assemble final rom

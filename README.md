@@ -19,6 +19,7 @@ Removed unused objects, temporarily disabled padding for Sega PCM (this will be 
 Removed debug mode and cheat codes. Press A+Start for level select. | 512196 | -3840
 Cleaned up some subroutines, removed padding. | 511870 | -326
 Used mdcomp for 256x256 mappings. | 508298 | -3572
+Removed unused code from batbrain and drowning objects. Used mdcomp for ending flowers. | 508200 | -98
 Target | 262144 | 
 
 ## Credits
