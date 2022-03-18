@@ -20,6 +20,7 @@ Removed debug mode and cheat codes. Press A+Start for level select. | 512196 | -
 Cleaned up some subroutines, removed padding. | 511870 | -326
 Used mdcomp for 256x256 mappings. | 508298 | -3572
 Removed unused code from batbrain and drowning objects. Used mdcomp for ending flowers. | 508200 | -98
+Used mdcomp for Nemesis graphics. | 504518 | -3682
 Target | 262144 | 
 
 ## Credits
