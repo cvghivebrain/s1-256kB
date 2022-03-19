@@ -32,7 +32,7 @@ CSon_Main:	; Routine 0
 
 CSon_ChkLand:	; Routine 2
 		cmpi.w	#$1A0,ost_y_pos(a0)			; has Sonic landed yet?
-		bne.s	@keep_falling				; if not, branch
+		bne.s	CSon_keep_falling				; if not, branch
 
 		addq.b	#2,ost_routine(a0)			; goto CSon_Animate next
 		clr.w	ost_y_vel(a0)				; stop Sonic falling
@@ -41,7 +41,7 @@ CSon_ChkLand:	; Routine 2
 		move.b	#id_Walk,ost_anim(a0)
 		bra.s	CSon_Animate
 
-	@keep_falling:
+	CSon_keep_falling:
 		jsr	(SpeedToPos).l
 		jsr	(Sonic_Animate).l
 		jmp	(Sonic_LoadGfx).l
@@ -66,15 +66,11 @@ CSon_Run:	; Routine 6
 		cmpi.w	#$800,ost_inertia(a0)			; check Sonic's inertia
 		bne.s	@add_inertia				; if too low, branch
 		move.w	#$1000,ost_x_vel(a0)			; move Sonic to the right
-		bra.s	@display
+		bra.s	CSon_keep_falling
 
 	@add_inertia:
 		addi.w	#$20,ost_inertia(a0)			; increase inertia
-
-	@display:
-		jsr	(SpeedToPos).l
-		jsr	(Sonic_Animate).l
-		jmp	(Sonic_LoadGfx).l
+		bra.s	CSon_keep_falling
 
 ; ---------------------------------------------------------------------------
 ; Animation script

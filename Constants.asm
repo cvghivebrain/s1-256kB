@@ -34,7 +34,7 @@ vram_orbinaut:	equ $8520	; orbinaut graphics
 vram_buzz:	equ $8880	; buzz bomber graphics
 vram_yadrin:	equ $8F60	; yadrin graphics
 vram_cater:	equ $9FE0	; caterkiller graphics
-vram_button:	equ $A1E0	; button graphics
+vram_button:	equ $A200	; button graphics
 vram_spikes:	equ $A360	; spikes graphics
 vram_hspring:	equ $A460	; horizontal spring graphics
 vram_vspring:	equ $A660	; vertical spring graphics

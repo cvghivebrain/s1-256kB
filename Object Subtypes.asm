@@ -62,8 +62,6 @@ type_plat_updown_slow_rev: equ id_Plat_Type_UpDown_Slow_Rev	; $C - moves up and 
 type_fire_updown_low:	equ id_FBall_Type_UpDown		; $x0 - flies up, falls down
 type_fire_updown_mid:	equ id_FBall_Type_UpDown_1		; $x1 - flies up, falls down
 type_fire_updown_high:	equ id_FBall_Type_UpDown_2		; $x2 - flies up, falls down
-type_fire_updown_highest: equ id_FBall_Type_UpDown_3		; $x3 - flies up, falls down
-type_fire_up:		equ id_FBall_Type_Up			; $x4 - up until it hits ceiling
 type_fire_down:		equ id_FBall_Type_Down			; $x5 - down until it hits floor
 type_fire_left:		equ id_FBall_Type_Left			; $x6 - left until it hits wall
 type_fire_right:	equ id_FBall_Type_Right			; $x7 - right until it hits wall

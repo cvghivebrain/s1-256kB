@@ -61,7 +61,6 @@ TCha_Main:	; Routine 0
 
 	@no_emeralds:
 		move.b	d2,ost_frame(a1)
-		addq.b	#1,ost_frame(a1)
 		addq.b	#1,d2
 		move.b	#$80,ost_angle(a1)
 		move.b	d3,ost_anim_time(a1)
@@ -72,7 +71,7 @@ TCha_Main:	; Routine 0
 
 TCha_Move:	; Routine 2
 		tst.w	ost_ectry_speed(a0)			; should be 0, 2 or -2 (changed by Eggman object)
-		beq.s	@no_move				; branch if 0
+		beq.s	TCha_no_move				; branch if 0
 		tst.b	ost_anim_time(a0)
 		beq.s	@update_angle				; branch if timer is 0
 		subq.b	#1,ost_anim_time(a0)			; decrement timer
@@ -93,6 +92,7 @@ TCha_Move:	; Routine 2
 		move.b	ost_anim_delay(a0),ost_anim_time(a0)
 
 	@angle_not_80:
+TCha_Move_sub:
 		jsr	(CalcSine).l				; convert angle (d0) to sine (d0) and cosine (d1)
 		moveq	#0,d4
 		move.b	ost_ectry_radius(a0),d4
@@ -105,5 +105,5 @@ TCha_Move:	; Routine 2
 		move.w	d1,ost_x_pos(a0)
 		move.w	d0,ost_y_screen(a0)
 
-	@no_move:
+	TCha_no_move:
 		rts	

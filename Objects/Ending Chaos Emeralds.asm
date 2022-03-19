@@ -58,16 +58,7 @@ ECha_Move:	; Routine 2
 		move.w	ost_echaos_angle(a0),d0
 		add.w	d0,ost_angle(a0)
 		move.b	ost_angle(a0),d0
-		jsr	(CalcSine).l
-		moveq	#0,d4
-		move.b	ost_echaos_radius(a0),d4
-		muls.w	d4,d1
-		asr.l	#8,d1
-		muls.w	d4,d0
-		asr.l	#8,d0
-		add.w	ost_echaos_x_start(a0),d1
-		add.w	ost_echaos_y_start(a0),d0
-		move.w	d1,ost_x_pos(a0)
+		bsr.w	TCha_Move_sub
 		move.w	d0,ost_y_pos(a0)
 
 	ECha_Expand:

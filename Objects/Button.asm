@@ -26,7 +26,7 @@ But_Main:	; Routine 0
 		cmpi.b	#id_MZ,(v_zone).w			; is level Marble Zone?
 		beq.s	@is_marble				; if yes, branch
 
-		move.w	#tile_Nem_LzSwitch+4,ost_tile(a0)	; SYZ, LZ and SBZ specific code
+		move.w	#tile_Nem_LzSwitch,ost_tile(a0)		; SYZ, LZ and SBZ specific code
 
 	@is_marble:
 		move.b	#render_rel,ost_render(a0)
@@ -47,10 +47,6 @@ But_Action:	; Routine 2
 		andi.w	#$F,d0					; get low nybble of subtype
 		lea	(v_button_state).w,a3
 		lea	(a3,d0.w),a3				; (a3) = button status
-		moveq	#0,d3
-		btst	#6,ost_subtype(a0)			; is subtype $4x or $Cx? (unused)
-		beq.s	@not_secondary				; if not, branch
-		moveq	#7,d3					; d3 = bit to set/clear in button status
 
 	@not_secondary:
 		tst.b	ost_subtype(a0)				; is subtype +$80?
@@ -61,7 +57,7 @@ But_Action:	; Routine 2
 	@subtype_0x:
 		tst.b	ost_solid(a0)				; is Sonic standing on the button?
 		bne.s	But_Press				; if yes, branch
-		bclr	d3,(a3)					; clear button status
+		bclr	#0,(a3)					; clear button status
 		bra.s	But_Flash
 ; ===========================================================================
 
@@ -71,17 +67,10 @@ But_Press:
 		play.w	1, jsr, sfx_Switch			; play "blip" sound
 
 	@already_pressed:
-		bset	d3,(a3)
+		bset	#0,(a3)
 		bset	#0,ost_frame(a0)			; use "pressed" frame
 
 But_Flash:
-		btst	#5,ost_subtype(a0)			; is subtype +$20?
-		beq.s	But_Display				; if not, branch
-		subq.b	#1,ost_anim_time(a0)			; decrement timer
-		bpl.s	But_Display				; branch if time remains
-		move.b	#7,ost_anim_time(a0)			; set timer to 7 frames
-		bchg	#1,ost_frame(a0)			; use frame 2/3
-
 But_Display:
 		bsr.w	DisplaySprite
 		out_of_range	But_Delete
@@ -100,7 +89,6 @@ But_Delete:
 ; ---------------------------------------------------------------------------
 
 But_PBlock_Chk:
-		move.w	d3,-(sp)
 		move.w	ost_x_pos(a0),d2
 		move.w	ost_y_pos(a0),d3
 		subi.w	#$10,d2					; d2 = x pos. of button left edge
@@ -120,7 +108,6 @@ But_PBlock_Chk:
 		lea	sizeof_ost(a1),a1			; check next object
 		dbf	d6,@loop				; repeat $5F times
 
-		move.w	(sp)+,d3
 		moveq	#0,d0
 		rts	
 ; ===========================================================================
@@ -166,6 +153,5 @@ But_PBlock_Chk:
 		bhi.s	@next
 
 @pblock_y_ok:
-		move.w	(sp)+,d3
 		moveq	#1,d0
 		rts

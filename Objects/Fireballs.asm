@@ -22,10 +22,8 @@ FBall_Speeds:	; Vertical - goes up and falls down
 		dc.w -$400					; x0
 		dc.w -$500					; x1
 		dc.w -$600					; x2
-		dc.w -$700					; x3 (unused)
 
 		; Vertical - constant speed
-		dc.w -$200					; x4 (unused)
 		dc.w $200					; x5
 
 		; Horizontal
@@ -62,7 +60,7 @@ FBall_Main:	; Routine 0
 		add.w	d0,d0
 		move.w	FBall_Speeds(pc,d0.w),ost_y_vel(a0)	; load object speed (vertical)
 		move.b	#8,ost_actwidth(a0)
-		cmpi.b	#6,ost_subtype(a0)			; is object type 0-5?
+		cmpi.b	#4,ost_subtype(a0)			; is object type 0-5?
 		bcs.s	@sound					; if yes, branch
 
 		move.b	#$10,ost_actwidth(a0)
@@ -91,8 +89,6 @@ FBall_TypeIndex:index *
 		ptr FBall_Type_UpDown
 		ptr FBall_Type_UpDown
 		ptr FBall_Type_UpDown
-		ptr FBall_Type_UpDown				; unused
-		ptr FBall_Type_Up				; unused
 		ptr FBall_Type_Down
 		ptr FBall_Type_Left
 		ptr FBall_Type_Right
@@ -114,21 +110,7 @@ FBall_Type_UpDown:
 		bset	#status_yflip_bit,ost_status(a0)	; set yflip
 
 	@upwards:
-		rts	
-; ===========================================================================
-; fireball type	04 flies up until it hits the ceiling
-
-FBall_Type_Up:
-		bset	#status_yflip_bit,ost_status(a0)
-		bsr.w	FindCeilingObj
-		tst.w	d1					; distance to ceiling
-		bpl.s	@no_ceiling				; branch if > 0
-		move.b	#id_FBall_Type_Stop,ost_subtype(a0)
-		move.b	#id_ani_fire_vertcollide,ost_anim(a0)
-		move.w	#0,ost_y_vel(a0)			; stop the object when it touches the ceiling
-
-	@no_ceiling:
-		rts	
+		rts
 ; ===========================================================================
 ; fireball type	05 falls down until it hits the	floor
 
@@ -171,11 +153,8 @@ FBall_Type_Right:
 		move.w	#0,ost_x_vel(a0)			; stop object when it touches a wall
 
 	@no_wall:
-		rts	
-; ===========================================================================
-
 FBall_Type_Stop:
-		rts	
+		rts
 ; ===========================================================================
 
 FBall_Delete:	; Routine 4

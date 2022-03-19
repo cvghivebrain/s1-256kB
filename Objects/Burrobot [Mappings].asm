@@ -7,7 +7,6 @@ Map_Burro:	index *
 		ptr frame_burro_dig1
 		ptr frame_burro_dig2
 		ptr frame_burro_fall
-		ptr frame_burro_facedown
 		ptr frame_burro_walk3
 		
 frame_burro_walk1:
@@ -38,12 +37,6 @@ frame_burro_fall:
 		spritemap					; falling after jumping up
 		piece	-$10, -$18, 3x3, $F
 		piece	-$C, 0, 3x3, $42
-		endsprite
-		
-frame_burro_facedown:
-		spritemap					; facing down (unused)
-		piece	-$18, -$C, 2x3, $4B
-		piece	-8, -$C, 3x3, $51
 		endsprite
 		
 frame_burro_walk3:

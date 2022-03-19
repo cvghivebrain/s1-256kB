@@ -43,10 +43,11 @@ CSI_MakeMiniSonic:
 		moveq	#0,d1
 		move.b	(v_continues).w,d1
 		subq.b	#2,d1
-		bcc.s	@more_than_1
+		bcc.s	CSI_more_than_1
+CSI_Delete:
 		jmp	(DeleteObject).l			; cancel if you have 0-1 continues
 
-	@more_than_1:
+	CSI_more_than_1:
 		moveq	#1,d3
 		cmpi.b	#14,d1					; do you have fewer than 16 continues
 		bcs.s	@fewer_than_16				; if yes, branch
@@ -98,7 +99,3 @@ CSI_Animate:
 
 	@no_frame_chg:
 		jmp	(DisplaySprite).l
-; ===========================================================================
-
-CSI_Delete:
-		jmp	(DeleteObject).l

@@ -59,7 +59,7 @@ Anml_Variables:	dc.w -$200, -$400				; type 0 - GHZ/SBZ
 		dc.l Map_Animal3
 
 Anml_EndSpeed:	dc.w -$440, -$400				; $A
-		dc.w -$440, -$400				; $B
+		dc.w -$280, -$380				; $14
 		dc.w -$440, -$400				; $C
 		dc.w -$300, -$400				; $D
 		dc.w -$300, -$400				; $E
@@ -68,10 +68,9 @@ Anml_EndSpeed:	dc.w -$440, -$400				; $A
 		dc.w -$140, -$180				; $11
 		dc.w -$1C0, -$300				; $12
 		dc.w -$200, -$300				; $13
-		dc.w -$280, -$380				; $14
 
 Anml_EndMap:	dc.l Map_Animal2				; $A
-		dc.l Map_Animal2				; $B - unused
+		dc.l Map_Animal3				; $14
 		dc.l Map_Animal2				; $C
 		dc.l Map_Animal1				; $D
 		dc.l Map_Animal1				; $E
@@ -80,10 +79,9 @@ Anml_EndMap:	dc.l Map_Animal2				; $A
 		dc.l Map_Animal2				; $11
 		dc.l Map_Animal3				; $12
 		dc.l Map_Animal2				; $13
-		dc.l Map_Animal3				; $14
 
 Anml_EndVram:	dc.w tile_Nem_Flicky_End			; $A
-		dc.w tile_Nem_Flicky_End			; $B - unused
+		dc.w tile_Nem_Squirrel_End			; $14
 		dc.w tile_Nem_Flicky_End			; $C
 		dc.w tile_Nem_Rabbit_End			; $D
 		dc.w tile_Nem_Rabbit_End			; $E
@@ -92,7 +90,6 @@ Anml_EndVram:	dc.w tile_Nem_Flicky_End			; $A
 		dc.w tile_Nem_Seal_End				; $11
 		dc.w tile_Nem_Pig_End				; $12
 		dc.w tile_Nem_Chicken_End			; $13
-		dc.w tile_Nem_Squirrel_End			; $14
 
 ost_animal_direction:	equ $29					; animal goes left/right
 ost_animal_type:	equ $30					; type of animal (0-$B)
@@ -118,13 +115,17 @@ Anml_Main:	; Routine 0
 		move.w	(a1,d0.w),ost_x_vel(a0)
 		move.w	2(a1,d0.w),ost_animal_y_vel(a0)		; load vertical speed
 		move.w	2(a1,d0.w),ost_y_vel(a0)
+		bsr.s	Anml_Main_sub
+		bra.w	DisplaySprite
+
+Anml_Main_sub:
 		move.b	#$C,ost_height(a0)
 		move.b	#render_rel,ost_render(a0)
 		bset	#render_xflip_bit,ost_render(a0)
 		move.b	#6,ost_priority(a0)
 		move.b	#8,ost_actwidth(a0)
 		move.b	#7,ost_anim_time(a0)
-		bra.w	DisplaySprite
+		rts
 ; ===========================================================================
 
 Anml_FromEnemy:
@@ -150,12 +151,7 @@ Anml_FromEnemy:
 		move.w	#tile_Nem_Flicky,ost_tile(a0)		; VRAM setting for 2nd animal
 
 	@type_0:
-		move.b	#$C,ost_height(a0)
-		move.b	#render_rel,ost_render(a0)
-		bset	#render_xflip_bit,ost_render(a0)
-		move.b	#6,ost_priority(a0)
-		move.b	#8,ost_actwidth(a0)
-		move.b	#7,ost_anim_time(a0)
+		bsr.s	Anml_Main_sub
 		move.b	#id_frame_animal1_drop,ost_frame(a0)	; use "dropping" frame
 		move.w	#-$400,ost_y_vel(a0)
 		tst.b	(v_boss_status).w			; has boss been beaten?

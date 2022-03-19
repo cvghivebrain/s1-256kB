@@ -73,9 +73,7 @@ Crab_WaitFire:
 		addq.b	#2,ost_routine2(a0)			; goto Crab_Walk next
 		move.w	#127,ost_crab_wait_time(a0)		; set time delay to approx 2 seconds
 		move.w	#$80,ost_x_vel(a0)			; move Crabmeat to the right
-		bsr.w	Crab_SetAni				; select animation based on floor angle
-		addq.b	#id_ani_crab_walk,d0			; use walking animation
-		move.b	d0,ost_anim(a0)
+		move.b	#id_ani_crab_walk,ost_anim(a0)
 		bchg	#status_xflip_bit,ost_status(a0)
 		bne.s	@noflip
 		neg.w	ost_x_vel(a0)				; change direction
@@ -135,10 +133,7 @@ Crab_Walk:
 @findfloor_here:
 		jsr	(FindFloorObj).l			; find floor at current position
 		add.w	d1,ost_y_pos(a0)			; align to floor
-		move.b	d3,ost_angle(a0)			; update angle
-		bsr.w	Crab_SetAni				; set animation based on angle
-		addq.b	#id_ani_crab_walk,d0			; use walking animation
-		move.b	d0,ost_anim(a0)
+		move.b	#id_ani_crab_walk,ost_anim(a0)
 		rts	
 ; ===========================================================================
 
@@ -146,49 +141,13 @@ Crab_Walk:
 		subq.b	#2,ost_routine2(a0)			; goto Crab_WaitFire next
 		move.w	#59,ost_crab_wait_time(a0)
 		move.w	#0,ost_x_vel(a0)
-		bsr.w	Crab_SetAni				; set animation based on angle
-		move.b	d0,ost_anim(a0)				; use standing animation
+		move.b	#id_ani_crab_stand,ost_anim(a0)	; use standing animation
 		rts
-
-; ---------------------------------------------------------------------------
-; Subroutine to	set the	correct	animation for a	Crabmeat
-
-; output:
-;	d0 = animation id (0 = flat; 1 = slope; 2 = xflip slope)
-; ---------------------------------------------------------------------------
-
-Crab_SetAni:
-		moveq	#id_ani_crab_stand,d0			; use standing flat animation by default
-		move.b	ost_angle(a0),d3			; get floor angle
-		bmi.s	@slope_up_right				; branch if sloping up-right
-		cmpi.b	#6,d3					; is slope at least 6?
-		bcs.s	@nearly_flat				; if not, branch
-		moveq	#id_ani_crab_standslope,d0		; use standing up-left slope animation
-		btst	#status_xflip_bit,ost_status(a0)
-		bne.s	@nearly_flat
-		moveq	#id_ani_crab_standsloperev,d0		; use xflip animation
-
-	@nearly_flat:
-		rts	
-; ===========================================================================
-
-@slope_up_right:
-		cmpi.b	#-6,d3					; is slope at least 6?
-		bhi.s	@nearly_flat2				; if not, branch
-		moveq	#id_ani_crab_standsloperev,d0		; use standing up-right slope animation
-		btst	#status_xflip_bit,ost_status(a0)
-		bne.s	@nearly_flat2
-		moveq	#id_ani_crab_standslope,d0		; use xflip animation
-
-	@nearly_flat2:
-		rts	
-; End of function Crab_SetAni
 
 ; ===========================================================================
 
 Crab_Delete:	; Routine 4
-		bsr.w	DeleteObject
-		rts
+		bra.w	DeleteObject
 
 ; ---------------------------------------------------------------------------
 ; Sub-object - missile that the	Crabmeat throws
@@ -213,11 +172,8 @@ Crab_BallMove:	; Routine 8
 		move.w	(v_boundary_bottom).w,d0
 		addi.w	#224,d0
 		cmp.w	ost_y_pos(a0),d0			; has object moved below the level boundary?
-		bcs.s	@delete					; if yes, branch
+		bcs.s	Crab_Delete					; if yes, branch
 		rts	
-
-	@delete:
-		bra.w	DeleteObject
 
 ; ---------------------------------------------------------------------------
 ; Animation script
@@ -225,11 +181,7 @@ Crab_BallMove:	; Routine 8
 
 Ani_Crab:	index *
 		ptr ani_crab_stand
-		ptr ani_crab_standslope
-		ptr ani_crab_standsloperev
 		ptr ani_crab_walk
-		ptr ani_crab_walkslope
-		ptr ani_crab_walksloperev
 		ptr ani_crab_firing
 		ptr ani_crab_ball
 		
@@ -237,19 +189,6 @@ ani_crab_stand:
 		dc.b $F
 		dc.b id_frame_crab_stand
 		dc.b afEnd
-		even
-
-ani_crab_standslope:
-		dc.b $F
-		dc.b id_frame_crab_slope1
-		dc.b afEnd
-		even
-
-ani_crab_standsloperev:
-		dc.b $F
-		dc.b id_frame_crab_slope1+afxflip
-		dc.b afEnd
-		even
 
 ani_crab_walk:
 		dc.b $F
@@ -257,29 +196,11 @@ ani_crab_walk:
 		dc.b id_frame_crab_walk+afxflip
 		dc.b id_frame_crab_stand
 		dc.b afEnd
-		even
-
-ani_crab_walkslope:
-		dc.b $F
-		dc.b id_frame_crab_walk+afxflip
-		dc.b id_frame_crab_slope2
-		dc.b id_frame_crab_slope1
-		dc.b afEnd
-		even
-
-ani_crab_walksloperev:
-		dc.b $F
-		dc.b id_frame_crab_walk
-		dc.b id_frame_crab_slope2+afxflip
-		dc.b id_frame_crab_slope1+afxflip
-		dc.b afEnd
-		even
 
 ani_crab_firing:
 		dc.b $F
 		dc.b id_frame_crab_firing
 		dc.b afEnd
-		even
 
 ani_crab_ball:
 		dc.b 1

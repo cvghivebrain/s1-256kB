@@ -14,13 +14,13 @@ ObjPos_End:
 		objpos $00E4,$01B1,Animals,$0C
 		objpos $00E8,$01B0,Animals,$0F
 		objpos $00F4,$01B0,Animals,$10
-		objpos $00F8,$01AF,Animals,$14
+		objpos $00F8,$01AF,Animals,$B
 		objpos $0108,$01B0,Animals,$0E
 		objpos $0108,$01B4,Animals,$13
 		objpos $0110,$0173,Animals,$0C
 		objpos $0114,$01B0,Animals,$10
 		objpos $0128,$0174,Animals,$0E
-		objpos $0128,$01B0,Animals,$14
+		objpos $0128,$01B0,Animals,$B
 		objpos $0128,$01B2,Animals,$13
 		objpos $0130,$01B8,Animals,$0C
 		objpos $0210,$01B0,Animals,$0A
@@ -52,7 +52,7 @@ ObjPos_End:
 		objpos $0A48,$0152,Animals,$12
 		objpos $0A78,$0152,Animals,$12
 		objpos $0AA8,$0152,Animals,$12
-		objpos $0AD4,$0154,Animals,$14
+		objpos $0AD4,$0154,Animals,$B
 		objpos $0B34,$0138,Animals,$0A
 		objpos $0BF8,$0174,Animals,$0A
 		objpos $0CC4,$01AB,Animals,$0D
