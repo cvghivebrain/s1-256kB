@@ -929,7 +929,7 @@ Art_LivesNums:	incbin	"Graphics\Lives Counter Numbers.bin"	; 8x8 pixel numbers o
 		include "Pattern Load Cues.asm"
 
 		nemfile	Nem_SegaLogo
-Eni_SegaLogo:	incbin	"Tilemaps\Sega Logo (JP1).eni"		; large Sega logo (mappings)
+Eni_SegaLogo:	incbin	"Tilemaps\Sega Logo.eni"		; large Sega logo (mappings)
 		even
 Eni_Title:	incbin	"Tilemaps\Title Screen.eni"		; title screen foreground (mappings)
 		even
@@ -1383,11 +1383,7 @@ byte_69B84:	dc.b 0,	0, 0, 0
 
 Level_SYZ1:	incbin	"Level Layouts\syz1.bin"
 		even
-Level_SYZbg:	if Revision=0
-			incbin	"Level Layouts\syzbg.bin"
-		else
-			incbin	"Level Layouts\syzbg (JP1).bin"
-		endc
+Level_SYZbg:	incbin	"Level Layouts\syzbg (JP1).bin"
 		even
 byte_69C7E:	dc.b 0,	0, 0, 0
 Level_SYZ2:	incbin	"Level Layouts\syz2.bin"

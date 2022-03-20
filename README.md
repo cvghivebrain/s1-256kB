@@ -25,6 +25,7 @@ Used mdcomp for 16x16 mappings. | 503240 | -1278
 Removed unused code and sprites from some objects. | 501836 | -1404
 Removed more unused code and sprites. Compressed giant ring graphics (causes a brief visual glitch when it appears). | 498656 | -3180
 Cleaned up more objects. | 498484 | -172
+Used mdcomp for tilemaps. | 498366 | -118
 Target | 262144 | 
 
 ## Credits
