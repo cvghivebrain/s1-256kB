@@ -59,6 +59,7 @@ Bonus_Main:	; Routine 0
 		rts	
 
 	@delete:
+Bonus_Display_del:
 		jmp	(DeleteObject).l
 
 ; ===========================================================================
@@ -71,9 +72,6 @@ Bonus_Points_3:	dc.w 1						; subtype 3 - 10 points (should be 100)
 
 Bonus_Display:	; Routine 2
 		subq.w	#1,ost_bonus_wait_time(a0)		; decrement display time
-		bmi.s	@delete					; if time is zero, branch
-		out_of_range.s	@delete
+		bmi.s	Bonus_Display_del					; if time is zero, branch
+		out_of_range.s	Bonus_Display_del
 		jmp	(DisplaySprite).l
-
-	@delete:	
-		jmp	(DeleteObject).l

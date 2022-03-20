@@ -29,7 +29,7 @@ HUD_Flash:	; Routine 2
 		tst.w	(v_rings).w				; do you have any rings?
 		beq.s	@norings				; if not, branch
 		clr.b	ost_frame(a0)				; make all counters yellow
-		jmp	(DisplaySprite).l
+		bra.s	@display2
 ; ===========================================================================
 
 @norings:
@@ -44,4 +44,5 @@ HUD_Flash:	; Routine 2
 
 	@display:
 		move.b	d0,ost_frame(a0)
+	@display2:
 		jmp	DisplaySprite

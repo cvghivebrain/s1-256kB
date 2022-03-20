@@ -1,6 +1,7 @@
 ; ---------------------------------------------------------------------------
 ; Sprite mappings - bubbles (LZ)
 ; ---------------------------------------------------------------------------
+frame_bubble_blank:
 Map_Bub:	index *
 		ptr frame_bubble_0
 		ptr frame_bubble_1
@@ -140,9 +141,5 @@ frame_bubble_bubmaker2:
 frame_bubble_bubmaker3:
 		spritemap
 		piece $F8, $F8, 2x2, $70, 0
-		endsprite
-		
-frame_bubble_blank:
-		spritemap
 		endsprite
 		even

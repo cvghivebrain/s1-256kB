@@ -3,9 +3,6 @@
 ; ---------------------------------------------------------------------------
 Map_Gar:	index *
 		ptr frame_gargoyle_head
-		ptr frame_gargoyle_head
-		ptr frame_gargoyle_fireball1
-		ptr frame_gargoyle_fireball2
 		
 frame_gargoyle_head:
 		spritemap
@@ -13,6 +10,10 @@ frame_gargoyle_head:
 		piece	-$10, -8, 4x2, 2
 		piece	-8, 8, 3x1, $A
 		endsprite
+		
+Map_GarFire:	index *
+		ptr frame_gargoyle_fireball1
+		ptr frame_gargoyle_fireball2
 		
 frame_gargoyle_fireball1:
 		spritemap

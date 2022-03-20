@@ -110,23 +110,19 @@ Bub_ChkWater:	; Routine 4
 
 @display:
 		bsr.w	SpeedToPos				; update position
-		tst.b	ost_render(a0)				; is bubble on-screen?
-		bpl.s	@delete					; if not, branch
-		jmp	(DisplaySprite).l
+		bra.s	Bub_Display_sub
 
-	@delete:
-		jmp	(DeleteObject).l
 ; ===========================================================================
 
 Bub_Display:	; Routine 6
 		lea	(Ani_Bub).l,a1
 		jsr	(AnimateSprite).l
+		
+Bub_Display_sub:
 		tst.b	ost_render(a0)
-		bpl.s	@delete
+		bpl.s	Bub_Delete
 		jmp	(DisplaySprite).l
 
-	@delete:
-		jmp	(DeleteObject).l
 ; ===========================================================================
 
 Bub_Delete:	; Routine 8

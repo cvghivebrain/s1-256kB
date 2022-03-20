@@ -66,8 +66,6 @@ Drown_ChkWater:	; Routine 4
 
 		move.b	#id_Drown_Display,ost_routine(a0)	; goto Drown_Display next
 		addq.b	#7,ost_anim(a0)
-		cmpi.b	#id_ani_drown_blank,ost_anim(a0)
-		beq.s	Drown_Display
 		bra.s	Drown_Display
 ; ===========================================================================
 
@@ -87,12 +85,11 @@ Drown_ChkWater:	; Routine 4
 		move.w	d0,ost_x_pos(a0)			; update position
 		bsr.s	Drown_ShowNumber
 		jsr	(SpeedToPos).l
-		tst.b	ost_render(a0)				; is object on-screen?
-		bpl.s	@delete					; if not, branch
-		jmp	(DisplaySprite).l
 
-	@delete:
-		jmp	(DeleteObject).l
+Drown_Display_sub:
+		tst.b	ost_render(a0)				; is object on-screen?
+		bpl.s	Drown_Delete					; if not, branch
+		bra.s	Drown_Display_sub2
 ; ===========================================================================
 
 Drown_Display:	; Routine 6, Routine $E
@@ -100,6 +97,8 @@ Drown_Display_Num:
 		bsr.s	Drown_ShowNumber
 		lea	(Ani_Drown).l,a1
 		jsr	(AnimateSprite).l
+
+Drown_Display_sub2:
 		jmp	(DisplaySprite).l
 ; ===========================================================================
 
@@ -109,7 +108,7 @@ Drown_Delete:	; Routine 8, Routine $10
 
 Drown_AirLeft:	; Routine $C
 		cmpi.w	#$C,(v_air).w				; check air remaining
-		bhi.s	@delete					; if higher than $C, branch
+		bhi.s	Drown_Delete					; if higher than $C, branch
 		subq.w	#1,ost_drown_num_time(a0)
 		bne.s	@display
 		move.b	#id_Drown_Display_Num,ost_routine(a0)	; goto Drown_Display next
@@ -120,12 +119,7 @@ Drown_AirLeft:	; Routine $C
 	@display:
 		lea	(Ani_Drown).l,a1
 		jsr	(AnimateSprite).l
-		tst.b	ost_render(a0)
-		bpl.s	@delete
-		jmp	(DisplaySprite).l
-
-	@delete:	
-		jmp	(DeleteObject).l
+		bra.s	Drown_Display_sub
 ; ===========================================================================
 
 Drown_ShowNumber:
@@ -158,16 +152,6 @@ Drown_ShowNumber:
 ; ---------------------------------------------------------------------------
 Drown_WobbleData:
 LZ_BG_Ripple_Data:
-		if Revision=0
-		dc.b 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2
-		dc.b 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
-		dc.b 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2
-		dc.b 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0
-		dc.b 0, -1, -1, -1, -1, -1, -2, -2, -2, -2, -2, -3, -3, -3, -3, -3
-		dc.b -3, -3, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4
-		dc.b -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -3
-		dc.b -3, -3, -3, -3, -3, -3, -2, -2, -2, -2, -2, -1, -1, -1, -1, -1
-		else
 		rept 2
 		dc.b 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2
 		dc.b 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
@@ -178,7 +162,6 @@ LZ_BG_Ripple_Data:
 		dc.b -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -4, -3
 		dc.b -3, -3, -3, -3, -3, -3, -2, -2, -2, -2, -2, -1, -1, -1, -1, -1
 		endr
-		endc
 ; ===========================================================================
 
 Drown_Countdown:; Routine $A

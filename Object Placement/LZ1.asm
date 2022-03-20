@@ -129,13 +129,13 @@ ObjPos_LZ1:
 		objpos $12C8,$0460,LabyrinthConvey,type_lcon_wheel
 		objpos $12CC,$06D0,Spikes,type_spike_6upwide+type_spike_still
 		objpos $12D0,$05F8,Harpoon,type_harp_v,rem
-		objpos $12F0,$0280,Gargoyle,$01,rem
+		objpos $12F0,$0280,Gargoyle,$02,rem
 		objpos $1310,$03D0,Spikes,type_spike_1up+type_spike_still,yflip
 		objpos $1320,$04F4,Spikes,type_spike_3up+type_spike_updown
 		objpos $1330,$03B0,Spikes,type_spike_1up+type_spike_still,yflip
 		objpos $1330,$03E8,Jaws,$08,xflip,rem
 		objpos $1344,$0498,Rings,$41,rem
-		objpos $1350,$0230,Gargoyle,$01,rem
+		objpos $1350,$0230,Gargoyle,$02,rem
 		objpos $1350,$03A0,Spikes,type_spike_1up+type_spike_still,yflip
 		objpos $1350,$05C8,Harpoon,type_harp_v,yflip,rem
 		objpos $1354,$0458,Rings,$41,rem

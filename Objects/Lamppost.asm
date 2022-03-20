@@ -58,7 +58,7 @@ Lamp_Main:	; Routine 0
 
 Lamp_Blue:	; Routine 2
 		tst.b	(v_lock_multi).w			; is object collision enabled?
-		bmi.w	@donothing				; if not, branch
+		bmi.w	Lamp_Blue_donothing				; if not, branch
 		move.b	(v_last_lamppost).w,d1
 		andi.b	#$7F,d1
 		move.b	ost_subtype(a0),d2
@@ -66,13 +66,10 @@ Lamp_Blue:	; Routine 2
 		cmp.b	d2,d1					; is this a "new" lamppost?
 		bcs.s	@chkhit					; if yes, branch
 
-		lea	(v_respawn_list).w,a2
-		moveq	#0,d0
-		move.b	ost_respawn(a0),d0
-		bset	#0,2(a2,d0.w)				; remember lamppost as red
+		bsr.w	Lamp_Blue_sub
 		move.b	#id_Lamp_Finish,ost_routine(a0)		; goto Lamp_Finish next
 		move.b	#id_frame_lamp_red,ost_frame(a0)	; use red lamppost frame
-		bra.w	@donothing
+		bra.w	Lamp_Blue_donothing
 ; ===========================================================================
 
 @chkhit:
@@ -80,12 +77,12 @@ Lamp_Blue:	; Routine 2
 		sub.w	ost_x_pos(a0),d0
 		addq.w	#8,d0
 		cmpi.w	#$10,d0
-		bcc.w	@donothing
+		bcc.w	Lamp_Blue_donothing
 		move.w	(v_ost_player+ost_y_pos).w,d0
 		sub.w	ost_y_pos(a0),d0
 		addi.w	#$40,d0
 		cmpi.w	#$68,d0
-		bcc.s	@donothing
+		bcc.s	Lamp_Blue_donothing
 
 		play.w	1, jsr, sfx_Lamppost			; play lamppost sound
 		addq.b	#2,ost_routine(a0)			; goto Lamp_Finish next
@@ -107,17 +104,16 @@ Lamp_Blue:	; Routine 2
 	@fail:
 		move.b	#id_frame_lamp_poleonly,ost_frame(a0)	; use "post only" frame
 		bsr.w	Lamp_StoreInfo				; store Sonic's position, rings, lives etc.
+		
+Lamp_Blue_sub:
 		lea	(v_respawn_list).w,a2
 		moveq	#0,d0
 		move.b	ost_respawn(a0),d0
 		bset	#0,2(a2,d0.w)				; remember lamppost as red
 
-	@donothing:
-		rts	
-; ===========================================================================
-
+Lamp_Blue_donothing:
 Lamp_Finish:	; Routine 4
-		rts	
+		rts
 ; ===========================================================================
 
 Lamp_Twirl:	; Routine 6
@@ -202,8 +198,6 @@ Lamp_LoadInfo:
 		move.b	(f_water_pal_full_lampcopy).w,(f_water_pal_full).w
 
 	@notlabyrinth:
-		tst.b	(v_last_lamppost).w			; is last lamppost negative? (it never is)
-		bpl.s	@exit					; if not, branch
 		move.w	(v_sonic_x_pos_lampcopy).w,d0
 		subi.w	#160,d0
 		move.w	d0,(v_boundary_left).w			; set left boundary to half a screen to Sonic's left

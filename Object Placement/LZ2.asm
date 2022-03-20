@@ -80,9 +80,9 @@ ObjPos_LZ2:
 		objpos $0840,$0390,Spikes,type_spike_3upwide+type_spike_still,yflip
 		objpos $0860,$05E4,Orbinaut,$00,xflip,rem
 		objpos $08A0,$0270,Spikes,type_spike_3upwide+type_spike_still,yflip
-		objpos $08A0,$0670,Gargoyle,$04,rem
+		objpos $08A0,$0670,Gargoyle,$05,rem
 		objpos $08D6,$0550,Spikes,type_spike_3upwide+type_spike_still,yflip
-		objpos $08F0,$020C,Gargoyle,$02,rem
+		objpos $08F0,$020C,Gargoyle,$03,rem
 		objpos $08F0,$0391,Monitor,type_monitor_rings,rem
 		objpos $0910,$06C8,Harpoon,type_harp_v,yflip,rem
 		objpos $0930,$0670,Jaws,$09,xflip,rem

@@ -80,7 +80,7 @@ ObjPos_SBZ3:
 		objpos $0770,$06A8,SpikeBall,$D5
 		objpos $0780,$0230,Rings,$14,rem
 		objpos $0798,$0270,Harpoon,type_harp_h,rem
-		objpos $07F0,$006C,Gargoyle,$03,rem
+		objpos $07F0,$006C,Gargoyle,$04,rem
 		objpos $0800,$06F8,Bubble,$81
 		objpos $0818,$0190,Rings,$12,rem
 		objpos $0818,$0290,Harpoon,type_harp_h,xflip,rem
@@ -92,7 +92,7 @@ ObjPos_SBZ3:
 		objpos $08E0,$0130,Spikes,type_spike_3upwide+type_spike_still,yflip
 		objpos $0910,$04F1,Monitor,type_monitor_rings,rem
 		objpos $0920,$0370,Jaws,$08,xflip,rem
-		objpos $0930,$028D,Gargoyle,$03,xflip,rem
+		objpos $0930,$028D,Gargoyle,$04,xflip,rem
 		objpos $0930,$0510,Burrobot,$00,rem
 		objpos $0970,$05E8,Button,$05
 		objpos $0980,$0140,ScrapStomp,type_stomp_sbz3_final,rem ; final position of large diagonal-moving block
@@ -100,12 +100,12 @@ ObjPos_SBZ3:
 		objpos $0980,$0710,Burrobot,$00,rem
 		objpos $09A0,$06F8,Bubble,$82
 		objpos $09B0,$054C,Rings,$41,rem
-		objpos $09D0,$028D,Gargoyle,$04,rem
+		objpos $09D0,$028D,Gargoyle,$05,rem
 		objpos $09D0,$0514,Rings,$41,rem
 		objpos $09E0,$06E0,Orbinaut,$00,rem
 		objpos $09E8,$05A0,FloatingBlock,type_fblock_lzvert+type_fblock_button+5,rem
-		objpos $0A10,$0230,Gargoyle,$02,xflip,rem
-		objpos $0A10,$02B0,Gargoyle,$02,xflip,rem
+		objpos $0A10,$0230,Gargoyle,$03,xflip,rem
+		objpos $0A10,$02B0,Gargoyle,$03,xflip,rem
 		objpos $0A18,$0510,Burrobot,$00,rem
 		objpos $0A20,$0610,FloatingBlock,type_fblock_lzhoriz+type_fblock_button+4,rem
 		objpos $0A50,$06F0,Burrobot,$00,rem
@@ -125,7 +125,7 @@ ObjPos_SBZ3:
 		objpos $0BB8,$01F4,Rings,$12,rem
 		objpos $0BD0,$05E0,Rings,$41,rem
 		objpos $0C10,$0208,MovingBlock,type_mblock_1+type_mblock_rightdrop,rem
-		objpos $0C10,$030D,Gargoyle,$03,xflip,rem
+		objpos $0C10,$030D,Gargoyle,$04,xflip,rem
 		objpos $0C10,$03F1,Monitor,type_monitor_rings,rem
 		objpos $0C20,$0610,Burrobot,$00,rem
 		objpos $0C28,$0260,Rings,$45,rem
@@ -133,7 +133,7 @@ ObjPos_SBZ3:
 		objpos $0C40,$0260,Rings,$45,rem
 		objpos $0C50,$0618,Bubble,$82
 		objpos $0C58,$0260,Rings,$45,rem
-		objpos $0C70,$03AD,Gargoyle,$03,xflip,rem
+		objpos $0C70,$03AD,Gargoyle,$04,xflip,rem
 		objpos $0C80,$04F8,Bubble,$81
 		objpos $0CB0,$0210,Burrobot,$00,rem
 		objpos $0CE0,$05F8,Orbinaut,$00,rem
@@ -172,7 +172,7 @@ ObjPos_SBZ3:
 		objpos $0F50,$0530,Burrobot,$00,xflip,rem
 		objpos $0F80,$04C0,SpikeBall,$44
 		objpos $0FE0,$0560,Orbinaut,$00,xflip,rem
-		objpos $1010,$0410,Gargoyle,$02,xflip,rem
+		objpos $1010,$0410,Gargoyle,$03,xflip,rem
 		objpos $1080,$0450,Spikes,type_spike_3upwide+type_spike_still,yflip
 		objpos $10B0,$0538,Bubble,$81
 		objpos $10C0,$0490,Rings,$12,rem
@@ -191,10 +191,10 @@ ObjPos_SBZ3:
 		objpos $1460,$04D0,Burrobot,$00,xflip,rem
 		objpos $1490,$06D0,Burrobot,$00,rem
 		objpos $1510,$04F1,Monitor,type_monitor_rings,rem
-		objpos $1510,$0630,Gargoyle,$03,xflip,rem
-		objpos $1510,$06B0,Gargoyle,$03,xflip,rem
+		objpos $1510,$0630,Gargoyle,$04,xflip,rem
+		objpos $1510,$06B0,Gargoyle,$04,xflip,rem
 		objpos $1540,$0510,Burrobot,$00,xflip,rem
-		objpos $1550,$05B0,Gargoyle,$03,xflip,rem
-		objpos $1580,$0530,Gargoyle,$03,xflip,rem
+		objpos $1550,$05B0,Gargoyle,$04,xflip,rem
+		objpos $1580,$0530,Gargoyle,$04,xflip,rem
 		objpos $15F0,$0510,Burrobot,$00,rem
 		endobj

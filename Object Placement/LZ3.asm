@@ -249,19 +249,19 @@ ObjPos_LZ3:
 		objpos $1C00,$0010,Burrobot,$00,rem
 		objpos $1C10,$05F1,Monitor,type_monitor_shield,rem
 		
-		objpos $1E10,$0530,Gargoyle,$03,xflip,rem
-		objpos $1E30,$01D0,Gargoyle,$03,xflip,rem
+		objpos $1E10,$0530,Gargoyle,$04,xflip,rem
+		objpos $1E30,$01D0,Gargoyle,$04,xflip,rem
 		objpos $1E30,$02D0,LabyrinthBlock,type_lblock_solid
-		objpos $1E30,$04E0,Gargoyle,$03,xflip,rem
+		objpos $1E30,$04E0,Gargoyle,$04,xflip,rem
 		objpos $1E48,$0180,Harpoon,type_harp_h,rem
 		objpos $1E48,$0380,Harpoon,type_harp_h,rem
 		objpos $1E48,$0480,Harpoon,type_harp_h,rem
-		objpos $1E50,$02D0,Gargoyle,$03,xflip,rem
+		objpos $1E50,$02D0,Gargoyle,$04,xflip,rem
 		objpos $1E58,$0130,Harpoon,type_harp_h,xflip,rem
 		objpos $1E58,$0330,Harpoon,type_harp_h,xflip,rem
 		objpos $1E58,$0430,Harpoon,type_harp_h,xflip,rem
 		objpos $1E98,$02B0,Harpoon,type_harp_h,rem
-		objpos $1EB0,$0250,Gargoyle,$03,rem
+		objpos $1EB0,$0250,Gargoyle,$04,rem
 		objpos $1ED8,$0180,Harpoon,type_harp_h,xflip,rem
 		objpos $1ED8,$0380,Harpoon,type_harp_h,xflip,rem
 		objpos $20D0,$00BB,Prison,$01

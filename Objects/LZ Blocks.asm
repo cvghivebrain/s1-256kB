@@ -49,7 +49,7 @@ LBlk_Main:	; Routine 0
 		move.b	ost_subtype(a0),d0			; get block type
 		andi.b	#$F,d0					; read only the low nybble
 		beq.s	LBlk_Action				; branch if 0
-		cmpi.b	#7,d0
+		cmpi.b	#id_LBlk_Type_Floats,d0
 		beq.s	LBlk_Action				; branch if 7 (floats on water)
 		move.b	#1,ost_lblock_flag(a0)			; for types 1/3, set "untouched" flag
 
@@ -72,7 +72,6 @@ LBlk_Action:	; Routine 2
 		move.w	d2,d3
 		addq.w	#1,d3
 		bsr.w	SolidObject
-		move.b	d4,ost_lblock_coll_flag(a0)		; copy collision type (output from SolidObject)
 		bsr.w	LBlk_Sink
 
 	@chkdel:
@@ -86,8 +85,6 @@ LBlk_Type_Index:
 		ptr LBlk_Type_Sinks_Now				; 2
 		ptr LBlk_Type_Rises				; 3
 		ptr LBlk_Type_Rises_Now				; 4
-		ptr LBlk_Type_Sinks_Side			; 5 (unused)
-		ptr LBlk_Type_Sinks_Now				; 6
 		ptr LBlk_Type_Floats				; 7
 ; ===========================================================================
 
@@ -145,18 +142,7 @@ LBlk_Type_Rises_Now:
 		clr.b	ost_subtype(a0)				; set type to 0 (non-moving type)
 
 	@noceiling04:
-		rts	
-; ===========================================================================
-
-; Type 5 - sinks when touched from the side (unused)
-LBlk_Type_Sinks_Side:
-		cmpi.b	#1,ost_lblock_coll_flag(a0)		; has Sonic touched the side of the block?
-		bne.s	@notouch05				; if not, branch
-		addq.b	#1,ost_subtype(a0)			; set type to 6 (LBlk_Type_Sinks_Now)
-		clr.b	ost_lblock_flag(a0)			; flag block as touched
-
-	@notouch05:
-		rts	
+		rts
 ; ===========================================================================
 
 ; Type 7 - floats on top of water
