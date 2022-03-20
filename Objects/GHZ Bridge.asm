@@ -35,21 +35,13 @@ Bri_Main:	; Routine 0
 		move.w	ost_y_pos(a0),d2
 		move.w	ost_x_pos(a0),d3
 		move.b	ost_id(a0),d4				; copy object id ($11) to d4
-		lea	ost_subtype(a0),a2			; a2 = address of subtype id, followed by child list
-		moveq	#0,d1
-		move.b	(a2),d1					; copy bridge length to d1
-		move.b	#0,(a2)+				; clear subtype
-		move.w	d1,d0
-		lsr.w	#1,d0
-		lsl.w	#4,d0
-		sub.w	d0,d3					; d3 = x position of leftmost log
-		subq.b	#2,d1					; d1 = number of logs, minus 1 for parent, minus 1 for first loop
-		bcs.s	Bri_Action				; don't make more if bridge has only 1 log
+		lea	ost_subtype+1(a0),a2			; a2 = address of subtype id, followed by child list
+		moveq	#10,d1
+		sub.w	#6*16,d3				; d3 = x position of leftmost log
 
 @buildloop:
 		bsr.w	FindFreeObj				; find free OST slot
 		bne.s	Bri_Action				; branch if not found
-		addq.b	#1,ost_subtype(a0)
 		cmp.w	ost_x_pos(a0),d3			; is this the middle log? (parent log is middle)
 		bne.s	@notmiddle				; if not, branch
 		; treat parent log as though it's the middle child log
@@ -61,7 +53,6 @@ Bri_Main:	; Routine 0
 		lsr.w	#6,d5					; divide by $40
 		andi.w	#$7F,d5
 		move.b	d5,(a2)+				; add parent OST index to child list
-		addq.b	#1,ost_subtype(a0)
 
 	@notmiddle:
 		move.w	a1,d5
@@ -99,12 +90,8 @@ Bri_Action:	; Routine 2
 ; ---------------------------------------------------------------------------
 
 Bri_Detect:
-		moveq	#0,d1
-		move.b	ost_subtype(a0),d1			; get bridge width (in logs)
-		lsl.w	#3,d1
-		move.w	d1,d2
-		addq.w	#8,d1					; d1 = width left to centre
-		add.w	d2,d2					; d2 = full width
+		move.w	#(12*8)+8,d1
+		move.w	#(12*8)*2,d2
 		lea	(v_ost_player).w,a1
 		tst.w	ost_y_vel(a1)				; is Sonic moving up/jumping?
 		bmi.w	Plat_Exit				; if yes, branch
@@ -134,11 +121,8 @@ Bri_Platform:	; Routine 4
 ; ---------------------------------------------------------------------------
 
 Bri_ChkPosition:
-		moveq	#0,d1
-		move.b	ost_subtype(a0),d1			; get bridge width
-		lsl.w	#3,d1					; multiply by 8
-		move.w	d1,d2					; d2 = distance from centre to right edge
-		addq.w	#8,d1					; d1 = distance from centre to left edge
+		move.w	#(12*8)+8,d1
+		move.w	#12*8,d2
 		bsr.s	ExitPlatform2				; update flags, goto Bri_Action next if leaving the bridge
 		bcc.s	@exit
 		lsr.w	#4,d0					; d0 = relative position of log Sonic is standing on, divided by 16
@@ -194,13 +178,9 @@ Bri_UpdateY:
 		bsr.w	CalcSine				; convert to sine
 		move.w	d0,d4					; save to d4
 		lea	(Bri_Data_Align).l,a4
-		moveq	#0,d0
-		move.b	ost_subtype(a0),d0			; get bridge length
-		lsl.w	#4,d0					; multiply by $10
 		moveq	#0,d3
 		move.b	ost_bridge_current_log(a0),d3		; log Sonic is standing on (left to right, starts at 0)
 		move.w	d3,d2					; copy to d2
-		add.w	d0,d3
 		moveq	#0,d5
 		lea	(Bri_Data_Y_Max).l,a5			; log y bend distance array
 		move.b	(a5,d3.w),d5				; get byte according to bridge length & log being stood on
@@ -225,12 +205,9 @@ Bri_UpdateY:
 		move.w	d0,ost_y_pos(a1)			; update y position
 		dbf	d2,@loop_left				; repeat for all logs left of the one being stood on
 
-		moveq	#0,d0
-		move.b	ost_subtype(a0),d0			; get bridge length
 		moveq	#0,d3
 		move.b	ost_bridge_current_log(a0),d3		; log Sonic is standing on (left to right, starts at 0)
-		addq.b	#1,d3					; start at 1
-		sub.b	d0,d3
+		sub.b	#11,d3
 		neg.b	d3					; d3 = logs to the right
 		bmi.s	@exit					; branch if invalid
 		move.w	d3,d2
@@ -266,28 +243,12 @@ Bri_UpdateY:
 
 ; Distance each log is moved down when stood on (only $C is used)
 Bri_Data_Y_Max:
-		dc.b  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0 ; 0 logs
-		dc.b  2,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0 ; 1 log
-		dc.b  2,   2,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0 ; 2 logs
-		dc.b  2,   4,   2,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0 ; 3 logs
-		dc.b  2,   4,   4,   2,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0 ; 4 logs
-		dc.b  2,   4,   6,   4,   2,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0 ; 5 logs
-		dc.b  2,   4,   6,   6,   4,   2,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0 ; 6 logs
-		dc.b  2,   4,   6,   8,   6,   4,   2,   0,   0,   0,   0,   0,   0,   0,   0,   0 ; 7 logs
-		dc.b  2,   4,   6,   8,   8,   6,   4,   2,   0,   0,   0,   0,   0,   0,   0,   0 ; 8 logs
-		dc.b  2,   4,   6,   8,  $A,   8,   6,   4,   2,   0,   0,   0,   0,   0,   0,   0 ; 9 logs
-		dc.b  2,   4,   6,   8,  $A,  $A,   8,   6,   4,   2,   0,   0,   0,   0,   0,   0 ; $A logs
-		dc.b  2,   4,   6,   8,  $A,  $C,  $A,   8,   6,   4,   2,   0,   0,   0,   0,   0 ; $B logs
 		dc.b  2,   4,   6,   8,  $A,  $C,  $C,  $A,   8,   6,   4,   2,   0,   0,   0,   0 ; $C logs
-		dc.b  2,   4,   6,   8,  $A,  $C,  $E,  $C,  $A,   8,   6,   4,   2,   0,   0,   0 ; $D logs
-		dc.b  2,   4,   6,   8,  $A,  $C,  $E,  $E,  $C,  $A,   8,   6,   4,   2,   0,   0 ; $E logs
-		dc.b  2,   4,   6,   8,  $A,  $C,  $E, $10,  $E,  $C,  $A,   8,   6,   4,   2,   0 ; $F logs
-		dc.b  2,   4,   6,   8,  $A,  $C,  $E, $10, $10,  $E,  $C,  $A,   8,   6,   4,   2 ; $10 logs
 		even
 
 ; Values used to align logs to the left & right of the one being stood on
 Bri_Data_Align:
-		dc.b $FF,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0 ; standing on log 0
+		dc.b $FF,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0
 		dc.b $B5, $FF,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0 ; standing on log 1
 		dc.b $7E, $DB, $FF,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0 ; standing on log 2
 		dc.b $61, $B5, $EC, $FF,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0 ; standing on log 3
@@ -300,9 +261,6 @@ Bri_Data_Align:
 		dc.b $1F, $44, $67, $88, $A7, $BD, $D4, $E7, $F4, $FD, $FF,   0,   0,   0,   0,   0 ; standing on log $A
 		dc.b $1F, $3E, $5C, $7E, $98, $B0, $C9, $DB, $EA, $F6, $FD, $FF,   0,   0,   0,   0 ; standing on log $B
 		dc.b $19, $38, $56, $73, $8E, $A7, $BD, $D1, $E1, $EE, $F8, $FE, $FF,   0,   0,   0 ; standing on log $C
-		dc.b $19, $38, $50, $6D, $83, $9D, $B0, $C5, $D8, $E4, $F1, $F8, $FE, $FF,   0,   0 ; standing on log $D
-		dc.b $19, $31, $4A, $67, $7E, $93, $A7, $BD, $CD, $DB, $E7, $F3, $F9, $FE, $FF,   0 ; standing on log $E
-		dc.b $19, $31, $4A, $61, $78, $8E, $A2, $B5, $C5, $D4, $E1, $EC, $F4, $FB, $FE, $FF ; standing on log $F
 		even
 
 ; ===========================================================================
@@ -332,18 +290,12 @@ Bri_ChkDel:
 		dbf	d2,@loop				; repeat d2 times (bridge length)
 
 @delparent:
-		bsr.w	DeleteObject
-		rts	
-; ===========================================================================
-
-Bri_Delete:	; Routine 6, 8
-		bsr.w	DeleteObject
-		rts	
+Bri_Delete:
+		bra.w	DeleteObject
 ; ===========================================================================
 
 Bri_Display:	; Routine $A
-		bsr.w	DisplaySprite
-		rts	
+		bra.w	DisplaySprite
 		
 		endm
 		

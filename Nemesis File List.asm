@@ -122,6 +122,7 @@
 		nemesis Nem_SignPost,"Signpost" ; end of level signpost
 		nemesis Nem_Lamp,"Lamppost"
 		nemesis Nem_BigFlash,"Giant Ring Flash"
+		nemesis Nem_BigRing,"Giant Ring"
 		nemesis Nem_Bonus,"Hidden Bonuses" ; hidden bonuses at end of a level
 		
 		; Continue

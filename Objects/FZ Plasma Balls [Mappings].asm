@@ -1,6 +1,7 @@
 ; ---------------------------------------------------------------------------
 ; Sprite mappings - energy balls (FZ)
 ; ---------------------------------------------------------------------------
+frame_plasma_blank:
 Map_Plasma:	index *
 		ptr frame_plasma_fuzzy1				; 0
 		ptr frame_plasma_fuzzy2				; 1
@@ -70,9 +71,5 @@ frame_plasma_fuzzy6:
 		spritemap
 		piece	-$C, -$C, 2x3, $82, yflip
 		piece	4, -$C, 1x3, $82, xflip
-		endsprite
-		
-frame_plasma_blank:
-		spritemap
 		endsprite
 		even

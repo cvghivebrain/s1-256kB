@@ -33,22 +33,15 @@ Hel_Main:	; Routine 0
 		move.w	ost_y_pos(a0),d2
 		move.w	ost_x_pos(a0),d3
 		move.b	ost_id(a0),d4
-		lea	ost_subtype(a0),a2			; (a2) = subtype, followed by child list
-		moveq	#0,d1
-		move.b	(a2),d1					; move helix length to d1
-		move.b	#0,(a2)+				; clear subtype
-		move.w	d1,d0
-		lsr.w	#1,d0
-		lsl.w	#4,d0
-		sub.w	d0,d3					; d3 is x-axis position of leftmost spike
-		subq.b	#2,d1					; d1 = number of spikes, minus 1 for parent, minus 1 for first loop
+		lea	ost_subtype+1(a0),a2			; (a2) = subtype, followed by child list
+		sub.w	#8*16,d3					; d3 is x-axis position of leftmost spike
+		moveq	#14,d1					; d1 = number of spikes, minus 1 for parent, minus 1 for first loop
 		bcs.s	Hel_Action				; skip to action if length is only 1
 		moveq	#0,d6
 
 @loop:
 		bsr.w	FindFreeObj				; find free OST slot
 		bne.s	Hel_Action				; branch if not found
-		addq.b	#1,ost_subtype(a0)			; keep track of number of child objects
 		move.w	a1,d5
 		subi.w	#v_ost_all&$FFFF,d5
 		lsr.w	#6,d5
@@ -74,7 +67,6 @@ Hel_Main:	; Routine 0
 		addq.b	#1,d6
 		andi.b	#7,d6
 		addi.w	#$10,d3					; skip to next spike
-		addq.b	#1,ost_subtype(a0)
 
 	@not_centre:
 		dbf	d1,@loop				; repeat d1 times (helix length)
@@ -125,8 +117,7 @@ Hel_DelAll:
 		dbf	d2,@loop				; repeat d2 times (helix length)
 
 Hel_Delete:	; Routine 6
-		bsr.w	DeleteObject
-		rts	
+		bra.w	DeleteObject
 ; ===========================================================================
 
 Hel_Display:	; Routine 8

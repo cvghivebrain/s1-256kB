@@ -73,6 +73,7 @@ Plasma_Update:
 
 	@animate:
 		lea	Ani_PLaunch(pc),a1
+Plasma_Update_sub:
 		jsr	(AnimateSprite).l
 		jmp	(DisplaySprite).l
 ; ===========================================================================
@@ -91,7 +92,6 @@ Plasma_MakeBalls:
 
 	@loop:
 		jsr	(FindNextFreeObj).l			; find free OST slot
-		bne.w	@skip_balls				; branch if not found
 		move.b	#id_BossPlasma,(a1)			; load plasma ball object
 		move.w	ost_x_pos(a0),ost_x_pos(a1)		; start at same position as launcher object
 		move.w	#$53C,ost_y_pos(a1)
@@ -145,8 +145,7 @@ Plasma_Balls:	; Routine 8
 		move.w	Plasma_Balls_Index(pc,d0.w),d0
 		jsr	Plasma_Balls_Index(pc,d0.w)
 		lea	Ani_Plasma(pc),a1
-		jsr	(AnimateSprite).l
-		jmp	(DisplaySprite).l
+		bra.w	Plasma_Update_sub
 ; ===========================================================================
 Plasma_Balls_Index:
 		index *,,2

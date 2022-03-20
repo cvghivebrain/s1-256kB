@@ -54,7 +54,6 @@ Swing_Index:	index *,,2
 ost_swing_y_start:	equ $38					; original y-axis position (2 bytes)
 ost_swing_x_start:	equ $3A					; original x-axis position (2 bytes)
 ost_swing_radius:	equ $3C					; distance of chainlink from anchor
-ost_swing_unused:	equ $3E
 ; ===========================================================================
 
 Swing_Main:	; Routine 0
@@ -92,7 +91,6 @@ Swing_Main:	; Routine 0
 		moveq	#0,d1
 		lea	ost_subtype(a0),a2			; (a2) = chain length, followed by child OST indices
 		move.b	(a2),d1					; d1 = chain length
-		move.w	d1,-(sp)
 		andi.w	#$F,d1					; max length is 15
 		move.b	#0,(a2)+				; clear subtype
 		move.w	d1,d3
@@ -139,19 +137,6 @@ Swing_Main:	; Routine 0
 		lsr.w	#6,d5
 		andi.w	#$7F,d5					; convert to index
 		move.b	d5,(a2)+				; save to end of child OST list
-		move.w	#$4080,ost_angle(a0)			; unused
-		move.w	#-$200,ost_swing_unused(a0)
-		move.w	(sp)+,d1				; retrieve chain length from stack
-		btst	#4,d1					; is object type $1x ?
-		beq.s	@not1x					; if not, branch
-
-		move.l	#Map_GBall,ost_mappings(a0)		; use GHZ ball mappings
-		move.w	#tile_Nem_Ball+tile_pal3,ost_tile(a0)
-		move.b	#id_frame_ball_check1,ost_frame(a0)
-		move.b	#2,ost_priority(a0)
-		move.b	#id_col_20x20+id_col_hurt,ost_col_type(a0) ; make object hurt when touched
-
-	@not1x:
 		cmpi.b	#id_SBZ,(v_zone).w			; is zone SBZ?
 		beq.s	Swing_Action				; if yes, branch
 
@@ -164,8 +149,7 @@ Swing_SetSolid:	; Routine 2
 
 Swing_Action:	; Routine $C
 		bsr.w	Swing_Move				; update positions of chainlinks and platform
-		bsr.w	DisplaySprite
-		bra.w	Swing_ChkDel
+		bra.s	Swing_Action2_sub
 ; ===========================================================================
 
 Swing_Action2:	; Routine 4
@@ -179,10 +163,10 @@ Swing_Action2:	; Routine 4
 		move.b	ost_height(a0),d3
 		addq.b	#1,d3
 		bsr.w	MoveWithPlatform
+
+Swing_Action2_sub:
 		bsr.w	DisplaySprite
 		bra.w	Swing_ChkDel
-
-		rts
 		
 		endm
 
@@ -278,8 +262,7 @@ Swing_DelAll:
 ; ===========================================================================
 
 Swing_Delete:	; Routine 6, 8
-		bsr.w	DeleteObject
-		rts	
+		bra.w	DeleteObject
 ; ===========================================================================
 
 Swing_Display:	; Routine $A

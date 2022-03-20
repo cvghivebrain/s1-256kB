@@ -444,9 +444,6 @@ Ledge_SlopeData:
 		include "Objects\SBZ Door.asm"			; AutoDoor
 		include "Objects\SBZ Door [Mappings].asm"	; Map_ADoor
 
-		include "Objects\GHZ Walls.asm"			; EdgeWalls
-		include_EdgeWalls_2
-
 		include "Objects\Ball Hog.asm"			; BallHog
 		include "Objects\Ball Hog Cannonball.asm"	; Cannonball
 
@@ -580,7 +577,7 @@ NullObject:
 		include "Objects\Roller.asm"			; Roller
 		include "Objects\Roller [Mappings].asm"		; Map_Roll
 
-		include_EdgeWalls_1				; Objects\GHZ Walls.asm
+		include "Objects\GHZ Walls.asm"
 		include "Objects\GHZ Walls [Mappings].asm"	; Map_Edge
 
 		include "Objects\MZ & SLZ Fireball Launchers.asm"
@@ -1082,6 +1079,7 @@ Eni_SSBg2:	incbin	"Tilemaps\SS Background 2.eni"		; special stage background (ma
 		nemfile	Nem_VSpring
 		nemfile	Nem_SignPost
 		nemfile	Nem_Lamp
+		nemfile	Nem_BigRing
 		nemfile	Nem_BigFlash
 		nemfile	Nem_Bonus
 ; ---------------------------------------------------------------------------
@@ -1413,9 +1411,6 @@ byte_6A2FC:	dc.b 0,	0, 0, 0
 Level_End:	incbin	"Level Layouts\ending.bin"
 		even
 byte_6A320:	dc.b 0,	0, 0, 0
-
-Art_BigRing:	incbin	"Graphics\Giant Ring.bin"
-		even
 
 ; ---------------------------------------------------------------------------
 ; Object position index

@@ -120,13 +120,13 @@ GBall_Base:	; Routine 2
 		bsr.w	GBall_UpdateBase			; update base animation/position
 		move.b	ost_angle(a0),d0
 		jsr	(Swing_MoveAll).l			; update positions of all chain links & ball
-		jmp	(DisplaySprite).l
+		bra.s	GBall_Ball_display
 ; ===========================================================================
 
 GBall_Base2:	; Routine 4
 		bsr.w	GBall_UpdateBase			; update base animation/position
 		jsr	(GBall_Move).l				; update angle and positions of child objects
-		jmp	(DisplaySprite).l
+		bra.s	GBall_Ball_display
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to animate, update position and destroy base
@@ -163,29 +163,22 @@ GBall_Link:	; Routine 6
 		move.b	#id_ExBom_Main,ost_routine(a0)
 
 	@not_beaten:
+GBall_Ball_display:
 		jmp	(DisplaySprite).l
 ; ===========================================================================
 
 GBall_Ball:	; Routine 8
-		moveq	#0,d0
-		tst.b	ost_frame(a0)				; is frame 0 displayed?
-		bne.s	@frame_1				; if not, branch
-		addq.b	#id_frame_ball_check1,d0
-
-	@frame_1:
-		move.b	d0,ost_frame(a0)			; use frame 0 or 1
+		bchg	#0,ost_frame(a0)			; use frame 0 or 1
 		movea.l	ost_ball_parent(a0),a1			; get address of OST of parent (ship)
 		tst.b	ost_status(a1)				; has boss been beaten?
-		bpl.s	@display				; if not, branch
+		bpl.s	GBall_Ball_display				; if not, branch
 		move.b	#0,ost_col_type(a0)			; make ball harmless
 		bsr.w	BossExplode				; spawn explosions
 		subq.b	#1,ost_ball_radius(a0)			; use radius as timer, decrements from 96
-		bpl.s	@display				; branch if time remains
+		bpl.s	GBall_Ball_display				; branch if time remains
 		move.b	#id_ExplosionBomb,(a0)			; replace ball with explosion after 1.5 seconds
 		move.b	#id_ExBom_Main,ost_routine(a0)
-
-	@display:
-		jmp	(DisplaySprite).l
+		rts
 
 		endm
 		

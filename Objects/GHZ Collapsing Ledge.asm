@@ -109,8 +109,7 @@ Ledge_FallNow:
 ; ===========================================================================
 
 Ledge_Delete:	; Routine 8
-		bsr.w	DeleteObject
-		rts	
+		bra.w	DeleteObject
 
 ; ---------------------------------------------------------------------------
 ; Object 1A - GHZ collapsing ledge, part 2

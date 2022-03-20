@@ -272,6 +272,7 @@ PLC_Boss:	plcheader
 ; ---------------------------------------------------------------------------
 PLC_Signpost:	plcheader
 		plcm	Nem_SignPost, $D000			; signpost
+		plcm	Nem_BigRing, vram_giantring
 		plcm	Nem_Bonus, $96C0			; hidden bonus points
 		plcm	Nem_BigFlash, $8C40			; giant	ring flash effect
 	PLC_Signpost_end:
