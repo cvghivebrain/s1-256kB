@@ -39,52 +39,52 @@ frame_cstomp_ceiling:
 		
 frame_cstomp_chain1:
 		spritemap
-		piece	-4, 0, 1x2, $3F
-		piece	-4, $10, 1x2, $3F
+		piece	-4, 0, 1x2, $2F
+		piece	-4, $10, 1x2, $2F
 		endsprite
 		
 frame_cstomp_chain2:
 		spritemap
-		piece	-4, -$20, 1x2, $3F
-		piece	-4, -$10, 1x2, $3F
-		piece	-4, 0, 1x2, $3F
-		piece	-4, $10, 1x2, $3F
+		piece	-4, -$20, 1x2, $2F
+		piece	-4, -$10, 1x2, $2F
+		piece	-4, 0, 1x2, $2F
+		piece	-4, $10, 1x2, $2F
 		endsprite
 		
 frame_cstomp_chain3:
 		spritemap
-		piece	-4, -$40, 1x2, $3F
-		piece	-4, -$30, 1x2, $3F
-		piece	-4, -$20, 1x2, $3F
-		piece	-4, -$10, 1x2, $3F
-		piece	-4, 0, 1x2, $3F
-		piece	-4, $10, 1x2, $3F
+		piece	-4, -$40, 1x2, $2F
+		piece	-4, -$30, 1x2, $2F
+		piece	-4, -$20, 1x2, $2F
+		piece	-4, -$10, 1x2, $2F
+		piece	-4, 0, 1x2, $2F
+		piece	-4, $10, 1x2, $2F
 		endsprite
 		
 frame_cstomp_chain4:
 		spritemap
-		piece	-4, -$60, 1x2, $3F
-		piece	-4, -$50, 1x2, $3F
-		piece	-4, -$40, 1x2, $3F
-		piece	-4, -$30, 1x2, $3F
-		piece	-4, -$20, 1x2, $3F
-		piece	-4, -$10, 1x2, $3F
-		piece	-4, 0, 1x2, $3F
-		piece	-4, $10, 1x2, $3F
+		piece	-4, -$60, 1x2, $2F
+		piece	-4, -$50, 1x2, $2F
+		piece	-4, -$40, 1x2, $2F
+		piece	-4, -$30, 1x2, $2F
+		piece	-4, -$20, 1x2, $2F
+		piece	-4, -$10, 1x2, $2F
+		piece	-4, 0, 1x2, $2F
+		piece	-4, $10, 1x2, $2F
 		endsprite
 		
 frame_cstomp_chain5:
 		spritemap
-		piece	-4, -$80, 1x2, $3F
-		piece	-4, -$70, 1x2, $3F
-		piece	-4, -$60, 1x2, $3F
-		piece	-4, -$50, 1x2, $3F
-		piece	-4, -$40, 1x2, $3F
-		piece	-4, -$30, 1x2, $3F
-		piece	-4, -$20, 1x2, $3F
-		piece	-4, -$10, 1x2, $3F
-		piece	-4, 0, 1x2, $3F
-		piece	-4, $10, 1x2, $3F
+		piece	-4, -$80, 1x2, $2F
+		piece	-4, -$70, 1x2, $2F
+		piece	-4, -$60, 1x2, $2F
+		piece	-4, -$50, 1x2, $2F
+		piece	-4, -$40, 1x2, $2F
+		piece	-4, -$30, 1x2, $2F
+		piece	-4, -$20, 1x2, $2F
+		piece	-4, -$10, 1x2, $2F
+		piece	-4, 0, 1x2, $2F
+		piece	-4, $10, 1x2, $2F
 		endsprite
 		
 frame_cstomp_mediumblock:
@@ -98,6 +98,6 @@ frame_cstomp_mediumblock:
 		
 frame_cstomp_smallblock:
 		spritemap
-		piece	-$10, -$14, 4x4, $2F
+		piece	-$10, -$14, 4x4, $1F
 		endsprite
 		even

@@ -28,7 +28,6 @@ Smab_Main:	; Routine 0
 		move.b	#render_rel,ost_render(a0)
 		move.b	#$10,ost_actwidth(a0)
 		move.b	#4,ost_priority(a0)
-		move.b	ost_subtype(a0),ost_frame(a0)
 
 Smab_Solid:	; Routine 2
 
@@ -60,7 +59,6 @@ Smab_Solid:	; Routine 2
 		move.b	#id_Sonic_Control,ost_routine(a1)
 		bclr	#status_platform_bit,ost_status(a0)
 		clr.b	ost_solid(a0)
-		move.b	#id_frame_smash_four,ost_frame(a0)
 		lea	(Smab_Speeds).l,a4			; load broken fragment speed data
 		moveq	#3,d1					; set number of	fragments to 4
 		move.w	#$38,d2					; gravity

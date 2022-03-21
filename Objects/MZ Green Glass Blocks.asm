@@ -134,16 +134,9 @@ Glass_Types:
 
 ; ===========================================================================
 Glass_TypeIndex:index *
-		ptr Glass_Still					; 0 - doesn't move
 		ptr Glass_UpDown				; 1 - moves up and down
 		ptr Glass_UpDown_Rev				; 2 - moves up and down, reversed
-		ptr Glass_Drop_Jump				; 3 - drops each time it's jumped on
 		ptr Glass_Drop_Button				; 4 - drops when button is pressed
-; ===========================================================================
-
-; Type 0 - doesn't move
-Glass_Still:
-		rts	
 ; ===========================================================================
 
 ; Type 1 - moves up and down
@@ -170,57 +163,6 @@ Glass_UpDown_Reflect:
 
 	@not_reflection:
 		bra.w	Glass_Move
-; ===========================================================================
-
-; Type 3 - drops each time it's jumped on
-Glass_Drop_Jump:
-		btst	#3,ost_subtype(a0)			; is object a reflection?
-		beq.s	@not_reflection				; if not, branch
-		move.b	(v_oscillating_table+$10).w,d0
-		subi.w	#$10,d0
-		bra.w	Glass_Move
-
-	@not_reflection:
-		btst	#status_platform_bit,ost_status(a0)	; is Sonic on the block?
-		bne.s	@chk_move				; if yes, branch
-		bclr	#0,ost_glass_move_mode(a0)
-		bra.s	@skip_move
-; ===========================================================================
-
-@chk_move:
-		tst.b	ost_glass_move_mode(a0)			; is block already moving?
-		bne.s	@skip_move				; if yes, branch
-		move.b	#1,ost_glass_move_mode(a0)		; set moving flag
-		bset	#0,ost_glass_jump_init(a0)		; set first jump flag
-		beq.s	@skip_move				; branch if previously 0 (i.e. not jumped on before)
-		bset	#7,ost_glass_move_mode(a0)		; +$80 to moving flag
-		move.w	#$10,ost_glass_sink_dist(a0)		; sink $10 pixels after it's jumped on
-		move.b	#$A,ost_glass_sink_delay(a0)
-		cmpi.w	#$40,ost_glass_y_dist(a0)		; is block within $40 of its final position?
-		bne.s	@skip_move				; if not, branch
-		move.w	#$40,ost_glass_sink_dist(a0)		; sink rest of the way
-
-@skip_move:
-		tst.b	ost_glass_move_mode(a0)
-		bpl.s	@update_pos
-		tst.b	ost_glass_sink_delay(a0)
-		beq.s	@wait					; branch if time remains on delay timer
-		subq.b	#1,ost_glass_sink_delay(a0)		; decrement timer
-		bne.s	@update_pos
-
-	@wait:
-		tst.w	ost_glass_y_dist(a0)
-		beq.s	@no_dist
-		subq.w	#1,ost_glass_y_dist(a0)
-		subq.w	#1,ost_glass_sink_dist(a0)
-		bne.s	@update_pos
-
-	@no_dist:
-		bclr	#7,ost_glass_move_mode(a0)
-
-	@update_pos:
-		move.w	ost_glass_y_dist(a0),d0
-		bra.s	Glass_Move
 ; ===========================================================================
 
 ; Type 4 - drops when button is pressed

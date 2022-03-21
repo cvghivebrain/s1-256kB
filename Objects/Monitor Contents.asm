@@ -27,7 +27,7 @@ Pow_Main:	; Routine 0
 		move.w	#-$300,ost_y_vel(a0)
 		moveq	#0,d0
 		move.b	ost_anim(a0),d0				; get subtype
-		addq.b	#2,d0
+		addq.b	#3,d0
 		move.b	d0,ost_frame(a0)			; use correct frame
 		movea.l	#Map_Monitor,a1
 		add.b	d0,d0
@@ -48,13 +48,8 @@ Pow_Checks:
 		move.w	#29,ost_anim_time(a0)			; display icon for half a second
 
 Pow_ChkEggman:
-		move.b	ost_anim(a0),d0
-		cmpi.b	#id_ani_monitor_eggman,d0		; does monitor contain Eggman?
-		bne.s	Pow_ChkSonic
-		rts						; Eggman monitor does nothing
-; ===========================================================================
-
 Pow_ChkSonic:
+		move.b	ost_anim(a0),d0
 		cmpi.b	#id_ani_monitor_sonic,d0		; does monitor contain Sonic?
 		bne.s	Pow_ChkShoes
 
@@ -101,20 +96,14 @@ Pow_ChkInvinc:
 		move.b	#id_ani_stars4,(v_ost_stars4+ost_anim).w
 		tst.b	(f_boss_boundary).w			; is boss mode on?
 		bne.s	Pow_NoMusic				; if yes, branch
-		if Revision<>0
-			cmpi.w	#$C,(v_air).w
-			bls.s	Pow_NoMusic
-		endc
+		cmpi.w	#$C,(v_air).w
+		bls.s	Pow_NoMusic
 		play.w	0, jmp, mus_Invincible			; play invincibility music
-; ===========================================================================
-
-Pow_NoMusic:
-		rts	
 ; ===========================================================================
 
 Pow_ChkRings:
 		cmpi.b	#id_ani_monitor_rings,d0		; does monitor contain 10 rings?
-		bne.s	Pow_ChkS
+		bne.s	Pow_NoMusic
 
 		addi.w	#10,(v_rings).w				; add 10 rings to the number of rings you have
 		ori.b	#1,(v_hud_rings_update).w		; update the ring counter
@@ -131,16 +120,8 @@ Pow_ChkRings:
 		play.w	0, jmp, sfx_Ring			; play ring sound
 ; ===========================================================================
 
-Pow_ChkS:
-		cmpi.b	#id_ani_monitor_s,d0			; does monitor contain 'S'?
-		bne.s	Pow_ChkEnd
-		nop	
-
-Pow_ChkEnd:
-		rts						; 'S' and goggles monitors do nothing
-; ===========================================================================
-
 Pow_Delete:	; Routine 4
 		subq.w	#1,ost_anim_time(a0)
 		bmi.w	DeleteObject				; delete after half a second
+Pow_NoMusic:
 		rts	

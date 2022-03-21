@@ -1,6 +1,7 @@
 ; ---------------------------------------------------------------------------
 ; Sprite mappings - lava geyser / lava that falls from the ceiling (MZ)
 ; ---------------------------------------------------------------------------
+frame_geyser_blank:
 Map_Geyser:	index *
 		ptr frame_geyser_bubble1			; 0
 		ptr frame_geyser_bubble2			; 1
@@ -233,9 +234,5 @@ frame_geyser_bubble8:
 		piece	$20, -$20, 3x4, $18, xflip
 		piece	-$20, -$28, 4x3, $90, xflip
 		piece	0, -$28, 4x3, $90
-		endsprite
-		
-frame_geyser_blank:
-		spritemap
 		endsprite
 		even

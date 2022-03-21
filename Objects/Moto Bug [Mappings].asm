@@ -1,6 +1,7 @@
 ; ---------------------------------------------------------------------------
 ; Sprite mappings - Moto Bug enemy (GHZ)
 ; ---------------------------------------------------------------------------
+frame_moto_blank:
 Map_Moto:	index *
 		ptr frame_moto_0
 		ptr frame_moto_1
@@ -48,9 +49,5 @@ frame_moto_smoke2:
 frame_moto_smoke3:
 		spritemap
 		piece	$10, -6, 1x1, $1C
-		endsprite
-		
-frame_moto_blank:
-		spritemap
 		endsprite
 		even

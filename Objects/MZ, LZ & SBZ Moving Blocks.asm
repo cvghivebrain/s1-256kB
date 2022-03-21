@@ -21,12 +21,11 @@ MBlock_Index:	index *,,2
 
 MBlock_Var:	; object width,	frame number
 MBlock_Var_0:	dc.b $10, id_frame_mblock_mz1			; $0x - single block
-MBlock_Var_1:	dc.b $20, id_frame_mblock_mz2			; $1x - double block (unused)
 MBlock_Var_2:	dc.b $20, id_frame_mblock_sbz			; $2x - SBZ black & yellow platform
 MBlock_Var_3:	dc.b $40, id_frame_mblock_sbzwide		; $3x - SBZ red horizontal door
 MBlock_Var_4:	dc.b $30, id_frame_mblock_mz3			; $4x - triple block
 
-sizeof_MBlock_Var:	equ MBlock_Var_1-MBlock_Var
+sizeof_MBlock_Var:	equ MBlock_Var_2-MBlock_Var
 
 ost_mblock_x_start:	equ $30					; original x position (2 bytes)
 ost_mblock_y_start:	equ $32					; original y position (2 bytes)

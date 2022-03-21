@@ -19,9 +19,6 @@ CStom_Index:	index *,,2
 		ptr CStom_Ceiling
 		ptr CStom_Chain
 
-CStom_BtnNums:	dc.b 0,	0					; button number, replacement subtype
-		dc.b 1,	0
-
 CStom_Var:	dc.b id_CStom_Block, 0, id_frame_cstomp_wideblock ; routine number, y position, frame number
 		dc.b id_CStom_Spikes, $1C, id_frame_cstomp_spikes
 		dc.b id_CStom_Chain, $CC, id_frame_cstomp_chain1
@@ -32,16 +29,12 @@ CStom_Length_0:	dc.w $7000					; 0
 CStom_Length_1:	dc.w $A000					; 1
 CStom_Length_2:	dc.w $5000					; 2
 CStom_Length_3:	dc.w $7800					; 3
-CStom_Length_4:	dc.w $3800					; 4 - unused
-CStom_Length_5:	dc.w $5800					; 5 - unused
-CStom_Length_6:	dc.w $B800					; 6 - unused
 
 ost_cstomp_y_start:		equ $30				; original y position (2 bytes)
 ost_cstomp_chain_length:	equ $32				; current chain length (2 bytes)
 ost_cstomp_chain_max:		equ $34				; maximum chain length (2 bytes)
 ost_cstomp_rise_flag:		equ $36				; 0 = falling; 1 = rising (2 bytes)
 ost_cstomp_delay_time:		equ $38				; time delay between fully extended and rising again (2 bytes)
-ost_cstomp_switch_id:		equ $3A				; switch number for the current stomper
 ost_cstomp_parent:		equ $3C				; address of OST of parent object (4 bytes)
 ; ===========================================================================
 
@@ -49,12 +42,7 @@ CStom_Main:	; Routine 0
 		moveq	#0,d0
 		move.b	ost_subtype(a0),d0			; get subtype
 		bpl.s	@not_80					; branch if 0-$7F
-		andi.w	#$7F,d0
-		add.w	d0,d0
-		lea	CStom_BtnNums(pc,d0.w),a2
-		move.b	(a2)+,ost_cstomp_switch_id(a0)		; get switch number
-		move.b	(a2)+,d0				; get replacement subtype
-		move.b	d0,ost_subtype(a0)			; change subtype to 0
+		move.b	#0,ost_subtype(a0)			; change subtype to 0
 
 	@not_80:
 		andi.b	#$F,d0					; read low nybble of subtype
@@ -187,17 +175,11 @@ CStom_TypeIndex:index *
 		ptr CStom_Type01				; 1
 		ptr CStom_Type01				; 2
 		ptr CStom_Type03				; 3
-		ptr CStom_Type01				; 4
-		ptr CStom_Type03				; 5 - unused
-		ptr CStom_Type01				; 6 - unused
 ; ===========================================================================
 
 ; Type 0 - rises when button is pressed
 CStom_Type00:
-		lea	(v_button_state).w,a2			; load button statuses
-		moveq	#0,d0
-		move.b	ost_cstomp_switch_id(a0),d0		; move number 0 or 1 to d0
-		tst.b	(a2,d0.w)				; has button (d0) been pressed?
+		tst.b	(v_button_state).w			; has button 0 been pressed?
 		beq.s	CStom_Type00_Fall			; if not, branch
 		tst.w	(v_cstomp_y_pos).w			; is stomper below the top edge of the level?
 		bpl.s	@within_boundary			; is yes, branch
@@ -306,7 +288,7 @@ CStom_Type03:
 	@sonic_is_right:
 		cmpi.w	#$90,d0					; is Sonic within 144px?
 		bcc.s	@over_144				; if not, branch
-		addq.b	#1,ost_subtype(a0)			; allow stomper to drop by changing subtype
+		subq.b	#1,ost_subtype(a0)			; allow stomper to drop by changing subtype
 
 	@over_144:
 		bra.w	CStom_SetPos

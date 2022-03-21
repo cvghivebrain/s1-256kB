@@ -116,7 +116,6 @@ LGrass_TypeIndex:
 		ptr LGrass_Type01
 		ptr LGrass_Type02
 		ptr LGrass_Type03
-		ptr LGrass_Type04
 		ptr LGrass_Type05
 ; ===========================================================================
 
@@ -143,13 +142,7 @@ LGrass_Type02:
 LGrass_Type03:
 		move.b	(v_oscillating_table+8).w,d0
 		move.w	#$40,d1
-		bra.s	LGrass_Move
 ; ===========================================================================
-
-; Type 4 - moves up and down 96 pixels (unused)
-LGrass_Type04:
-		move.b	(v_oscillating_table+$C).w,d0
-		move.w	#$60,d1
 
 LGrass_Move:
 		btst	#3,ost_subtype(a0)			; is bit 3 of subtype set? (+8)

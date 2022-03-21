@@ -16,22 +16,15 @@ FireMaker:
 FireM_Index:	index *,,2
 		ptr FireM_Main
 		ptr FireM_MakeFire
-
-; Delay between launching fireballs
-FireM_Rates:	dc.b 30						; 0x - 0.5 seconds (unused)
-		dc.b 60						; 1x - 1 seconds (SLZ2)
-		dc.b 90						; 2x - 1.5 seconds (MZ3)
-		dc.b 120					; 3x - 2 seconds (MZ1/2/3, SLZ1/3)
-		dc.b 150					; 4x - 2.5 seconds (MZ1/2/3)
-		dc.b 180					; 5x - 3 seconds (MZ3)
 ; ===========================================================================
 
 FireM_Main:	; Routine 0
 		addq.b	#2,ost_routine(a0)			; goto FireM_MakeFire next
 		move.b	ost_subtype(a0),d0
-		lsr.w	#4,d0
-		andi.w	#$F,d0					; get high nybble of subtype (rate)
-		move.b	FireM_Rates(pc,d0.w),ost_anim_delay(a0)
+		lsr.b	#4,d0
+		addq.b	#1,d0
+		mulu.w	#30,d0
+		move.b	d0,ost_anim_delay(a0)
 		move.b	ost_anim_delay(a0),ost_anim_time(a0)	; set time delay for fireballs
 		andi.b	#$F,ost_subtype(a0)			; get low nybble of subtype (speed/direction)
 

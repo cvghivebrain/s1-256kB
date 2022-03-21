@@ -21,7 +21,6 @@ type_spike_updown:	equ id_Spike_UpDown			; x1 - moves up and down 32px
 type_spike_leftright:	equ id_Spike_LeftRight			; x2 - moves side-to-side 32px
 
 ; Monitor
-type_monitor_eggman:	equ id_ani_monitor_eggman	; 1 - Eggman, does nothing
 type_monitor_1up:	equ id_ani_monitor_sonic	; 2 - Extra life
 type_monitor_shoes:	equ id_ani_monitor_shoes	; 3 - speed shoes
 type_monitor_shield:	equ id_ani_monitor_shield	; 4 - shield
@@ -79,7 +78,6 @@ type_grass_still:	equ id_LGrass_Type00					; $x0 - doesn't move
 type_grass_1:		equ id_LGrass_Type01					; $x1 - moves up and down 32 pixels
 type_grass_2:		equ id_LGrass_Type02					; $x2 - moves up and down 48 pixels
 type_grass_3:		equ id_LGrass_Type03					; $x3 - moves up and down 64 pixels
-type_grass_4:		equ id_LGrass_Type04					; $x4 - moves up and down 96 pixels
 type_grass_sinks:	equ id_LGrass_Type05					; $x5 - sinks and catches fire when stood on
 type_grass_rev:		equ 8							; +8 - reverse movement direction
 
@@ -103,17 +101,14 @@ type_brick_falls:	equ id_Brick_Falls		; 2 - falls when Sonic is near
 type_brick_rev:		equ 8				; +8 - reverse wobble direction
 
 ; GlassBlock
-type_glass_still:	equ id_Glass_Still		; 0 - doesn't move
 type_glass_updown:	equ id_Glass_UpDown		; 1 - moves up and down
 type_glass_updown_rev:	equ id_Glass_UpDown_Rev		; 2 - moves up and down, reversed
-type_glass_drop_jump:	equ id_Glass_Drop_Jump		; 3 - drops each time it's jumped on
 type_glass_drop_button:	equ id_Glass_Drop_Button	; 4 - drops when button is pressed
 type_glass_button_0:	equ 0				; $0x - button 0
 type_glass_button_1:	equ $10				; $1x - button 1
 
 ; MovingBlock
 type_mblock_1:		equ ((MBlock_Var_0-MBlock_Var)/sizeof_MBlock_Var)<<4	; $0x - single block
-type_mblock_2:		equ ((MBlock_Var_1-MBlock_Var)/sizeof_MBlock_Var)<<4	; $1x - double block
 type_mblock_sbz:	equ ((MBlock_Var_2-MBlock_Var)/sizeof_MBlock_Var)<<4	; $2x - SBZ black & yellow platform
 type_mblock_sbzwide:	equ ((MBlock_Var_3-MBlock_Var)/sizeof_MBlock_Var)<<4	; $3x - SBZ red horizontal door
 type_mblock_3:		equ ((MBlock_Var_4-MBlock_Var)/sizeof_MBlock_Var)<<4	; $4x - triple block

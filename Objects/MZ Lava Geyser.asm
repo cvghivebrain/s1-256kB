@@ -112,28 +112,25 @@ Geyser_Types:	index *
 ; ===========================================================================
 
 Geyser_Type00:
+		bsr.s	Geyser_Type00_sub
+		move.b	#id_ani_geyser_bubble3,ost_anim(a1)
+		rts
+		
+Geyser_Type00_sub:
 		addi.w	#$18,ost_y_vel(a0)			; apply gravity
 		move.w	ost_geyser_y_start(a0),d0
 		cmp.w	ost_y_pos(a0),d0			; is geyser back at start position?
 		bcc.s	@exit					; if not, branch
 		addq.b	#4,ost_routine(a0)			; goto Geyser_Delete next
 		movea.l	ost_geyser_parent(a0),a1
-		move.b	#id_ani_geyser_bubble3,ost_anim(a1)
 
 	@exit:
 		rts	
 ; ===========================================================================
 
 Geyser_Type01:
-		addi.w	#$18,ost_y_vel(a0)			; apply gravity
-		move.w	ost_geyser_y_start(a0),d0
-		cmp.w	ost_y_pos(a0),d0			; is lavafall at final position?
-		bcc.s	@exit					; if not, branch
-		addq.b	#4,ost_routine(a0)			; goto Geyser_Delete next
-		movea.l	ost_geyser_parent(a0),a1
+		bsr.s	Geyser_Type00_sub
 		move.b	#id_ani_geyser_bubble2,ost_anim(a1)
-
-	@exit:
 		rts	
 ; ===========================================================================
 

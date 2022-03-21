@@ -26,7 +26,6 @@ LTag_Main:	; Routine 0
 		moveq	#0,d0
 		move.b	ost_subtype(a0),d0
 		move.b	LTag_ColTypes(pc,d0.w),ost_col_type(a0)	; get collision setting based on subtype
-		move.l	#Map_LTag,ost_mappings(a0)
 		move.b	#render_onscreen+render_rel,ost_render(a0)
 
 LTag_ChkDel:	; Routine 2

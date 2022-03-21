@@ -602,7 +602,6 @@ NullObject:
 		include "Objects\MZ Lava Geyser.asm"		; LavaGeyser
 		include "Objects\MZ Lava Wall.asm"		; LavaWall
 		include "Objects\MZ Invisible Lava Tag.asm"	; LavaTag
-		include "Objects\MZ Invisible Lava Tag [Mappings].asm" ; Map_LTag
 		include_LavaGeyser_animation
 		include_LavaWall_animation
 		include "Objects\MZ Lava Geyser [Mappings].asm"	; Map_Geyser
