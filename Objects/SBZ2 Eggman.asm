@@ -17,24 +17,20 @@ SEgg_Index:	index *,,2
 		ptr SEgg_Eggman
 		ptr SEgg_Button
 
-SEgg_ObjData:	dc.b id_SEgg_Eggman, id_ani_eggman_stand, 3	; routine number, animation, priority
-		dc.b id_SEgg_Button, 0, 3
-
 ost_eggman_parent:	equ $34					; address of OST of parent object (4 bytes)
 ost_eggman_wait_time:	equ $3C					; time delay between events (2 bytes)
 ; ===========================================================================
 
 SEgg_Main:	; Routine 0
-		lea	SEgg_ObjData(pc),a2
 		move.w	#$2160,ost_x_pos(a0)
 		move.w	#$5A4,ost_y_pos(a0)
 		move.b	#id_col_24x24,ost_col_type(a0)
 		move.b	#$10,ost_col_property(a0)
 		bclr	#status_xflip_bit,ost_status(a0)
 		clr.b	ost_routine2(a0)
-		move.b	(a2)+,ost_routine(a0)			; goto SEgg_Eggman next
-		move.b	(a2)+,ost_anim(a0)
-		move.b	(a2)+,ost_priority(a0)
+		move.b	#id_SEgg_Eggman,ost_routine(a0)			; goto SEgg_Eggman next
+		move.b	#id_ani_eggman_stand,ost_anim(a0)
+		move.b	#3,ost_priority(a0)
 		move.l	#Map_SEgg,ost_mappings(a0)
 		move.w	#tile_Nem_Sbz2Eggman,ost_tile(a0)
 		move.b	#render_rel,ost_render(a0)
@@ -48,9 +44,9 @@ SEgg_Main:	; Routine 0
 		move.w	#$2130,ost_x_pos(a1)
 		move.w	#$5BC,ost_y_pos(a1)
 		clr.b	ost_routine2(a0)
-		move.b	(a2)+,ost_routine(a1)			; goto SEgg_Button next
-		move.b	(a2)+,ost_anim(a1)
-		move.b	(a2)+,ost_priority(a1)
+		move.b	id_SEgg_Button,ost_routine(a1)			; goto SEgg_Button next
+		move.b	#0,ost_anim(a1)
+		move.b	#3,ost_priority(a1)
 		move.l	#Map_But,ost_mappings(a1)
 		move.w	#tile_Nem_LzSwitch_SBZ2,ost_tile(a1)
 		move.b	#render_rel,ost_render(a1)
@@ -65,7 +61,7 @@ SEgg_Eggman:	; Routine 2
 		jsr	SEgg_EggIndex(pc,d1.w)
 		lea	Ani_SEgg(pc),a1
 		jsr	(AnimateSprite).l
-		jmp	(DisplaySprite).l
+		bra.w	SEgg_BtnDisplay
 ; ===========================================================================
 SEgg_EggIndex:	index *,,2
 		ptr SEgg_ChkSonic

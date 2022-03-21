@@ -74,7 +74,7 @@ ObjPos_SYZ2:
 		objpos $0B60,$01DD,FloatingBlock,type_fblock_syz2x2+type_fblock_updown,xflip
 		objpos $0B60,$029A,FloatingBlock,type_fblock_syz2x2+type_fblock_updown,xflip
 		objpos $0B60,$0357,FloatingBlock,type_fblock_syz2x2+type_fblock_updown,xflip
-		objpos $0B60,$0390,Rings,$92,rem
+		objpos $0B60,$0390,Rings,$72,rem
 		objpos $0B70,$0380,Rings,$46,rem
 		objpos $0B80,$0390,Rings,$62,rem
 		objpos $0B90,$0538,Springs,type_spring_red+type_spring_up

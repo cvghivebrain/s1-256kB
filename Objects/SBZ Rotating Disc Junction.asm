@@ -127,7 +127,7 @@ Jun_Release:	; Routine 6
 	@dontrelease:
 		bsr.s	Jun_Update				; check if button is pressed and animate the junction
 		bsr.s	Jun_MoveSonic				; update Sonic's position within the junction
-		bra.w	DespawnObject
+		bra.s	Jun_Display
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to update direction when button is pressed and animate

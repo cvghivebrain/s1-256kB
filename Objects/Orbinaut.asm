@@ -171,7 +171,7 @@ Orb_MoveOrb:	; Routine 6
 		neg.w	ost_x_vel(a0)
 
 	@noflip:
-		bra.w	DisplaySprite
+		bra.s	Orb_MoveOrb_display
 ; ===========================================================================
 
 @circle:
@@ -185,6 +185,8 @@ Orb_MoveOrb:	; Routine 6
 		move.w	d0,ost_y_pos(a0)
 		move.b	ost_orb_direction(a1),d0		; get direction (1 or -1)
 		add.b	d0,ost_angle(a0)			; add to angle
+
+Orb_MoveOrb_display:
 		bra.w	DisplaySprite
 ; ===========================================================================
 
@@ -192,7 +194,7 @@ Orb_FireOrb:	; Routine 8
 		bsr.w	SpeedToPos				; update position
 		tst.b	ost_render(a0)				; is orb on-screen?
 		bpl.w	DeleteObject				; if not, branch
-		bra.w	DisplaySprite
+		bra.s	Orb_MoveOrb_display
 
 ; ---------------------------------------------------------------------------
 ; Animation script

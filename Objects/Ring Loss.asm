@@ -110,7 +110,7 @@ RLoss_Bounce:	; Routine 2
 		addi.w	#224,d0
 		cmp.w	ost_y_pos(a0),d0			; has object moved below level boundary?
 		bcs.s	RLoss_Delete				; if yes, branch
-		bra.w	DisplaySprite
+		bra.s	RLoss_Sparkle_display
 ; ===========================================================================
 
 RLoss_Collect:	; Routine 4
@@ -122,6 +122,7 @@ RLoss_Collect:	; Routine 4
 RLoss_Sparkle:	; Routine 6
 		lea	(Ani_Ring).l,a1
 		bsr.w	AnimateSprite				; animate and goto RLoss_Delete when finished
+RLoss_Sparkle_display:
 		bra.w	DisplaySprite
 ; ===========================================================================
 

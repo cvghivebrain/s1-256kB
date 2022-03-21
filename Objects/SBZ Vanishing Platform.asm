@@ -87,7 +87,7 @@ VanP_StoodOn:	; Routine 4
 		moveq	#0,d1
 		move.b	ost_actwidth(a0),d1
 		jsr	(DetectPlatform).l			; detect collision and goto VanP_StoodOn next if true
-		bra.w	DespawnObject
+		bra.s	VanP_despawn
 ; ===========================================================================
 
 @stood_on:
@@ -96,19 +96,19 @@ VanP_StoodOn:	; Routine 4
 		jsr	(ExitPlatform).l			; goto VanP_Detect next if Sonic leaves platform
 		move.w	ost_x_pos(a0),d2
 		jsr	(MoveWithPlatform2).l
-		bra.w	DespawnObject
+		bra.s	VanP_despawn
 ; ===========================================================================
 
 @notsolid:
 		btst	#status_platform_bit,ost_status(a0)	; is Sonic on the platform?
-		beq.s	@skip_clear				; if not, branch
+		beq.s	VanP_despawn				; if not, branch
 		lea	(v_ost_player).w,a1
 		bclr	#status_platform_bit,ost_status(a1)	; clear all platform flags
 		bclr	#status_platform_bit,ost_status(a0)
 		move.b	#id_VanP_Detect,ost_routine(a0)
 		clr.b	ost_solid(a0)
 
-	@skip_clear:
+VanP_despawn:
 		bra.w	DespawnObject
 
 ; ---------------------------------------------------------------------------

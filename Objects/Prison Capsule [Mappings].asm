@@ -1,13 +1,12 @@
 ; ---------------------------------------------------------------------------
 ; Sprite mappings - prison capsule
 ; ---------------------------------------------------------------------------
+frame_prison_blank:
 Map_Pri:	index *
 		ptr frame_prison_capsule
 		ptr frame_prison_switch1
 		ptr frame_prison_broken
 		ptr frame_prison_switch2
-		ptr frame_prison_unused_pod
-		ptr frame_prison_unused_panel
 		ptr frame_prison_blank
 		
 frame_prison_capsule:
@@ -39,20 +38,5 @@ frame_prison_broken:
 frame_prison_switch2:
 		spritemap
 		piece	-$C, -8, 3x2, $4F
-		endsprite
-		
-frame_prison_unused_pod:
-		spritemap
-		piece	-$10, -$18, 4x3, $55, pal2
-		piece	-$10, 0, 4x3, $61, pal2
-		endsprite
-		
-frame_prison_unused_panel:
-		spritemap
-		piece	-8, -$10, 2x4, $6D, pal2
-		endsprite
-		
-frame_prison_blank:
-		spritemap
 		endsprite
 		even

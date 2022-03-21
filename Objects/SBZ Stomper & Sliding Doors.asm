@@ -150,11 +150,6 @@ Sto_Type_Index:
 		ptr Sto_SlideDiagonal
 ; ===========================================================================
 
-; Type 0
-Sto_Still:
-		rts
-; ===========================================================================
-
 ; Type 1
 ; Horizonal door, opens when button (ost_stomp_button_num) is pressed
 Sto_SlideOpen:
@@ -273,6 +268,7 @@ Sto_Drop_RiseSlow:
 		move.w	ost_stomp_y_start(a0),d1		; get initial y pos
 		add.w	d0,d1					; apply difference
 		move.w	d1,ost_y_pos(a0)			; update position
+Sto_Still:
 		rts	
 ; ===========================================================================
 
@@ -326,10 +322,7 @@ Sto_Drop_RiseFast:
 Sto_SlideDiagonal:
 		tst.b	ost_stomp_flag(a0)			; has door been activated?
 		bne.s	@update_pos				; if yes, branch
-		lea	(v_button_state).w,a2
-		moveq	#0,d0
-		move.b	ost_stomp_button_num(a0),d0
-		btst	#0,(a2,d0.w)				; has relevant button been pressed?
+		tst.b	(v_button_state+$B).w				; has relevant button been pressed?
 		beq.s	@exit					; if not, branch
 		move.b	#1,ost_stomp_flag(a0)			; set active flag
 		lea	(v_respawn_list).w,a2

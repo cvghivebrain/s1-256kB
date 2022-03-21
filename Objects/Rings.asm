@@ -33,15 +33,8 @@ Ring_Spacing:	dc.b $10, 0					; horizontal tight
 		dc.b 0,	$18					; vertical normal
 		dc.b 0,	$20					; vertical wide
 		dc.b $10, $10					; diagonal
-		dc.b $18, $18
-		dc.b $20, $20
 		dc.b $F0, $10
-		dc.b $E8, $18
-		dc.b $E0, $20
-		dc.b $10, 8
-		dc.b $18, $10
-		dc.b $F0, 8
-		dc.b $E8, $10
+		dc.b $20, $20
 
 ost_ring_x_main:	equ $32					; x position of primary ring (2 bytes)
 ost_ring_num:		equ $34					; which ring in the group of 1-7 rings it is

@@ -1,6 +1,7 @@
 ; ---------------------------------------------------------------------------
 ; Sprite mappings - rings
 ; ---------------------------------------------------------------------------
+frame_ring_blank:
 Map_Ring:	index *
 		ptr frame_ring_front
 		ptr frame_ring_angle1
@@ -10,9 +11,7 @@ Map_Ring:	index *
 		ptr frame_ring_sparkle2
 		ptr frame_ring_sparkle3
 		ptr frame_ring_sparkle4
-		if Revision>0
 		ptr frame_ring_blank
-		endc
 		
 frame_ring_front:
 		spritemap					; ring front
@@ -53,10 +52,4 @@ frame_ring_sparkle4:
 		spritemap					; sparkle
 		piece	-8, -8, 2x2, $A, yflip
 		endsprite
-		
-		if Revision>0
-frame_ring_blank:
-		spritemap
-		endsprite
-		endc
 		even

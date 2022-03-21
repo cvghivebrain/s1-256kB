@@ -113,13 +113,14 @@ FFloor_AllGone:	; Routine 6
 FFloor_Block:	; Routine 8
 		cmpi.w	#$474F,ost_subtype(a0)			; is block set to disintegrate?
 		beq.s	FFloor_BlockBreak			; if yes, branch
-		jmp	(DisplaySprite).l
+		bra.s	FFloor_Frag_display
 ; ===========================================================================
 
 FFloor_Frag:	; Routine $A
 		tst.b	ost_render(a0)				; is object on-screen?
 		bpl.w	FFloor_Delete				; if not, branch
 		jsr	(ObjectFall).l				; apply gravity & update position
+FFloor_Frag_display:
 		jmp	(DisplaySprite).l
 ; ===========================================================================
 
@@ -163,7 +164,7 @@ FFloor_BlockBreak:
 
 	@fail:
 		play.w	1, jsr, sfx_Smash			; play smashing sound
-		jmp	(DisplaySprite).l
+		bra.s	FFloor_Frag_display
 ; ===========================================================================
 FFloor_FragSpeed:
 		dc.w $80

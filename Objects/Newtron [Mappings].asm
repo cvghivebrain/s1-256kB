@@ -1,7 +1,7 @@
 ; ---------------------------------------------------------------------------
 ; Sprite mappings - Newtron enemy (GHZ)
 ; ---------------------------------------------------------------------------
-
+frame_newt_blank:
 Map_Newt:	index *
 		ptr frame_newt_trans
 		ptr frame_newt_norm
@@ -83,9 +83,5 @@ frame_newt_fly2b:
 		piece	-$14, -8, 4x2, $48
 		piece	$C, -8, 1x2, $50
 		piece	$14, -2, 2x1, $53, pal4, hi
-		endsprite
-		
-frame_newt_blank:
-		spritemap
 		endsprite
 		even

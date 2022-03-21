@@ -77,18 +77,18 @@ Spin_Trapdoor:	; Routine 2
 		addq.w	#1,d3
 		move.w	ost_x_pos(a0),d4
 		bsr.w	SolidObject
-		bra.w	DespawnObject
+		bra.s	Spin_Trapdoor_despawn
 ; ===========================================================================
 
 @notsolid:
 		btst	#status_platform_bit,ost_status(a0)	; is Sonic standing on the trapdoor?
-		beq.s	@display				; if not, branch
+		beq.s	Spin_Trapdoor_despawn				; if not, branch
 		lea	(v_ost_player).w,a1
 		bclr	#status_platform_bit,ost_status(a1)
 		bclr	#status_platform_bit,ost_status(a0)
 		clr.b	ost_solid(a0)
 
-	@display:
+Spin_Trapdoor_despawn:
 		bra.w	DespawnObject
 ; ===========================================================================
 
@@ -105,7 +105,7 @@ Spin_Spinner:	; Routine 4
 		bpl.s	@animate				; branch if time remains
 		move.w	ost_spin_wait_master(a0),ost_spin_wait_time(a0) ; reset timer
 		clr.b	ost_spin_flag(a0)
-		bchg	#0,ost_anim(a0)				; restart animation (switches between identical animations)
+		move.b	#1,ost_anim_restart(a0)				; restart animation (switches between identical animations)
 
 	@animate:
 		lea	(Ani_Spin).l,a1
@@ -118,19 +118,19 @@ Spin_Spinner:	; Routine 4
 		addq.w	#1,d3
 		move.w	ost_x_pos(a0),d4
 		bsr.w	SolidObject
-		bra.w	DespawnObject
+		bra.s	Spin_Trapdoor_despawn
 ; ===========================================================================
 
 @notsolid2:
 		btst	#status_platform_bit,ost_status(a0)	; is Sonic on the platform?
-		beq.s	@display				; if not, branch
+		beq.s	Spin_Trapdoor_despawn				; if not, branch
 		lea	(v_ost_player).w,a1
 		bclr	#status_platform_bit,ost_status(a1)
 		bclr	#status_platform_bit,ost_status(a0)
 		clr.b	ost_solid(a0)
 
 	@display:
-		bra.w	DespawnObject
+		bra.s	Spin_Trapdoor_despawn
 
 ; ---------------------------------------------------------------------------
 ; Animation script
@@ -140,7 +140,6 @@ Ani_Spin:	index *
 		ptr ani_spin_trapopen
 		ptr ani_spin_trapclose
 		ptr ani_spin_1
-		ptr ani_spin_2
 		
 ani_spin_trapopen:
 		dc.b 3
@@ -157,27 +156,6 @@ ani_spin_trapclose:
 		dc.b afBack, 1
 
 ani_spin_1:
-		dc.b 1
-		dc.b id_frame_spin_flat
-		dc.b id_frame_spin_1
-		dc.b id_frame_spin_2
-		dc.b id_frame_spin_3
-		dc.b id_frame_spin_4
-		dc.b id_frame_spin_3+afyflip
-		dc.b id_frame_spin_2+afyflip
-		dc.b id_frame_spin_1+afyflip
-		dc.b id_frame_spin_flat+afyflip
-		dc.b id_frame_spin_1+afxflip+afyflip
-		dc.b id_frame_spin_2+afxflip+afyflip
-		dc.b id_frame_spin_3+afxflip+afyflip
-		dc.b id_frame_spin_4+afxflip+afyflip
-		dc.b id_frame_spin_3+afxflip
-		dc.b id_frame_spin_2+afxflip
-		dc.b id_frame_spin_1+afxflip
-		dc.b id_frame_spin_flat
-		dc.b afBack, 1
-
-ani_spin_2:
 		dc.b 1
 		dc.b id_frame_spin_flat
 		dc.b id_frame_spin_1

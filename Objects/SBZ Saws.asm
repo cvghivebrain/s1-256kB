@@ -48,16 +48,9 @@ Saw_Action:	; Routine 2
 ; ===========================================================================
 Saw_Type_Index:
 		index *
-		ptr Saw_Pizza_Still				; pizza cutter, doesn't move - unused
 		ptr Saw_Pizza_Sideways				; pizza cutter, moves side-to-side
 		ptr Saw_Pizza_UpDown				; pizza cutter, moves up and down
 		ptr Saw_Ground_Right				; ground saw, moves right
-		ptr Saw_Ground_Left				; ground saw, moves left - unused
-; ===========================================================================
-
-; Type 0
-Saw_Pizza_Still:
-		rts						; doesn't move
 ; ===========================================================================
 
 ; Type 1
@@ -163,46 +156,4 @@ Saw_Ground_Right:
 		bchg	#0,ost_frame(a0)			; change frame
 
 	@sameframe03:
-		rts	
-; ===========================================================================
-
-; Type 4
-Saw_Ground_Left:
-		tst.b	ost_saw_flag(a0)			; has the saw appeared already?
-		bne.s	@already_here				; if yes, branch
-
-		move.w	(v_ost_player+ost_x_pos).w,d0
-		addi.w	#$E0,d0
-		sub.w	ost_x_pos(a0),d0
-		bcc.s	@nosaw04x				; branch if saw is > 224px right of Sonic 
-		move.w	(v_ost_player+ost_y_pos).w,d0
-		subi.w	#$80,d0
-		cmp.w	ost_y_pos(a0),d0
-		bcc.s	@nosaw04y				; branch if saw is > 128px above Sonic
-		addi.w	#$100,d0
-		cmp.w	ost_y_pos(a0),d0
-		bcs.s	@nosaw04y				; branch if saw is > 128px below Sonic
-
-		move.b	#1,ost_saw_flag(a0)			; flag object as already loaded
-		move.w	#-$600,ost_x_vel(a0)			; move object to the left
-		move.b	#id_col_24x24+id_col_hurt,ost_col_type(a0)
-		move.b	#id_frame_saw_groundsaw1,ost_frame(a0)
-		play.w	1, jsr, sfx_Saw				; play saw sound
-
-	@nosaw04x:
-		addq.l	#4,sp
-
-	@nosaw04y:
-		rts	
-; ===========================================================================
-
-@already_here:
-		jsr	(SpeedToPos).l				; update position
-		move.w	ost_x_pos(a0),ost_saw_x_start(a0)
-		subq.b	#1,ost_anim_time(a0)			; decrement frame timer
-		bpl.s	@sameframe04				; branch if time remains
-		move.b	#2,ost_anim_time(a0)			; reset timer
-		bchg	#0,ost_frame(a0)			; change frame
-
-	@sameframe04:
-		rts	
+		rts

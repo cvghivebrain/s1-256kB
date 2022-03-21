@@ -20,8 +20,6 @@ Pri_Index:	index *,,2
 		ptr Pri_Main
 		ptr Pri_Body
 		ptr Pri_Switch
-		ptr Pri_Switch2
-		ptr Pri_Panel
 		ptr Pri_Explosion
 		ptr Pri_Animals
 		ptr Pri_EndAct
@@ -29,8 +27,6 @@ Pri_Index:	index *,,2
 		; routine, width, priority, frame
 Pri_Var:	dc.b id_Pri_Body, $20, 4, id_frame_prison_capsule ; 0 - body
 		dc.b id_Pri_Switch, $C, 5, id_frame_prison_switch1 ; 1 - switch
-		dc.b id_Pri_Switch2, $10, 4, id_frame_prison_switch2 ; 2 - unused
-		dc.b id_Pri_Panel, $10, 3, id_frame_prison_unused_panel ; 3 - unused
 
 ost_prison_y_start:	equ $30					; original y position (2 bytes)
 ; ===========================================================================
@@ -107,8 +103,6 @@ Pri_Switch:	; Routine 4
 		rts	
 ; ===========================================================================
 
-Pri_Switch2:
-Pri_Panel:
 Pri_Explosion:	; Routine 6, 8, $A
 		moveq	#7,d0
 		and.b	(v_vblank_counter_byte).w,d0		; byte that increments every frame
@@ -189,6 +183,7 @@ Pri_Animals:	; Routine $C
 		move.w	#180,ost_anim_time(a0)			; this does nothing
 
 	@wait:
+Pri_EndAct_found:
 		rts	
 ; ===========================================================================
 
@@ -200,22 +195,18 @@ Pri_EndAct:	; Routine $E
 
 	@findanimal:
 		cmp.b	(a1),d1					; is object $28	(animal) loaded?
-		beq.s	@found					; if yes, branch
+		beq.s	Pri_EndAct_found					; if yes, branch
 		adda.w	d2,a1					; next OST slot
 		dbf	d0,@findanimal				; repeat $3E times (this misses the last $40 OST slots)
 
 		jsr	(HasPassedAct).l			; load gfx, play music (see "Signpost & HasPassedAct.asm")
 		jmp	(DeleteObject).l
 
-	@found:
-		rts	
-
 ; ---------------------------------------------------------------------------
 ; Animation script
 ; ---------------------------------------------------------------------------
 
 Ani_Pri:	index *
-		ptr ani_prison_switchflash
 		ptr ani_prison_switchflash
 		
 ani_prison_switchflash:

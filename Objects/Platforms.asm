@@ -76,9 +76,8 @@ Plat_Solid:	; Routine 2
 
 Plat_Action:	; Routine 8
 		bsr.w	Plat_Move				; move platform
-		bsr.w	Plat_Nudge				; apply nudge
-		bsr.w	DisplaySprite
-		bra.w	Plat_ChkDel
+		bsr.s	Plat_Nudge				; apply nudge
+		bra.s	Plat_StoodOn_sub
 ; ===========================================================================
 
 Plat_StoodOn:	; Routine 4
@@ -91,14 +90,14 @@ Plat_StoodOn:	; Routine 4
 		move.b	ost_actwidth(a0),d1
 		bsr.w	ExitPlatform				; detect Sonic leaving platform, goto Plat_Solid next if he does
 		move.w	ost_x_pos(a0),-(sp)
-		bsr.w	Plat_Move
-		bsr.w	Plat_Nudge
+		bsr.s	Plat_Move
+		bsr.s	Plat_Nudge
 		move.w	(sp)+,d2
 		bsr.w	MoveWithPlatform2
+		
+Plat_StoodOn_sub:
 		bsr.w	DisplaySprite
 		bra.w	Plat_ChkDel
-
-		rts
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to	move platform slightly when you	stand on it
@@ -141,12 +140,6 @@ Plat_Move:
 		ptr Plat_Type_UpDown_Large			; $A
 		ptr Plat_Type_UpDown_Slow			; $B
 		ptr Plat_Type_UpDown_Slow_Rev			; $C
-; ===========================================================================
-
-; Type 0
-; Type 9
-Plat_Type_Still:
-		rts						; platform 00 doesn't move
 ; ===========================================================================
 
 ; Type 5
@@ -226,6 +219,7 @@ Plat_Type_Falls:
 		bne.s	@type03_nomove				; brainch if time remains
 		move.w	#32,ost_plat_wait_time(a0)
 		addq.b	#1,ost_subtype(a0)			; change to type 04 (falling)
+Plat_Type_Still:
 		rts	
 ; ===========================================================================
 
