@@ -27,7 +27,6 @@ frame_card_ghz:
 		piece $2C, -8, 2x2, $26
 		piece $3C, -8, 2x2, $26
 		endsprite
-		even
 		
 frame_card_lz:
 		spritemap					; LABYRINTH
@@ -41,7 +40,6 @@ frame_card_lz:
 		piece $24, -8, 2x2, $42
 		piece $34, -8, 2x2, $1C
 		endsprite
-		even
 		
 frame_card_mz:
 		spritemap					; MARBLE
@@ -52,7 +50,6 @@ frame_card_mz:
 		piece $10, -8, 2x2, $26
 		piece $20, -8, 2x2, $10
 		endsprite
-		even
 		
 frame_card_slz:
 		spritemap					; STAR LIGHT
@@ -66,7 +63,6 @@ frame_card_slz:
 		piece $2C, -8, 2x2, $1C
 		piece $3C, -8, 2x2, $42
 		endsprite
-		even
 		
 frame_card_syz:
 		spritemap					; SPRING YARD
@@ -81,7 +77,6 @@ frame_card_syz:
 		piece $34, -8, 2x2, $3A
 		piece $44, -8, 2x2, $C
 		endsprite
-		even
 		
 frame_card_sbz:
 		spritemap					; SCRAP BRAIN
@@ -96,52 +91,49 @@ frame_card_sbz:
 		piece $3C, -8, 1x2, $20
 		piece $44, -8, 2x2, $2E
 		endsprite
-		even
 		
 frame_card_zone:
 		spritemap					; ZONE
-		piece -$20, -8, 2x2, $4E
+		piece -$20, -8, 2x2, $22
 		piece -$10, -8, 2x2, $32
 		piece 0, -8, 2x2, $2E
 		piece $10, -8, 2x2, $10
 		endsprite
-		even
 		
 frame_card_act1:
 		spritemap					; ACT 1
-		piece -$14, 4, 4x1, $53
+		piece -$14, 4, 3x1, $4E
 		piece $C, -$C, 1x3, $57
 		endsprite
 		
 frame_card_act2:
 		spritemap					; ACT 2
-		piece -$14, 4, 4x1, $53
+		piece -$14, 4, 3x1, $4E
 		piece 8, -$C, 2x3, $5A
 		endsprite
 		
 frame_card_act3:
 		spritemap					; ACT 3
-		piece -$14, 4, 4x1, $53
-		piece 8, -$C, 2x3, $60
+		piece -$14, 4, 3x1, $4E
+		piece 8, -$C, 2x3, $51
 		endsprite
 		
 frame_card_oval:
 		spritemap					; Oval
-		piece -$C, -$1C, 4x1, $70
-		piece $14, -$1C, 1x3, $74
-		piece -$14, -$14, 2x1, $77
-		piece -$1C, -$C, 2x2, $79
-		piece -$14, $14, 4x1, $70, xflip, yflip
-		piece -$1C, 4, 1x3, $74, xflip, yflip
-		piece 4, $C, 2x1, $77, xflip, yflip
-		piece $C, -4, 2x2, $79, xflip, yflip
-		piece -4, -$14, 3x1, $7D
-		piece -$C, -$C, 4x1, $7C
-		piece -$C, -4, 3x1, $7C
-		piece -$14, 4, 4x1, $7C
-		piece -$14, $C, 3x1, $7C
+		piece -$C, -$1C, 4x1, $6A
+		piece $14, -$1C, 1x3, $6E
+		piece -$14, -$14, 2x1, $71
+		piece -$1C, -$C, 2x2, $73
+		piece -$14, $14, 4x1, $6A, xflip, yflip
+		piece -$1C, 4, 1x3, $6E, xflip, yflip
+		piece 4, $C, 2x1, $71, xflip, yflip
+		piece $C, -4, 2x2, $73, xflip, yflip
+		piece -4, -$14, 3x1, $77
+		piece -$C, -$C, 4x1, $76
+		piece -$C, -4, 3x1, $76
+		piece -$14, 4, 4x1, $76
+		piece -$14, $C, 3x1, $76
 		endsprite
-		even
 		
 frame_card_fz:
 		spritemap					; FINAL

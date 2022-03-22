@@ -128,13 +128,13 @@ Card_Move:	; Routine 2
 
 	@at_target:
 		move.w	ost_x_pos(a0),d0
-		bmi.s	@no_display				; branch if item is outside left of screen
+		bmi.s	Card_rts				; branch if item is outside left of screen
 		cmpi.w	#$200,d0				; is item right of $200 on x-axis?
-		bcc.s	@no_display				; if yes, branch
-		bra.w	DisplaySprite
+		bcc.s	Card_rts				; if yes, branch
+		bra.s	Card_Wait_display
 ; ===========================================================================
 
-@no_display:
+Card_rts:
 		rts	
 ; ===========================================================================
 
@@ -143,6 +143,7 @@ Card_Wait:	; Routine 4/6
 		tst.w	ost_anim_time(a0)			; has timer hit 0?
 		beq.s	Card_MoveBack				; if yes, branch
 		subq.w	#1,ost_anim_time(a0)			; decrement timer
+Card_Wait_display:
 		bra.w	DisplaySprite
 ; ===========================================================================
 
@@ -160,14 +161,10 @@ Card_MoveBack:
 	@is_left:
 		add.w	d1,ost_x_pos(a0)			; update position
 		move.w	ost_x_pos(a0),d0
-		bmi.s	@no_display				; branch if item is outside left of screen
+		bmi.s	Card_rts				; branch if item is outside left of screen
 		cmpi.w	#$200,d0				; is item right of $200 on x-axis?
-		bcc.s	@no_display				; if yes, branch
-		bra.w	DisplaySprite
-; ===========================================================================
-
-@no_display:
-		rts	
+		bcc.s	Card_rts				; if yes, branch
+		bra.s	Card_Wait_display
 ; ===========================================================================
 
 Card_ChangeArt:

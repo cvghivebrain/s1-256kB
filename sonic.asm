@@ -484,14 +484,9 @@ Ledge_SlopeData:
 		include "Objects\Monitors [Mappings].asm"	; Map_Monitor
 
 		include "Objects\Title Screen Sonic.asm"	; TitleSonic
-		include "Objects\Title Screen Press Start & TM.asm" ; PSBTM
-
-		include_TitleSonic_animation
-		include_PSBTM_animation
 
 		include "Objects\_AnimateSprite.asm"
 
-		include "Objects\Title Screen Press Start & TM [Mappings].asm" ; Map_PSB
 		include "Objects\Title Screen Sonic [Mappings].asm" ; Map_TSon
 
 		include "Objects\Chopper.asm"			; Chopper
@@ -934,7 +929,6 @@ Eni_Title:	incbin	"Tilemaps\Title Screen.eni"		; title screen foreground (mappin
 		even
 		nemfile	Nem_TitleFg
 		nemfile	Nem_TitleSonic
-		nemfile	Nem_TitleTM
 
 		include "Objects\Sonic [Mappings].asm"		; Map_Sonic
 

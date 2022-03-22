@@ -4,7 +4,6 @@
 		nemesis	Nem_SegaLogo,"Sega Logo (JP1)"; large Sega logo
 		nemesis	Nem_TitleFg,"Title Screen Foreground"
 		nemesis	Nem_TitleSonic,"Title Screen Sonic"
-		nemesis	Nem_TitleTM,"Title Screen TM"
 		
 		nemesis Nem_Shield,"Shield"
 		nemesis Nem_Stars,"Invincibility"

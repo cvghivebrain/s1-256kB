@@ -62,7 +62,6 @@ Obj_Index:
 		ptr FlapDoor					; $0C
 		ptr Signpost
 		ptr TitleSonic
-		ptr PSBTM
 		ptr Bridge
 		ptr SpinningLight
 		ptr FireMaker

@@ -40,17 +40,17 @@ frame_has_score:
 		piece -$30, -8, 1x2, $162
 		piece $18, -8, 3x2, $164
 		piece $30, -8, 4x2, $16A
-		piece -$33, -9, 2x1, $6E
-		piece -$33, -1, 2x1, $6E, xflip, yflip
+		piece -$33, -9, 2x1, $68
+		piece -$33, -1, 2x1, $68, xflip, yflip
 		endsprite
 		
 frame_has_timebonus:
 		spritemap					; TIME BONUS
 		piece -$50, -8, 4x2, $15A
-		piece -$27, -8, 4x2, $66
+		piece -$27, -8, 4x2, $60
 		piece -7, -8, 1x2, $14A
-		piece -$A, -9, 2x1, $6E
-		piece -$A, -1, 2x1, $6E, xflip, yflip
+		piece -$A, -9, 2x1, $68
+		piece -$A, -1, 2x1, $68, xflip, yflip
 		piece $28, -8, 4x2, -$10
 		piece $48, -8, 1x2, $170
 		endsprite
@@ -58,10 +58,10 @@ frame_has_timebonus:
 frame_has_ringbonus:
 		spritemap					; RING BONUS
 		piece -$50, -8, 4x2, $152
-		piece -$27, -8, 4x2, $66
+		piece -$27, -8, 4x2, $60
 		piece -7, -8, 1x2, $14A
-		piece -$A, -9, 2x1, $6E
-		piece -$A, -1, 2x1, $6E, xflip, yflip
+		piece -$A, -9, 2x1, $68
+		piece -$A, -1, 2x1, $68, xflip, yflip
 		piece $28, -8, 4x2, -8
 		piece $48, -8, 1x2, $170
 		endsprite

@@ -34,4 +34,8 @@ Cred_Main:	; Routine 0
 		move.b	#id_frame_cred_sonicteam,ost_frame(a0)	; display "SONIC TEAM PRESENTS"
 
 Cred_Display:	; Routine 2
+		cmpi.b	#id_TitleSonic,(v_ost_titlesonic).w
+		bne.s	@display
+		jmp	DeleteObject
+	@display:
 		jmp	DisplaySprite
