@@ -12,23 +12,13 @@ Ani_Sonic:	index *
 		ptr Balance
 		ptr LookUp
 		ptr Duck
-		ptr Warp1
-		ptr Warp2
-		ptr Warp3
-		ptr Warp4
 		ptr Stop
-		ptr Float1
 		ptr Float2
 		ptr Spring
 		ptr Hang
-		ptr Leap1
-		ptr Leap2
-		ptr Surf
 		ptr GetAir
-		ptr Burnt
 		ptr Drown
 		ptr Death
-		ptr Shrink
 		ptr Hurt
 		ptr WaterSlide
 		ptr Blank
@@ -123,35 +113,9 @@ Duck:		dc.b $3F
 		dc.b afEnd
 		even
 
-Warp1:		dc.b $3F
-		dc.b id_frame_warp1
-		dc.b afEnd
-		even
-
-Warp2:		dc.b $3F
-		dc.b id_frame_warp2
-		dc.b afEnd
-		even
-
-Warp3:		dc.b $3F
-		dc.b id_frame_warp3
-		dc.b afEnd
-		even
-
-Warp4:		dc.b $3F
-		dc.b id_frame_warp4
-		dc.b afEnd
-		even
-
 Stop:		dc.b 7
 		dc.b id_frame_stop1
 		dc.b id_frame_stop2
-		dc.b afEnd
-		even
-
-Float1:		dc.b 7
-		dc.b id_frame_float1
-		dc.b id_frame_float4
 		dc.b afEnd
 		even
 
@@ -175,35 +139,12 @@ Hang:		dc.b 4
 		dc.b afEnd
 		even
 
-Leap1:		dc.b $F
-		dc.b id_frame_leap1
-		dc.b id_frame_leap1
-		dc.b id_frame_leap1
-		dc.b afBack, 1
-		even
-
-Leap2:		dc.b $F
-		dc.b id_frame_leap1
-		dc.b id_frame_leap2
-		dc.b afBack, 1
-		even
-
-Surf:		dc.b $3F
-		dc.b id_frame_surf
-		dc.b afEnd
-		even
-
 GetAir:		dc.b $B
 		dc.b id_frame_getair
 		dc.b id_frame_getair
 		dc.b id_frame_walk15
 		dc.b id_frame_walk16
 		dc.b afChange, id_Walk
-		even
-
-Burnt:		dc.b $20
-		dc.b id_frame_burnt
-		dc.b afEnd
 		even
 
 Drown:		dc.b $2F
@@ -214,16 +155,6 @@ Drown:		dc.b $2F
 Death:		dc.b 3
 		dc.b id_frame_death
 		dc.b afEnd
-		even
-
-Shrink:		dc.b 3
-		dc.b id_frame_shrink1
-		dc.b id_frame_shrink2
-		dc.b id_frame_shrink3
-		dc.b id_frame_shrink4
-		dc.b id_frame_shrink5
-		dc.b id_frame_blank
-		dc.b afBack, 1
 		even
 
 Hurt:		dc.b 3

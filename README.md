@@ -29,6 +29,7 @@ Used mdcomp for tilemaps. | 498366 | -118
 Cleaned up MZ objects and monitors. | 497666 | -700
 Cleaned up SBZ objects, rings, prison capsule. | 496620 | -1046
 Cleaned up SLZ objects. | 496386 | -234
+Removed unused Sonic sprites and animations. | 488924 | -7462
 Target | 262144 | 
 
 ## Credits

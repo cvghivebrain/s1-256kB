@@ -755,25 +755,6 @@ Sonic_JumpDirection:
 ; End of function Sonic_JumpDirection
 
 ; ---------------------------------------------------------------------------
-; Unused subroutine to squash Sonic against the ceiling
-; ---------------------------------------------------------------------------
-
-		move.b	ost_angle(a0),d0
-		addi.b	#$20,d0
-		andi.b	#$C0,d0
-		bne.s	@dont_squash				; branch if Sonic is running on a wall or ceiling
-		bsr.w	Sonic_FindCeiling
-		tst.w	d1
-		bpl.s	@dont_squash				; branch if there's space between Sonic and the ceiling
-		move.w	#0,ost_inertia(a0)			; stop Sonic moving
-		move.w	#0,ost_x_vel(a0)
-		move.w	#0,ost_y_vel(a0)
-		move.b	#id_Warp3,ost_anim(a0)			; use "warping" animation
-
-	@dont_squash:
-		rts	
-
-; ---------------------------------------------------------------------------
 ; Subroutine to	prevent	Sonic leaving the boundaries of	a level
 ; ---------------------------------------------------------------------------
 

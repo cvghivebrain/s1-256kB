@@ -1,6 +1,7 @@
 ; ---------------------------------------------------------------------------
 ; Sprite mappings - Sonic
 ; ---------------------------------------------------------------------------
+frame_Blank:
 Map_Sonic:	index *,,
 		ptr frame_Blank,sonic_frames
 		ptr frame_Stand,sonic_frames
@@ -53,10 +54,6 @@ Map_Sonic:	index *,,
 		ptr frame_Roll3,sonic_frames
 		ptr frame_Roll4,sonic_frames
 		ptr frame_Roll5,sonic_frames
-		ptr frame_Warp1,sonic_frames
-		ptr frame_Warp2,sonic_frames
-		ptr frame_Warp3,sonic_frames
-		ptr frame_Warp4,sonic_frames
 		ptr frame_Stop1,sonic_frames
 		ptr frame_Stop2,sonic_frames
 		ptr frame_Duck,sonic_frames
@@ -65,34 +62,20 @@ Map_Sonic:	index *,,
 		ptr frame_Float1,sonic_frames
 		ptr frame_Float2,sonic_frames
 		ptr frame_Float3,sonic_frames
-		ptr frame_Float4,sonic_frames
 		ptr frame_Spring,sonic_frames
 		ptr frame_Hang1,sonic_frames
 		ptr frame_Hang2,sonic_frames
-		ptr frame_Leap1,sonic_frames
-		ptr frame_Leap2,sonic_frames
 		ptr frame_Push1,sonic_frames
 		ptr frame_Push2,sonic_frames
 		ptr frame_Push3,sonic_frames
 		ptr frame_Push4,sonic_frames
-		ptr frame_Surf,sonic_frames
-		ptr frame_BubStand,sonic_frames
-		ptr frame_Burnt,sonic_frames
 		ptr frame_Drown,sonic_frames
 		ptr frame_Death,sonic_frames
-		ptr frame_Shrink1,sonic_frames
-		ptr frame_Shrink2,sonic_frames
-		ptr frame_Shrink3,sonic_frames
-		ptr frame_Shrink4,sonic_frames
-		ptr frame_Shrink5,sonic_frames
 		ptr frame_Float5,sonic_frames
 		ptr frame_Float6,sonic_frames
 		ptr frame_Injury,sonic_frames
 		ptr frame_GetAir,sonic_frames
 		ptr frame_WaterSlide,sonic_frames
-
-frame_Blank:	spritemap
-		endsprite
 
 frame_Stand:	spritemap
 		piece	-$10, -$14, 3x1, 0
@@ -400,24 +383,6 @@ frame_Roll5:	spritemap
 		piece	-$10, -$10, 4x4, 0
 		endsprite
 
-frame_Warp1:	spritemap
-		piece	-$14, -$C, 4x3, 0
-		piece	$C, -$C, 1x3, $C
-		endsprite
-
-frame_Warp2:	spritemap
-		piece	-$10, -$10, 4x4, 0
-		endsprite
-
-frame_Warp3:	spritemap
-		piece	-$C, -$14, 3x4, 0
-		piece	-$C, $C, 3x1, $C
-		endsprite
-
-frame_Warp4:	spritemap
-		piece	-$10, -$10, 4x4, 0
-		endsprite
-
 frame_Stop1:	spritemap
 		piece	-$10, -$13, 3x2, 0
 		piece	-$10, -3, 4x3, 6
@@ -466,12 +431,6 @@ frame_Float3:	spritemap
 		piece	-$14, 4, 4x1, 9
 		endsprite
 
-frame_Float4:	spritemap
-		piece	-4, -$C, 4x2, 0
-		piece	-$14, -4, 2x2, 8
-		piece	-4, 4, 3x1, $C
-		endsprite
-
 frame_Spring:	spritemap
 		piece	-$10, -$18, 3x4, 0
 		piece	-8, 8, 2x1, $C
@@ -490,22 +449,6 @@ frame_Hang2:	spritemap
 		piece	8, 0, 2x2, $C
 		piece	8, -8, 1x1, $10
 		piece	-8, -$10, 1x1, $11
-		endsprite
-
-frame_Leap1:	spritemap
-		piece	-$C, -$18, 3x3, 0
-		piece	$C, -$10, 1x2, 9
-		piece	-$C, 0, 3x2, $B
-		piece	-$C, $10, 2x1, $11
-		piece	-$14, 0, 1x1, $13
-		endsprite
-
-frame_Leap2:	spritemap
-		piece	-$C, -$18, 3x3, 0
-		piece	$C, -$18, 1x2, 9
-		piece	-$C, 0, 3x2, $B
-		piece	-$C, $10, 2x1, $11
-		piece	-$14, 0, 1x1, $13
 		endsprite
 
 frame_Push1:	spritemap
@@ -530,23 +473,6 @@ frame_Push4:	spritemap
 		piece	-$D, $C, 2x1, $C
 		endsprite
 
-frame_Surf:	spritemap
-		piece	-$10, -$14, 3x2, 0
-		piece	-$10, -4, 4x3, 6
-		endsprite
-
-frame_BubStand:	spritemap
-		piece	-$10, -$14, 3x3, 0
-		piece	-8, 4, 2x2, 9
-		piece	-8, -$1C, 1x1, $D
-		endsprite
-
-frame_Burnt:	spritemap
-		piece	-$14, -$18, 4x2, 0
-		piece	$C, -$18, 1x2, 8
-		piece	-$C, -8, 3x4, $A
-		endsprite
-
 frame_Drown:	spritemap
 		piece	-$14, -$18, 4x2, 0
 		piece	$C, -$18, 1x2, 8
@@ -561,29 +487,6 @@ frame_Death:	spritemap
 		piece	-$C, -8, 3x2, $A
 		piece	-$C, 8, 4x1, $10
 		piece	-$C, $10, 1x1, $14
-		endsprite
-
-frame_Shrink1:	spritemap
-		piece	-$10, -$14, 3x1, 0
-		piece	-$10, -$C, 4x4, 3
-		endsprite
-
-frame_Shrink2:	spritemap
-		piece	-$10, -$14, 3x1, 0
-		piece	-$10, -$C, 4x3, 3
-		piece	-8, $C, 3x1, $F
-		endsprite
-
-frame_Shrink3:	spritemap
-		piece	-$C, -$10, 3x4, 0
-		endsprite
-
-frame_Shrink4:	spritemap
-		piece	-8, -$C, 2x3, 0
-		endsprite
-
-frame_Shrink5:	spritemap
-		piece	-4, -8, 1x2, 0
 		endsprite
 
 frame_Float5:	spritemap
