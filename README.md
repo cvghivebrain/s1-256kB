@@ -31,6 +31,7 @@ Cleaned up SBZ objects, rings, prison capsule. | 496620 | -1046
 Cleaned up SLZ objects. | 496386 | -234
 Removed unused Sonic sprites and animations. | 488924 | -7462
 Used single index for Sonic's mappings and DPLCs. | 488810 | -114
+Cleaned up SYZ objects. | 488506 | -304
 Target | 262144 | 
 
 ## Credits

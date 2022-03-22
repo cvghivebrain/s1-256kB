@@ -102,7 +102,7 @@ SSR_Move:	; Routine 2
 		bmi.s	@exit					; branch if object is at -ve x pos
 		cmpi.w	#$200,d0				; is object further right than $200?
 		bcc.s	@exit					; if yes, branch
-		bra.w	DisplaySprite
+		bra.s	SSR_Wait_display
 ; ===========================================================================
 
 @exit:
@@ -123,6 +123,7 @@ SSR_Wait:	; Routine 4, 8, $C, $10
 		addq.b	#2,ost_routine(a0)			; goto SSR_RingBonus/SSR_Exit/SSR_Continue next
 
 	@wait:
+SSR_Wait_display:
 		bra.w	DisplaySprite
 ; ===========================================================================
 
@@ -156,7 +157,7 @@ SSR_RingBonus:	; Routine 6
 
 SSR_Exit:	; Routine $A, $12
 		move.w	#1,(f_restart).w			; restart level
-		bra.w	DisplaySprite
+		bra.s	SSR_ContAni_display
 ; ===========================================================================
 
 SSR_Continue:	; Routine $E
@@ -165,7 +166,7 @@ SSR_Continue:	; Routine $E
 		play.w	1, jsr, sfx_Continue			; play continues jingle
 		addq.b	#2,ost_routine(a0)			; goto SSR_Wait next, and then SSR_Exit
 		move.w	#360,ost_anim_time(a0)			; set time delay to 6 seconds
-		bra.w	DisplaySprite
+		bra.s	SSR_ContAni_display
 ; ===========================================================================
 
 SSR_ContAni:	; Routine $14
@@ -175,6 +176,7 @@ SSR_ContAni:	; Routine $14
 		bchg	#0,ost_frame(a0)			; Sonic moves his foot every 16th frame
 
 	@wait:
+SSR_ContAni_display:
 		bra.w	DisplaySprite
 ; ===========================================================================
 		include_SSR_Config

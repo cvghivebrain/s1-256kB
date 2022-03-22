@@ -53,15 +53,9 @@ BBall_Move:	; Routine 2
 		bra.w	DisplaySprite
 ; ===========================================================================
 BBall_Types:	index *
-		ptr BBall_Still					; 0 - unused
 		ptr BBall_Sideways				; 1
 		ptr BBall_UpDown				; 2
 		ptr BBall_Circle				; $x3
-; ===========================================================================
-
-; Type 0 - doesn't move
-BBall_Still:
-		rts	
 ; ===========================================================================
 
 ; Type 1

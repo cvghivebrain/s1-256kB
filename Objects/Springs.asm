@@ -145,8 +145,7 @@ Spring_BounceLR:
 		play.w	1, jsr, sfx_Spring			; play spring sound
 
 Spring_AniLR:	; Routine $A
-		lea	(Ani_Spring).l,a1
-		bra.w	AnimateSprite				; animate and goto Spring_ResetLR next
+		bra.w	Spring_AniUp				; animate and goto Spring_ResetLR next
 ; ===========================================================================
 
 Spring_ResetLR:	; Routine $C
@@ -188,8 +187,7 @@ Spring_BounceDwn:
 		play.w	1, jsr, sfx_Spring			; play spring sound
 
 Spring_AniDwn:	; Routine $10
-		lea	(Ani_Spring).l,a1
-		bra.w	AnimateSprite				; animate and goto Spring_ResetDwn next
+		bra.w	Spring_AniUp				; animate and goto Spring_ResetDwn next
 ; ===========================================================================
 
 Spring_ResetDwn:

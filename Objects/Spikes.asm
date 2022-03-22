@@ -97,18 +97,10 @@ Spike_Hurt:
 		lea	(v_ost_player).w,a0			; a0 is temporarily Sonic now
 		cmpi.b	#id_Sonic_Hurt,ost_routine(a0)		; is Sonic hurt or dead?
 		bcc.s	Spike_Skip_Hurt				; if yes, branch
-		if Revision<>2
-			move.l	ost_y_pos(a0),d3
-			move.w	ost_y_vel(a0),d0
-			ext.l	d0
-			asl.l	#8,d0
-		else
-								; this fixes the infamous "spike bug"
-			tst.w	ost_sonic_flash_rate(a0)	; is Sonic flashing after being hurt?
-			bne.s	Spike_Skip_Hurt			; if yes, branch
-			jmp	(Spike_Bugfix).l		; this is a copy of the above code that was pushed aside for this
-	Spike_Resume:
-		endc
+		move.l	ost_y_pos(a0),d3
+		move.w	ost_y_vel(a0),d0
+		ext.l	d0
+		asl.l	#8,d0
 		sub.l	d0,d3
 		move.l	d3,ost_y_pos(a0)			; move Sonic away from spikes, based on his y speed
 		jsr	(HurtSonic).l				; lose rings/die
@@ -136,11 +128,6 @@ Spike_TypeIndex:
 		ptr Spike_LeftRight				; $x2
 ; ===========================================================================
 
-; Type 0 - doesn't move
-Spike_Still:
-		rts
-; ===========================================================================
-
 ; Type 1 - moves up and down
 Spike_UpDown:
 		bsr.w	Spike_Wait				; run timer and update ost_spike_move_dist
@@ -148,6 +135,7 @@ Spike_UpDown:
 		move.b	ost_spike_move_dist(a0),d0		; get distance to move
 		add.w	ost_spike_y_start(a0),d0		; add to initial y position
 		move.w	d0,ost_y_pos(a0)			; update position
+Spike_Still:
 		rts	
 ; ===========================================================================
 

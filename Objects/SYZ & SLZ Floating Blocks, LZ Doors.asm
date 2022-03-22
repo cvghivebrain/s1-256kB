@@ -22,7 +22,6 @@ FBlock_Var:	; width/2, height/2
 		dc.b  $20, $20					; subtype 1x/9x
 		dc.b  $10, $20					; subtype 2x/Ax
 		dc.b  $20, $1A					; subtype 3x/Bx
-		dc.b  $10, $27					; subtype 4x/Cx - unused
 		dc.b  $10, $10					; subtype 5x/Dx
 		dc.b	8, $20					; subtype 6x/Ex
 		dc.b  $40, $10					; subtype 7x/Fx
@@ -60,22 +59,20 @@ FBlock_Main:	; Routine 0
 		move.b	(a2),d0					; get height from size list
 		add.w	d0,d0
 		move.w	d0,ost_fblock_move_dist(a0)		; set full height
-		if Revision=0
-		else
-			cmpi.b	#type_fblock_syzrect2x2+type_fblock_farrightbutton,ost_subtype(a0) ; is the subtype $37? (used once in SYZ3)
-			bne.s	@dontdelete			; if not, branch
-			cmpi.w	#$1BB8,ost_x_pos(a0)		; is object in its start position?
-			bne.s	@notatpos			; if not, branch
-			tst.b	(f_fblock_finish).w		; has similar object reached its destination?
-			beq.s	@dontdelete			; if not, branch
-			jmp	(DeleteObject).l
+		cmpi.b	#type_fblock_syzrect2x2+type_fblock_farrightbutton,ost_subtype(a0) ; is the subtype $37? (used once in SYZ3)
+		bne.s	@dontdelete			; if not, branch
+		cmpi.w	#$1BB8,ost_x_pos(a0)		; is object in its start position?
+		bne.s	@notatpos			; if not, branch
+		tst.b	(f_fblock_finish).w		; has similar object reached its destination?
+		beq.s	@dontdelete			; if not, branch
+		bra.s	@delete
 	@notatpos:
-			clr.b	ost_subtype(a0)			; stop object moving
-			tst.b	(f_fblock_finish).w
-			bne.s	@dontdelete
-			jmp	(DeleteObject).l
+		clr.b	ost_subtype(a0)			; stop object moving
+		tst.b	(f_fblock_finish).w
+		bne.s	@dontdelete
+	@delete:
+		bra.w	DeleteObject
 	@dontdelete:
-		endc
 		moveq	#0,d0
 		cmpi.b	#id_LZ,(v_zone).w			; check if level is LZ
 		beq.s	@not_syzslz				; if yes, branch
@@ -133,42 +130,29 @@ FBlock_Action:	; Routine 2
 		bsr.w	SolidObject				; detect collision
 
 	@chkdel:
-		if Revision=0
-			out_of_range	DeleteObject,ost_fblock_x_start(a0)
-			bra.w	DisplaySprite
-		else
-			out_of_range.s	@chkdel2,ost_fblock_x_start(a0)
-		@display:
-			bra.w	DisplaySprite
-		@chkdel2:
-			cmpi.b	#type_fblock_syzrect2x2+type_fblock_farrightbutton,ost_subtype(a0)
-			bne.s	@delete
-			tst.b	ost_fblock_move_flag(a0)
-			bne.s	@display
-		@delete:
-			jmp	(DeleteObject).l
-		endc
+		out_of_range.s	@chkdel2,ost_fblock_x_start(a0)
+	@display:
+		bra.w	DisplaySprite
+	@chkdel2:
+		cmpi.b	#type_fblock_syzrect2x2+type_fblock_farrightbutton,ost_subtype(a0)
+		bne.s	@delete
+		tst.b	ost_fblock_move_flag(a0)
+		bne.s	@display
+	@delete:
+		bra.w	DeleteObject
 ; ===========================================================================
 FBlock_Types:	index *
 		ptr FBlock_Still				; 0
 		ptr FBlock_LeftRight				; 1
 		ptr FBlock_LeftRightWide			; 2
 		ptr FBlock_UpDown				; 3
-		ptr FBlock_UpDownWide				; 4 - unused
 		ptr FBlock_UpButton				; 5
-		ptr FBlock_DownButton				; 6 - used, but never activated
 		ptr FBlock_FarRightButton			; 7
 		ptr FBlock_SquareSmall				; 8
 		ptr FBlock_SquareMedium				; 9
 		ptr FBlock_SquareBig				; $A
 		ptr FBlock_SquareBiggest			; $B
 		ptr FBlock_LeftButton				; $C
-		ptr FBlock_RightButton				; $D - used, but never activated
-; ===========================================================================
-
-; Type 0 - doesn't move
-FBlock_Still:
-		rts	
 ; ===========================================================================
 
 ; Type 1 - moves side-to-side
@@ -195,6 +179,7 @@ FBlock_LeftRight_Move:
 		move.w	ost_fblock_x_start(a0),d1
 		sub.w	d0,d1
 		move.w	d1,ost_x_pos(a0)			; move object horizontally
+FBlock_Still:
 		rts	
 ; ===========================================================================
 
@@ -203,16 +188,6 @@ FBlock_UpDown:
 		move.w	#$40,d1					; set move distance
 		moveq	#0,d0
 		move.b	(v_oscillating_table+8).w,d0
-		bra.s	FBlock_UpDown_Move
-; ===========================================================================
-
-; Type 4 - moves up/down
-FBlock_UpDownWide:
-		move.w	#$80,d1					; set move distance
-		moveq	#0,d0
-		move.b	(v_oscillating_table+$1C).w,d0
-
-FBlock_UpDown_Move:
 		btst	#status_xflip_bit,ost_status(a0)
 		beq.s	@noflip
 		neg.w	d0
@@ -273,56 +248,13 @@ FBlock_UpButton:
 ; ===========================================================================
 
 @finish:
-		addq.b	#1,ost_subtype(a0)			; convert to type 6
+		clr.b	ost_subtype(a0)
 		clr.b	ost_fblock_move_flag(a0)		; clear movement flag
 		lea	(v_respawn_list).w,a2
 		moveq	#0,d0
 		move.b	ost_respawn(a0),d0
 		beq.s	@not_pressed
 		bset	#0,2(a2,d0.w)
-		bra.s	@not_pressed
-; ===========================================================================
-
-; Type 6 - moves down when button is pressed
-FBlock_DownButton:
-		tst.b	ost_fblock_move_flag(a0)		; is object moving?
-		bne.s	@chk_distance				; if yes, branch
-		lea	(v_button_state).w,a2
-		moveq	#0,d0
-		move.b	ost_fblock_btn_num(a0),d0
-		tst.b	(a2,d0.w)				; check status of linked button (unused button subtype $4x)
-		bpl.s	@not_pressed				; branch if not pressed
-		move.b	#1,ost_fblock_move_flag(a0)
-
-	@chk_distance:
-		moveq	#0,d0
-		move.b	ost_height(a0),d0
-		add.w	d0,d0
-		cmp.w	ost_fblock_move_dist(a0),d0		; has object moved distance equal to its height?
-		beq.s	@finish					; if yes, branch
-		addq.w	#2,ost_fblock_move_dist(a0)		; increment distance
-
-	@not_pressed:
-		move.w	ost_fblock_move_dist(a0),d0
-		btst	#status_xflip_bit,ost_status(a0)
-		beq.s	@no_xflip
-		neg.w	d0					; invert if xflipped
-
-	@no_xflip:
-		move.w	ost_fblock_y_start(a0),d1
-		add.w	d0,d1					; add distance to start position
-		move.w	d1,ost_y_pos(a0)			; update y pos
-		rts	
-; ===========================================================================
-
-@finish:
-		subq.b	#1,ost_subtype(a0)			; convert to type 5
-		clr.b	ost_fblock_move_flag(a0)		; clear movement flag
-		lea	(v_respawn_list).w,a2
-		moveq	#0,d0
-		move.b	ost_respawn(a0),d0
-		beq.s	@not_pressed
-		bclr	#0,2(a2,d0.w)
 		bra.s	@not_pressed
 ; ===========================================================================
 
@@ -341,11 +273,8 @@ FBlock_FarRightButton:
 		addq.w	#1,ost_fblock_move_dist(a0)		; increment movement counter
 		cmpi.w	#$380,ost_fblock_move_dist(a0)		; has object moved $380 pixels?
 		bne.s	@end					; if not, branch
-		if Revision=0
-		else
-			move.b	#1,(f_fblock_finish).w
-			clr.b	ost_fblock_move_flag(a0)
-		endc
+		move.b	#1,(f_fblock_finish).w
+		clr.b	ost_fblock_move_flag(a0)
 		clr.b	ost_subtype(a0)				; stop object moving
 
 	@end:
@@ -383,55 +312,13 @@ FBlock_LeftButton:
 ; ===========================================================================
 
 @finish:
-		addq.b	#1,ost_subtype(a0)			; convert to type $D
+		clr.b	ost_subtype(a0)
 		clr.b	ost_fblock_move_flag(a0)		; clear movement flag
 		lea	(v_respawn_list).w,a2
 		moveq	#0,d0
 		move.b	ost_respawn(a0),d0
 		beq.s	@not_pressed
 		bset	#0,2(a2,d0.w)
-		bra.s	@not_pressed
-; ===========================================================================
-
-; Type $D - moves right when button is pressed
-FBlock_RightButton:
-		tst.b	ost_fblock_move_flag(a0)		; is object moving?
-		bne.s	@chk_distance				; if yes, branch
-		lea	(v_button_state).w,a2
-		moveq	#0,d0
-		move.b	ost_fblock_btn_num(a0),d0
-		tst.b	(a2,d0.w)				; check status of linked button (unused button subtype $4x)
-		bpl.s	@not_pressed				; branch if not pressed
-		move.b	#1,ost_fblock_move_flag(a0)
-
-	@chk_distance:
-		move.w	#$80,d0
-		cmp.w	ost_fblock_move_dist(a0),d0		; has object moved 128px?
-		beq.s	@finish					; if yes, branch
-		addq.w	#2,ost_fblock_move_dist(a0)		; increment distance
-
-	@not_pressed:
-		move.w	ost_fblock_move_dist(a0),d0
-		btst	#status_xflip_bit,ost_status(a0)
-		beq.s	@no_xflip
-		neg.w	d0					; invert if xflipped
-		addi.w	#$80,d0
-
-	@no_xflip:
-		move.w	ost_fblock_x_start(a0),d1
-		add.w	d0,d1					; add distance to start position
-		move.w	d1,ost_x_pos(a0)			; update x pos
-		rts	
-; ===========================================================================
-
-@finish:
-		subq.b	#1,ost_subtype(a0)			; convert to type $C
-		clr.b	ost_fblock_move_flag(a0)		; clear movement flag
-		lea	(v_respawn_list).w,a2
-		moveq	#0,d0
-		move.b	ost_respawn(a0),d0
-		beq.s	@not_pressed
-		bclr	#0,2(a2,d0.w)
 		bra.s	@not_pressed
 ; ===========================================================================
 
@@ -498,6 +385,7 @@ FBlock_Square_Move:
 		add.w	ost_fblock_y_start(a0),d0
 		move.w	d0,ost_y_pos(a0)			; update position
 		addq.w	#1,d1
+	@xflip_sub:
 		add.w	ost_fblock_x_start(a0),d1
 		move.w	d1,ost_x_pos(a0)
 		rts	
@@ -512,6 +400,7 @@ FBlock_Square_Move:
 		add.w	ost_fblock_x_start(a0),d0
 		move.w	d0,ost_x_pos(a0)			; update position
 		addq.w	#1,d1
+	@yflip_sub:
 		add.w	ost_fblock_y_start(a0),d1
 		move.w	d1,ost_y_pos(a0)
 		rts	
@@ -519,9 +408,6 @@ FBlock_Square_Move:
 
 @xflip_and_yflip:
 		sub.w	d1,d0
-		add.w	ost_fblock_y_start(a0),d0
-		move.w	d0,ost_y_pos(a0)			; update position
+		bsr.s	@yflip_sub
 		neg.w	d1
-		add.w	ost_fblock_x_start(a0),d1
-		move.w	d1,ost_x_pos(a0)
-		rts	
+		bra.s	@xflip_sub

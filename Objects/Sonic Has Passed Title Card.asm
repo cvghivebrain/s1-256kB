@@ -125,11 +125,12 @@ Has_Wait:	; Routine 4, 8, $C
 		addq.b	#2,ost_routine(a0)			; goto Has_Bonus/Has_NextLevel/Has_MoveBack next
 
 	@wait:
+Has_Bonus_display:
 		bra.w	DisplaySprite
 ; ===========================================================================
 
 Has_Bonus:	; Routine 6
-		bsr.w	DisplaySprite
+		bsr.s	Has_Bonus_display
 		move.b	#1,(f_pass_bonus_update).w		; set time/ring bonus update flag
 		moveq	#0,d0
 		tst.w	(v_time_bonus).w			; is time bonus	= zero?
@@ -237,10 +238,7 @@ LevelOrder:
 		; Scrap Brain Zone
 		dc.b id_SBZ, 1					; Act 1
 		dc.b id_LZ, 3					; Act 2
-		dc.b 0, 0					; Final Zone
-		dc.b 0, 0
 		even
-		zonewarning LevelOrder,8
 ; ===========================================================================
 
 Has_MoveBack:	; Routine $E
@@ -255,14 +253,10 @@ Has_MoveBack:	; Routine $E
 	@is_left:
 		add.w	d1,ost_x_pos(a0)			; update position
 		move.w	ost_x_pos(a0),d0
-		bmi.s	@exit					; branch if object is at -ve x pos
+		bmi.s	Has_Boundary_rts					; branch if object is at -ve x pos
 		cmpi.w	#$200,d0				; is object further right than $200?
-		bcc.s	@exit					; if yes, branch
+		bcc.s	Has_Boundary_rts					; if yes, branch
 		bra.w	DisplaySprite
-; ===========================================================================
-
-@exit:
-		rts	
 ; ===========================================================================
 
 @at_target:
@@ -277,6 +271,7 @@ Has_Boundary:	; Routine $10
 		addq.w	#2,(v_boundary_right).w			; extend right level boundary 2px
 		cmpi.w	#$2100,(v_boundary_right).w
 		beq.w	DeleteObject				; if boundary reaches $2100, delete object
+Has_Boundary_rts:
 		rts	
 ; ===========================================================================
 		include_Has_Config				; see beginning of this file

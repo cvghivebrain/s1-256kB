@@ -1,6 +1,7 @@
 ; ---------------------------------------------------------------------------
 ; Sprite mappings - chaos emeralds from	the special stage results screen
 ; ---------------------------------------------------------------------------
+frame_ssrc_blank:
 Map_SSRC:	index *
 		ptr frame_ssrc_blue
 		ptr frame_ssrc_yellow
@@ -38,9 +39,5 @@ frame_ssrc_red:
 frame_ssrc_grey:
 		spritemap
 		piece -8, -8, 2x2, $C, pal2
-		endsprite
-		
-frame_ssrc_blank:
-		spritemap					; Blank frame
 		endsprite
 		even

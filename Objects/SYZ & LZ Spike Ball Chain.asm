@@ -28,20 +28,19 @@ ost_sball_speed:	equ $3E					; rate of spin (2 bytes)
 
 SBall_Main:	; Routine 0
 		addq.b	#2,ost_routine(a0)			; goto SBall_Move next
-		move.l	#Map_SBall,ost_mappings(a0)
-		move.w	#tile_Nem_SmallSpike,ost_tile(a0)
+		move.w	#tile_Nem_LzSpikeBall,ost_tile(a0)
+		move.l	#Map_SBall2,ost_mappings(a0)
 		move.b	#render_rel,ost_render(a0)
 		move.b	#4,ost_priority(a0)
 		move.b	#8,ost_actwidth(a0)
 		move.w	ost_x_pos(a0),ost_sball_x_start(a0)
 		move.w	ost_y_pos(a0),ost_sball_y_start(a0)
-		move.b	#id_col_4x4+id_col_hurt,ost_col_type(a0) ; SYZ specific code (chain hurts Sonic)
-		cmpi.b	#id_LZ,(v_zone).w			; check if level is LZ
+		cmpi.b	#id_SLZ,(v_zone).w			; check if level is LZ
 		bne.s	@notlz
 
-		move.b	#0,ost_col_type(a0)			; LZ specific code (chain doesn't hurt)
-		move.w	#tile_Nem_LzSpikeBall,ost_tile(a0)
-		move.l	#Map_SBall2,ost_mappings(a0)
+		move.l	#Map_SBall,ost_mappings(a0)
+		move.w	#tile_Nem_SmallSpike,ost_tile(a0)
+		move.b	#id_col_4x4+id_col_hurt,ost_col_type(a0) ; SYZ specific code (chain hurts Sonic)
 
 	@notlz:
 		move.b	ost_subtype(a0),d1			; get object type
@@ -147,7 +146,7 @@ SBall_MoveAll:
 
 SBall_ChkDel:
 		out_of_range	@delete,ost_sball_x_start(a0)
-		bra.w	DisplaySprite
+		bra.s	SBall_Display
 ; ===========================================================================
 
 @delete:
