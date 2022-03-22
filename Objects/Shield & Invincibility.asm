@@ -34,50 +34,31 @@ Shi_Main:	; Routine 0
 @stars:
 		addq.b	#2,ost_routine(a0)			; goto Shi_Stars next
 		move.w	#tile_Nem_Stars,ost_tile(a0)
+Shi_Shield_rts:
 		rts	
 ; ===========================================================================
 
 Shi_Shield:	; Routine 2
 		tst.b	(v_invincibility).w			; does Sonic have invincibility?
-		bne.s	@hide					; if yes, branch
+		bne.s	Shi_Shield_rts					; if yes, branch
 		tst.b	(v_shield).w				; does Sonic have shield?
 		beq.s	@delete					; if not, branch
 
 		move.w	(v_ost_player+ost_x_pos).w,ost_x_pos(a0) ; match Sonic's position & orientation
 		move.w	(v_ost_player+ost_y_pos).w,ost_y_pos(a0)
-		move.b	(v_ost_player+ost_status).w,ost_status(a0)
-		lea	(Ani_Shield).l,a1
-		jsr	(AnimateSprite).l
-		jmp	(DisplaySprite).l
-
-	@hide:
-		rts	
+		bra.s	Shi_Animate
 
 	@delete:
+Shi_Shield_delete:
 		jmp	(DeleteObject).l
 ; ===========================================================================
 
 Shi_Stars:	; Routine 4
 		tst.b	(v_invincibility).w			; does Sonic have invincibility?
-		beq.s	@delete					; if not, branch
+		beq.s	Shi_Shield_delete					; if not, branch
 		move.w	(v_sonic_pos_tracker_num).w,d0		; get current index value for position tracking data
 		move.b	ost_anim(a0),d1				; get animation id (1 to 4)
 		subq.b	#1,d1					; subtract 1 (0 to 3)
-		bra.s	@trail
-; ===========================================================================
-; unused - similar to below, but with star objects closer together
-		lsl.b	#4,d1					; multiply animation number by 16
-		addq.b	#4,d1					; add 4
-		sub.b	d1,d0					; subtract from tracker
-		move.b	ost_invincibility_last_pos(a0),d1	; retrieve previous index
-		sub.b	d1,d0					; subtract from tracker
-		addq.b	#4,d1					; increment tracking index
-		andi.b	#$F,d1					; cap at 15
-		move.b	d1,ost_invincibility_last_pos(a0)	; set new tracking index value
-		bra.s	@set_pos
-; ===========================================================================
-
-@trail:
 		lsl.b	#3,d1
 		move.b	d1,d2
 		add.b	d1,d1
@@ -99,14 +80,12 @@ Shi_Stars:	; Routine 4
 		lea	(a1,d0.w),a1				; jump to relevant position data
 		move.w	(a1)+,ost_x_pos(a0)			; update position of stars
 		move.w	(a1)+,ost_y_pos(a0)
+		
+Shi_Animate:
 		move.b	(v_ost_player+ost_status).w,ost_status(a0)
 		lea	(Ani_Shield).l,a1
 		jsr	(AnimateSprite).l
 		jmp	(DisplaySprite).l
-; ===========================================================================
-
-@delete:	
-		jmp	(DeleteObject).l
 
 ; ---------------------------------------------------------------------------
 ; Animation script

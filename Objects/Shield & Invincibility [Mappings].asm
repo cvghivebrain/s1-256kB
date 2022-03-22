@@ -1,6 +1,7 @@
 ; ---------------------------------------------------------------------------
 ; Sprite mappings - shield and invincibility stars
 ; ---------------------------------------------------------------------------
+frame_shield_blank:
 Map_Shield:	index *
 		ptr frame_shield_blank
 		ptr frame_shield_1
@@ -14,7 +15,6 @@ Map_Shield:	index *
 frame_shield_1:	spritemap
 		piece	-$18, -$18, 3x3, 0
 		piece	0, -$18, 3x3, 9
-frame_shield_blank:
 		piece	-$18, 0, 3x3, 0, yflip
 		piece	0, 0, 3x3, 9, yflip
 		endsprite

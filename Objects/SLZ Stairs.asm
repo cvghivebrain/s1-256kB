@@ -182,5 +182,4 @@ Stair_Type01:
 		move.b	d1,(a1)+
 
 	@exit:
-		rts	
-		rts	
+		rts

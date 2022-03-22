@@ -45,7 +45,6 @@ SEgg_Main:	; Routine 0
 		move.w	#$5BC,ost_y_pos(a1)
 		clr.b	ost_routine2(a0)
 		move.b	id_SEgg_Button,ost_routine(a1)			; goto SEgg_Button next
-		move.b	#0,ost_anim(a1)
 		move.b	#3,ost_priority(a1)
 		move.l	#Map_But,ost_mappings(a1)
 		move.w	#tile_Nem_LzSwitch_SBZ2,ost_tile(a1)

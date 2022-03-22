@@ -28,6 +28,7 @@ Cleaned up more objects. | 498484 | -172
 Used mdcomp for tilemaps. | 498366 | -118
 Cleaned up MZ objects and monitors. | 497666 | -700
 Cleaned up SBZ objects, rings, prison capsule. | 496620 | -1046
+Cleaned up SLZ objects. | 496386 | -234
 Target | 262144 | 
 
 ## Credits

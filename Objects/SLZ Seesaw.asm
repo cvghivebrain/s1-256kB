@@ -78,8 +78,7 @@ See_Slope:	; Routine 2
 		lea	(v_ost_player).w,a1
 		move.w	ost_y_vel(a1),ost_seesaw_impact(a0)	; save speed at which Sonic landed on the seesaw
 		move.w	#$30,d1
-		jsr	(SlopeObject).l				; detect collision and goto See_StoodOn next if true
-		rts	
+		jmp	(SlopeObject).l				; detect collision and goto See_StoodOn next if true
 ; ===========================================================================
 
 See_StoodOn:	; Routine 4
@@ -94,8 +93,7 @@ See_StoodOn:	; Routine 4
 		jsr	(ExitPlatform).l			; goto See_Slope next if Sonic leaves seesaw
 		move.w	#$30,d1
 		move.w	ost_x_pos(a0),d2
-		jsr	(SlopeObject_NoChk).l
-		rts	
+		jmp	(SlopeObject_NoChk).l
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to check which side Sonic is on, and update its frame
@@ -214,6 +212,7 @@ See_SpikeAction:
 		move.w	d2,ost_x_pos(a0)
 		clr.w	ost_y_sub(a0)
 		clr.w	ost_x_sub(a0)
+See_SpikeFall_no_double_grav:
 		rts	
 ; ===========================================================================
 
@@ -224,11 +223,8 @@ See_SpikeFall:	; Routine $A
 		move.w	ost_seesaw_y_start(a0),d0
 		subi.w	#$2F,d0
 		cmp.w	ost_y_pos(a0),d0			; is spikeball more than 47px above seesaw?
-		bgt.s	@no_double_grav				; if not, branch
-		bsr.w	ObjectFall				; apply more gravity
-
-	@no_double_grav:
-		rts	
+		bgt.s	See_SpikeFall_no_double_grav				; if not, branch
+		bra.w	ObjectFall				; apply more gravity
 ; ===========================================================================
 
 @downwards:

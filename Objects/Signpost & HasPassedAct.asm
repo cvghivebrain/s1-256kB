@@ -158,6 +158,7 @@ HasPassedAct:
 		play.w	1, jsr, mus_HasPassed			; play "Sonic Has Passed" music
 
 Sign_SonicRun_Exit:
+Sign_Exit:	; Routine 8
 		rts	
 ; End of function HasPassedAct
 
@@ -183,10 +184,6 @@ TimeBonuses:	dc.w   5000
 		dc.w     50
 		dc.w     50					; < 5:00 = 500
 WorstTime:	dc.w      0					; 5:00+ = 0
-; ===========================================================================
-
-Sign_Exit:	; Routine 8
-		rts	
 
 ; ---------------------------------------------------------------------------
 ; Animation script
