@@ -1686,9 +1686,21 @@ Sonic_LoadGfx:
 		beq.s	@nochange				; if not, branch
 
 		move.b	d0,(v_sonic_last_frame_id).w
-		lea	(SonicDynPLC).l,a2			; load PLC script
+		cmpi.b	#id_frame_Float5,d0
+		bne.s	@not_float5
+		move.b	#id_frame_Float1,d0
+	@not_float5:
+		cmpi.b	#id_frame_Float6,d0
+		bne.s	@not_float6
+		move.b	#id_frame_Float3,d0
+	@not_float6:
+		lea	(Map_Sonic).l,a2			; load PLC script
 		add.w	d0,d0
 		adda.w	(a2,d0.w),a2
+		moveq	#0,d0
+		move.b	(a2)+,d0
+		mulu.w	#5,d0
+		lea	(a2,d0.w),a2
 		moveq	#0,d1
 		move.b	(a2)+,d1				; read "number of entries" value
 		subq.b	#1,d1					; minus 1 for number of loops

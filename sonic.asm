@@ -937,7 +937,6 @@ Eni_Title:	incbin	"Tilemaps\Title Screen.eni"		; title screen foreground (mappin
 		nemfile	Nem_TitleTM
 
 		include "Objects\Sonic [Mappings].asm"		; Map_Sonic
-		include "Objects\Sonic DPLCs.asm"		; SonicDynPLC
 
 ; ---------------------------------------------------------------------------
 ; Uncompressed graphics	- Sonic
