@@ -102,7 +102,7 @@ Brick_FallNow:
 		move.b	#id_Brick_FallLava,ost_subtype(a0)	; final subtype - slow wobble on lava
 		move.w	(a1),d0					; get 16x16 tile id the block is sitting on
 		andi.w	#$3FF,d0
-		cmpi.w	#$16A,d0				; is the 16x16 tile it's landed on lava?
+		cmpi.w	#$11F,d0				; is the 16x16 tile it's landed on lava?
 		bcc.s	@exit					; if yes, branch
 		move.b	#0,ost_subtype(a0)			; don't wobble
 
