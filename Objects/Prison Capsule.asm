@@ -44,13 +44,6 @@ Pri_Main:	; Routine 0
 		move.b	(a1)+,ost_actwidth(a0)
 		move.b	(a1)+,ost_priority(a0)
 		move.b	(a1)+,ost_frame(a0)
-		cmpi.w	#8,d0					; is subtype = 2 ?
-		bne.s	@not02					; if not, branch
-
-		move.b	#id_col_16x16,ost_col_type(a0)
-		move.b	#8,ost_col_property(a0)
-
-	@not02:
 		rts	
 ; ===========================================================================
 

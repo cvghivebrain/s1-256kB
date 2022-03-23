@@ -35,7 +35,7 @@ SBall_Main:	; Routine 0
 		move.b	#8,ost_actwidth(a0)
 		move.w	ost_x_pos(a0),ost_sball_x_start(a0)
 		move.w	ost_y_pos(a0),ost_sball_y_start(a0)
-		cmpi.b	#id_SLZ,(v_zone).w			; check if level is LZ
+		cmpi.b	#id_SYZ,(v_zone).w			; check if level is LZ
 		bne.s	@notlz
 
 		move.l	#Map_SBall,ost_mappings(a0)

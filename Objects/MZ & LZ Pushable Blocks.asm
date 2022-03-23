@@ -143,7 +143,7 @@ PushB_OnLava:
 		bclr	#status_air_bit,ost_status(a0)
 		move.w	(a1),d0					; get 16x16 tile the block is on
 		andi.w	#$3FF,d0
-		cmpi.w	#$16A,d0				; is it block $16A+ (lava)?
+		cmpi.w	#$11F,d0				; is it block $16A+ (lava)?
 		bcs.s	@goto_solid				; if not, branch
 		move.w	ost_pblock_lava_speed(a0),d0
 		asr.w	#3,d0
@@ -291,7 +291,7 @@ PushB_Solid_Lava:
 		clr.b	ost_routine2(a0)			; goto PushB_Solid next
 		move.w	(a1),d0					; get 16x16 tile the block is on
 		andi.w	#$3FF,d0
-		cmpi.w	#$16A,d0				; is it block $16A+ (lava)?
+		cmpi.w	#$11F,d0				; is it block $16A+ (lava)?
 		bcs.s	@exit					; if not, branch
 		move.w	ost_pblock_lava_speed(a0),d0
 		asr.w	#3,d0

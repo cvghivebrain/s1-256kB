@@ -43,7 +43,7 @@ Glass_Main:	; Routine 0
 		lea	(Glass_Vars012).l,a2
 		moveq	#1,d1
 		move.b	#$48,ost_height(a0)
-		cmpi.b	#3,ost_subtype(a0)			; is object type 0/1/2 ?
+		cmpi.b	#2,ost_subtype(a0)			; is object type 0/1/2 ?
 		bcs.s	@type012				; if yes, branch
 
 		lea	(Glass_Vars34).l,a2

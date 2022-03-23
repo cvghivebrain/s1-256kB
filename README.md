@@ -34,6 +34,7 @@ Used single index for Sonic's mappings and DPLCs. | 488810 | -114
 Cleaned up SYZ objects. | 488506 | -304
 Cleaned up title cards and title screen. TM is now part of the logo instead of its own object. | 487792 | -714
 Removed unused tiles from MZ/LZ/SLZ. | 483504 | -4288
+Removed unused tiles from GHZ/SYZ/SBZ. | 481712 | -1792
 Target | 262144 | 
 
 ## Credits
