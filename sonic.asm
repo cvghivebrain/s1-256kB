@@ -76,11 +76,7 @@ Title_Local:	dc.b "SONIC THE               HEDGEHOG                " ; Domestic 
 Title_Int:	dc.b "SONIC THE               HEDGEHOG                " ; International name
 
 Serial:
-	if Revision=0
-		dc.b "GM 00001009-00"				; Serial/version number (Rev 0)
-	else
 		dc.b "GM 00004049-01"				; Serial/version number (Rev non-0)
-	endc
 
 Checksum: 	dc.w $0
 		dc.b "J               "				; I/O support
@@ -100,7 +96,8 @@ SRAMSupport:
 		dc.l $20202020					; SRAM end
 	endc
 
-Notes:		dc.b "                                                    " ; Notes (unused, anything can be put in this space, but it has to be 52 bytes.)
+Notes:		dc.b "                                             "
+MusicList:	dc.b mus_GHZ, mus_LZ, mus_MZ, mus_SLZ, mus_SYZ, mus_SBZ, mus_FZ
 Region:		dc.b "JUE             "				; Region (Country code)
 EndOfHeader:
 

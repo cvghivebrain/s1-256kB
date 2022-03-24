@@ -90,18 +90,15 @@ BBlock_Action:	; Routine 2
 		jsr	(SolidObject).l
 
 @display:
+BBlock_display:
 		jmp	(DisplaySprite).l
 ; ===========================================================================
 
 BBlock_Frag:	; Routine 4
 		tst.b	ost_render(a0)				; is object on-screen?
-		bpl.s	@delete					; if not, branch
+		bpl.w	BSYZ_delete					; if not, branch
 		jsr	(ObjectFall).l				; apply gravity and update position
-		jmp	(DisplaySprite).l
-; ===========================================================================
-
-@delete:
-		jmp	(DeleteObject).l
+		bra.s	BBlock_display
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to break block into fragments 
@@ -127,12 +124,9 @@ BBlock_Break:
 @load_frag:
 		lea	(a0),a2
 		lea	(a1),a3
-		moveq	#(sizeof_ost/16)-1,d3
+		moveq	#(sizeof_ost/4)-1,d3
 
 	@loop_copy:
-		move.l	(a2)+,(a3)+
-		move.l	(a2)+,(a3)+
-		move.l	(a2)+,(a3)+
 		move.l	(a2)+,(a3)+
 		dbf	d3,@loop_copy				; copy contents of OST to other 3 fragments
 

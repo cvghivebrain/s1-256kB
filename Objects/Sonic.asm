@@ -29,9 +29,7 @@ Sonic_Main:	; Routine 0
 		move.b	#2,ost_priority(a0)
 		move.b	#$18,ost_actwidth(a0)
 		move.b	#render_rel,ost_render(a0)
-		move.w	#sonic_max_speed,(v_sonic_max_speed).w	; Sonic's top speed
-		move.w	#sonic_acceleration,(v_sonic_acceleration).w ; Sonic's acceleration
-		move.w	#sonic_deceleration,(v_sonic_deceleration).w ; Sonic's deceleration
+		bsr.w	Sonic_SetSpeed
 
 Sonic_Control:	; Routine 2
 		tst.b	(f_lock_controls).w			; are controls locked?
@@ -76,16 +74,6 @@ Sonic_Modes:	index *,,2
 		ptr Sonic_Mode_Air				; status_jump_bit = 0; status_air_bit = 1
 		ptr Sonic_Mode_Roll				; status_jump_bit = 1; status_air_bit = 0
 		ptr Sonic_Mode_Jump				; status_jump_bit = 1; status_air_bit = 1
-		
-; ---------------------------------------------------------------------------
-; Music	to play	after invincibility wears off
-; ---------------------------------------------------------------------------
-
-MusicList2:
-		include_MusicList				; see "Includes\GM_Level.asm"
-		zonewarning MusicList2,1
-		; The ending doesn't get an entry
-		even
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to display Sonic and update invincibility/speed shoes
@@ -119,7 +107,7 @@ Sonic_Display:
 		moveq	#5,d0					; play SBZ music
 
 	@music:
-		lea	(MusicList2).l,a1
+		lea	(MusicList).l,a1
 		move.b	(a1,d0.w),d0
 		jsr	(PlaySound0).l				; play normal music
 
@@ -128,18 +116,19 @@ Sonic_Display:
 
 	@chkshoes:
 		tst.b	(v_shoes).w				; does Sonic have speed	shoes?
-		beq.s	@exit					; if not, branch
+		beq.s	Sonic_Display_exit					; if not, branch
 		tst.w	ost_sonic_shoe_time(a0)			; check	time remaining
-		beq.s	@exit					; if 0, branch
+		beq.s	Sonic_Display_exit					; if 0, branch
 		subq.w	#1,ost_sonic_shoe_time(a0)		; decrement timer
-		bne.s	@exit					; branch if time remains
+		bne.s	Sonic_Display_exit					; branch if time remains
+		move.b	#0,(v_shoes).w				; cancel speed shoes
+		play.w	0, jsr, cmd_Slowdown			; run music at normal speed
+
+Sonic_SetSpeed:
 		move.w	#sonic_max_speed,(v_sonic_max_speed).w	; restore Sonic's speed
 		move.w	#sonic_acceleration,(v_sonic_acceleration).w ; restore Sonic's acceleration
 		move.w	#sonic_deceleration,(v_sonic_deceleration).w ; restore Sonic's deceleration
-		move.b	#0,(v_shoes).w				; cancel speed shoes
-		play.w	0, jmp, cmd_Slowdown			; run music at normal speed
-
-	@exit:
+Sonic_Display_exit:
 		rts	
 
 ; ---------------------------------------------------------------------------
@@ -193,9 +182,7 @@ Sonic_Water:
 		beq.s	@exit					; branch if already clear
 
 		bsr.w	ResumeMusic
-		move.w	#sonic_max_speed,(v_sonic_max_speed).w	; restore Sonic's speed
-		move.w	#sonic_acceleration,(v_sonic_acceleration).w ; restore Sonic's acceleration
-		move.w	#sonic_deceleration,(v_sonic_deceleration).w ; restore Sonic's deceleration
+		bsr.w	Sonic_SetSpeed
 		asl	ost_y_vel(a0)
 		beq.w	@exit
 		move.b	#id_Splash,(v_ost_splash).w		; load splash object
@@ -215,39 +202,10 @@ Sonic_Mode_Normal:
 		bsr.w	Sonic_SlopeResist
 		bsr.w	Sonic_Move
 		bsr.w	Sonic_Roll
-		bsr.w	Sonic_LevelBound
-		jsr	(SpeedToPos).l
-		bsr.w	Sonic_AnglePos
-		bsr.w	Sonic_SlopeRepel
-		rts	
+		bra.s	Sonic_Mode_Roll_1
 ; ===========================================================================
 
 Sonic_Mode_Air:
-		bsr.w	Sonic_JumpHeight
-		bsr.w	Sonic_JumpDirection
-		bsr.w	Sonic_LevelBound
-		jsr	(ObjectFall).l
-		btst	#status_underwater_bit,ost_status(a0)	; is Sonic underwater?
-		beq.s	@notwater				; if not, branch
-		subi.w	#$28,ost_y_vel(a0)			; reduce jump speed
-
-	@notwater:
-		bsr.w	Sonic_JumpAngle
-		bsr.w	Sonic_JumpCollision
-		rts	
-; ===========================================================================
-
-Sonic_Mode_Roll:
-		bsr.w	Sonic_Jump
-		bsr.w	Sonic_RollRepel
-		bsr.w	Sonic_RollSpeed
-		bsr.w	Sonic_LevelBound
-		jsr	(SpeedToPos).l
-		bsr.w	Sonic_AnglePos
-		bsr.w	Sonic_SlopeRepel
-		rts	
-; ===========================================================================
-
 Sonic_Mode_Jump:
 		bsr.w	Sonic_JumpHeight
 		bsr.w	Sonic_JumpDirection
@@ -259,8 +217,18 @@ Sonic_Mode_Jump:
 
 	@notwater:
 		bsr.w	Sonic_JumpAngle
-		bsr.w	Sonic_JumpCollision
-		rts	
+		bra.w	Sonic_JumpCollision
+; ===========================================================================
+
+Sonic_Mode_Roll:
+		bsr.w	Sonic_Jump
+		bsr.w	Sonic_RollRepel
+		bsr.w	Sonic_RollSpeed
+	Sonic_Mode_Roll_1:
+		bsr.w	Sonic_LevelBound
+		jsr	(SpeedToPos).l
+		bsr.w	Sonic_AnglePos
+		bra.w	Sonic_SlopeRepel
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to	make Sonic walk/run
@@ -1743,7 +1711,6 @@ include_Sonic_2:	macro
 ; ---------------------------------------------------------------------------
 ; Subroutine to	change Sonic's angle & position as he walks along the floor
 ; ---------------------------------------------------------------------------
-
 Sonic_AnglePos:
 		btst	#status_platform_bit,ost_status(a0)
 		beq.s	@not_on_platform			; branch if Sonic isn't on a platform
@@ -1786,14 +1753,7 @@ Sonic_AnglePos:
 		cmpi.b	#$C0,d0
 		beq.w	Sonic_WalkVertR				; branch if on right vertical
 
-		move.w	ost_y_pos(a0),d2
-		move.w	ost_x_pos(a0),d3
-		moveq	#0,d0
-		move.b	ost_height(a0),d0
-		ext.w	d0
-		add.w	d0,d2					; d2 = y pos of bottom edge of Sonic
-		move.b	ost_width(a0),d0
-		ext.w	d0
+		bsr.s	Sonic_AnglePos_sub
 		add.w	d0,d3					; d3 = x pos of right edge of Sonic
 		lea	(v_angle_right).w,a4			; write angle here
 		movea.w	#$10,a3					; tile height
@@ -1802,14 +1762,7 @@ Sonic_AnglePos:
 		bsr.w	FindFloor
 		move.w	d1,-(sp)				; save d1 (distance to floor) to stack
 
-		move.w	ost_y_pos(a0),d2
-		move.w	ost_x_pos(a0),d3
-		moveq	#0,d0
-		move.b	ost_height(a0),d0
-		ext.w	d0
-		add.w	d0,d2					; d2 = y pos of bottom edge of Sonic
-		move.b	ost_width(a0),d0
-		ext.w	d0
+		bsr.s	Sonic_AnglePos_sub
 		neg.w	d0
 		add.w	d0,d3					; d3 = x pos of left edge of Sonic
 		lea	(v_angle_left).w,a4			; write angle here
@@ -1845,55 +1798,20 @@ Sonic_AnglePos:
 		bset	#status_air_bit,ost_status(a0)
 		bclr	#status_pushing_bit,ost_status(a0)
 		move.b	#id_Run,ost_anim_restart(a0)
-		rts	
-; ===========================================================================
-
 Sonic_BelowFloor:
-		rts	
-; End of function Sonic_AnglePos
-
-; ===========================================================================
-		move.l	ost_x_pos(a0),d2
-		move.w	ost_x_vel(a0),d0
-		ext.l	d0
-		asl.l	#8,d0
-		sub.l	d0,d2
-		move.l	d2,ost_x_pos(a0)
-		move.w	#$38,d0
-		ext.l	d0
-		asl.l	#8,d0
-		sub.l	d0,d3
-		move.l	d3,ost_y_pos(a0)
-		rts	
-; ===========================================================================
-
 Sonic_InsideWall:
-		rts	
-; ===========================================================================
-		move.l	ost_y_pos(a0),d3
-		move.w	ost_y_vel(a0),d0
-		subi.w	#$38,d0
-		move.w	d0,ost_y_vel(a0)
-		ext.l	d0
-		asl.l	#8,d0
-		sub.l	d0,d3
-		move.l	d3,ost_y_pos(a0)
-		rts	
-		rts	
-; ===========================================================================
-		move.l	ost_x_pos(a0),d2
-		move.l	ost_y_pos(a0),d3
-		move.w	ost_x_vel(a0),d0
-		ext.l	d0
-		asl.l	#8,d0
-		sub.l	d0,d2
-		move.w	ost_y_vel(a0),d0
-		ext.l	d0
-		asl.l	#8,d0
-		sub.l	d0,d3
-		move.l	d2,ost_x_pos(a0)
-		move.l	d3,ost_y_pos(a0)
-		rts	
+		rts
+
+Sonic_AnglePos_sub:
+		move.w	ost_y_pos(a0),d2
+		move.w	ost_x_pos(a0),d3
+		moveq	#0,d0
+		move.b	ost_height(a0),d0
+		ext.w	d0
+		add.w	d0,d2					; d2 = y pos of bottom edge of Sonic
+		move.b	ost_width(a0),d0
+		ext.w	d0
+		rts
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to	update Sonic's angle
@@ -1932,13 +1850,15 @@ Sonic_Angle:
 ; ---------------------------------------------------------------------------
 ; Subroutine allowing Sonic to walk up a vertical slope/wall to	his right
 ; ---------------------------------------------------------------------------
-
-Sonic_WalkVertR:
+Sonic_WalkVertR_sub:
 		move.w	ost_y_pos(a0),d2
 		move.w	ost_x_pos(a0),d3
 		moveq	#0,d0
 		move.b	ost_width(a0),d0
 		ext.w	d0
+		rts
+Sonic_WalkVertR:
+		bsr.s	Sonic_WalkVertR_sub
 		neg.w	d0
 		add.w	d0,d2					; d2 = y pos of upper edge of Sonic (i.e. his front or back)
 		move.b	ost_height(a0),d0
@@ -1951,11 +1871,7 @@ Sonic_WalkVertR:
 		bsr.w	FindWall
 		move.w	d1,-(sp)				; save d1 (distance to wall) to stack
 
-		move.w	ost_y_pos(a0),d2
-		move.w	ost_x_pos(a0),d3
-		moveq	#0,d0
-		move.b	ost_width(a0),d0
-		ext.w	d0
+		bsr.s	Sonic_WalkVertR_sub
 		add.w	d0,d2					; d2 = y pos of lower edge of Sonic (i.e. his front or back)
 		move.b	ost_height(a0),d0
 		ext.w	d0
@@ -1999,8 +1915,7 @@ Sonic_WalkVertR:
 ; ---------------------------------------------------------------------------
 ; Subroutine allowing Sonic to walk upside-down
 ; ---------------------------------------------------------------------------
-
-Sonic_WalkCeiling:
+Sonic_WalkCeiling_sub:
 		move.w	ost_y_pos(a0),d2
 		move.w	ost_x_pos(a0),d3
 		moveq	#0,d0
@@ -2010,6 +1925,9 @@ Sonic_WalkCeiling:
 		eori.w	#$F,d2					; add some amount
 		move.b	ost_width(a0),d0
 		ext.w	d0
+		rts
+Sonic_WalkCeiling:
+		bsr.s	Sonic_WalkCeiling_sub
 		add.w	d0,d3					; d3 = x pos of right edge of Sonic
 		lea	(v_angle_right).w,a4			; write angle here
 		movea.w	#-$10,a3				; tile height
@@ -2018,15 +1936,7 @@ Sonic_WalkCeiling:
 		bsr.w	FindFloor
 		move.w	d1,-(sp)				; save d1 (distance to ceiling) to stack
 
-		move.w	ost_y_pos(a0),d2
-		move.w	ost_x_pos(a0),d3
-		moveq	#0,d0
-		move.b	ost_height(a0),d0
-		ext.w	d0
-		sub.w	d0,d2					; d2 = y pos of top edge of Sonic (i.e. his feet)
-		eori.w	#$F,d2
-		move.b	ost_width(a0),d0
-		ext.w	d0
+		bsr.s	Sonic_WalkCeiling_sub
 		sub.w	d0,d3					; d3 = x pos of left edge of Sonic
 		lea	(v_angle_left).w,a4			; write angle here
 		movea.w	#-$10,a3				; tile height
@@ -2067,13 +1977,8 @@ Sonic_WalkCeiling:
 ; ---------------------------------------------------------------------------
 ; Subroutine allowing Sonic to walk up a vertical slope/wall to	his left
 ; ---------------------------------------------------------------------------
-
 Sonic_WalkVertL:
-		move.w	ost_y_pos(a0),d2
-		move.w	ost_x_pos(a0),d3
-		moveq	#0,d0
-		move.b	ost_width(a0),d0
-		ext.w	d0
+		bsr.w	Sonic_WalkVertR_sub
 		sub.w	d0,d2					; d2 = y pos of upper edge of Sonic (i.e. his front or back)
 		move.b	ost_height(a0),d0
 		ext.w	d0
@@ -2086,11 +1991,7 @@ Sonic_WalkVertL:
 		bsr.w	FindWall
 		move.w	d1,-(sp)				; save d1 (distance to wall) to stack
 
-		move.w	ost_y_pos(a0),d2
-		move.w	ost_x_pos(a0),d3
-		moveq	#0,d0
-		move.b	ost_width(a0),d0
-		ext.w	d0
+		bsr.w	Sonic_WalkVertR_sub
 		add.w	d0,d2					; d2 = y pos of lower edge of Sonic (i.e. his front or back)
 		move.b	ost_height(a0),d0
 		ext.w	d0
@@ -2236,8 +2137,7 @@ Sonic_CalcHeadroom:
 ;	(a1) = 16x16 tile number
 ;	(a4) = floor angle
 ; ---------------------------------------------------------------------------
-
-Sonic_FindFloor:
+Sonic_FindFloor_sub:
 		move.w	ost_y_pos(a0),d2
 		move.w	ost_x_pos(a0),d3
 		moveq	#0,d0
@@ -2246,6 +2146,9 @@ Sonic_FindFloor:
 		add.w	d0,d2					; d2 = y pos. of Sonic's bottom edge
 		move.b	ost_width(a0),d0
 		ext.w	d0
+		rts
+Sonic_FindFloor:
+		bsr.s	Sonic_FindFloor_sub
 		add.w	d0,d3					; d3 = x pos. of Sonic's right edge
 		lea	(v_angle_right).w,a4			; write angle here
 		movea.w	#$10,a3					; tile height
@@ -2254,14 +2157,7 @@ Sonic_FindFloor:
 		bsr.w	FindFloor
 		move.w	d1,-(sp)				; save d1 (distance to floor) to stack
 		
-		move.w	ost_y_pos(a0),d2
-		move.w	ost_x_pos(a0),d3
-		moveq	#0,d0
-		move.b	ost_height(a0),d0
-		ext.w	d0
-		add.w	d0,d2					; d2 = y pos. of Sonic's bottom edge
-		move.b	ost_width(a0),d0
-		ext.w	d0
+		bsr.s	Sonic_FindFloor_sub
 		sub.w	d0,d3					; d3 = x pos. of Sonic's left edge
 		lea	(v_angle_left).w,a4			; write angle here
 		movea.w	#$10,a3					; tile height
@@ -2303,9 +2199,6 @@ Sonic_FindSmaller:
 ;	(a4) = floor angle
 ; ---------------------------------------------------------------------------
 
-		move.w	ost_y_pos(a0),d2			; unused
-		move.w	ost_x_pos(a0),d3			; unused
-
 Sonic_FindFloor_Quick:
 		addi.w	#$A,d2
 		lea	(v_angle_right).w,a4			; write angle here
@@ -2344,11 +2237,7 @@ include_Sonic_4:	macro
 ; ---------------------------------------------------------------------------
 
 Sonic_FindWallRight:
-		move.w	ost_y_pos(a0),d2
-		move.w	ost_x_pos(a0),d3
-		moveq	#0,d0
-		move.b	ost_width(a0),d0
-		ext.w	d0
+		bsr.w	Sonic_WalkVertR_sub
 		sub.w	d0,d2					; d2 = y pos. of Sonic's upper edge (his left/right)
 		move.b	ost_height(a0),d0
 		ext.w	d0
@@ -2360,11 +2249,7 @@ Sonic_FindWallRight:
 		bsr.w	FindWall
 		move.w	d1,-(sp)				; save d1 (distance to wall) to stack
 		
-		move.w	ost_y_pos(a0),d2
-		move.w	ost_x_pos(a0),d3
-		moveq	#0,d0
-		move.b	ost_width(a0),d0
-		ext.w	d0
+		bsr.w	Sonic_WalkVertR_sub
 		add.w	d0,d2					; d2 = y pos. of Sonic's lower edge (his right/left)
 		move.b	ost_height(a0),d0
 		ext.w	d0
@@ -2429,15 +2314,7 @@ include_Sonic_5:	macro
 ; ---------------------------------------------------------------------------
 
 Sonic_FindCeiling:
-		move.w	ost_y_pos(a0),d2
-		move.w	ost_x_pos(a0),d3
-		moveq	#0,d0
-		move.b	ost_height(a0),d0
-		ext.w	d0
-		sub.w	d0,d2					; d2 = y pos. of Sonic's top edge
-		eori.w	#$F,d2
-		move.b	ost_width(a0),d0
-		ext.w	d0
+		bsr.w	Sonic_WalkCeiling_sub
 		add.w	d0,d3					; d3 = x pos. of Sonic's right edge
 		lea	(v_angle_right).w,a4			; write angle here
 		movea.w	#-$10,a3				; tile height
@@ -2446,15 +2323,7 @@ Sonic_FindCeiling:
 		bsr.w	FindFloor
 		move.w	d1,-(sp)				; save d1 (distance to ceiling) to stack
 		
-		move.w	ost_y_pos(a0),d2
-		move.w	ost_x_pos(a0),d3
-		moveq	#0,d0
-		move.b	ost_height(a0),d0
-		ext.w	d0
-		sub.w	d0,d2					; d2 = y pos. of Sonic's top edge
-		eori.w	#$F,d2
-		move.b	ost_width(a0),d0
-		ext.w	d0
+		bsr.w	Sonic_WalkCeiling_sub
 		sub.w	d0,d3					; d3 = x pos. of Sonic's left edge
 		lea	(v_angle_left).w,a4			; write angle here
 		movea.w	#-$10,a3				; tile height
@@ -2480,9 +2349,6 @@ Sonic_FindCeiling:
 ;	(a1) = 16x16 tile number
 ;	(a4) = floor angle
 ; ---------------------------------------------------------------------------
-
-		move.w	ost_y_pos(a0),d2			; unused
-		move.w	ost_x_pos(a0),d3			; unused
 
 Sonic_FindCeiling_Quick:
 		subi.w	#$A,d2
@@ -2515,11 +2381,7 @@ include_Sonic_6:	macro
 ; ---------------------------------------------------------------------------
 
 Sonic_FindWallLeft:
-		move.w	ost_y_pos(a0),d2
-		move.w	ost_x_pos(a0),d3
-		moveq	#0,d0
-		move.b	ost_width(a0),d0
-		ext.w	d0
+		bsr.w	Sonic_WalkVertR_sub
 		sub.w	d0,d2					; d2 = y pos. of Sonic's upper edge (his left/right)
 		move.b	ost_height(a0),d0
 		ext.w	d0
@@ -2532,11 +2394,7 @@ Sonic_FindWallLeft:
 		bsr.w	FindWall
 		move.w	d1,-(sp)				; save d1 (distance to wall) to stack
 		
-		move.w	ost_y_pos(a0),d2
-		move.w	ost_x_pos(a0),d3
-		moveq	#0,d0
-		move.b	ost_width(a0),d0
-		ext.w	d0
+		bsr.w	Sonic_WalkVertR_sub
 		add.w	d0,d2					; d2 = y pos. of Sonic's lower edge (his right/left)
 		move.b	ost_height(a0),d0
 		ext.w	d0

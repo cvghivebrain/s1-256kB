@@ -53,15 +53,10 @@ BFire_Action:	; Routine 2
 		move.w	BFire_Index2(pc,d0.w),d0
 		jsr	BFire_Index2(pc,d0.w)
 		jsr	(SpeedToPos).l				; update position
-		lea	(Ani_Fire).l,a1
-		jsr	(AnimateSprite).l
+		bsr.w	BFire_animate
 		cmpi.w	#$2E8,ost_y_pos(a0)			; has fireball fallen into the lava in the middle?
-		bhi.s	BFire_Delete				; if yes, branch
+		bhi.w	BFire_TempFireDel				; if yes, branch
 		rts	
-; ===========================================================================
-
-BFire_Delete:
-		jmp	(DeleteObject).l
 ; ===========================================================================
 BFire_Index2:	index *,,2
 		ptr BFire_Drop
@@ -99,19 +94,17 @@ BFire_Duplicate:
 		bne.s	@fail					; branch if not found
 		lea	(a1),a3					; a3 = address of OST of new object
 		lea	(a0),a2					; a2 = address of OST of original object
-		moveq	#(sizeof_ost/16)-1,d0
+		moveq	#(sizeof_ost/4)-1,d0
 
 	@loop:
 		move.l	(a2)+,(a3)+				; duplicate object
-		move.l	(a2)+,(a3)+
-		move.l	(a2)+,(a3)+
-		move.l	(a2)+,(a3)+
 		dbf	d0,@loop
 
 		neg.w	ost_x_vel(a1)				; make duplicate move left
 		addq.b	#2,ost_routine2(a1)			; goto BFire_FireSpread next
 
 	@fail:
+BFire_addroutine2:
 		addq.b	#2,ost_routine2(a0)			; goto BFire_FireSpread next
 		rts	
 
@@ -136,7 +129,7 @@ BFire_SpawnFire:
 BFire_FireSpread:
 		bsr.w	FindFloorObj
 		tst.w	d1					; is fireball touching the floor?
-		bpl.s	@not_on_floor				; if not, branch
+		bpl.s	BFire_addroutine2				; if not, branch
 		move.w	ost_x_pos(a0),d0
 		cmpi.w	#$1940,d0				; is fireball outside the right edge of the screen?
 		bgt.s	@outside_right				; if yes, branch
@@ -152,11 +145,6 @@ BFire_FireSpread:
 
 	@skip_fire:
 		move.w	ost_x_pos(a0),ost_bfire_x_start(a0)
-		rts	
-; ===========================================================================
-
-@not_on_floor:
-		addq.b	#2,ost_routine2(a0)			; goto BFire_FallEdge next
 		rts	
 ; ===========================================================================
 
@@ -183,7 +171,7 @@ BFire_FallEdge:
 		tst.w	d1					; has fireball hit the floor?
 		bpl.s	@not_on_floor				; if not, branch
 		subq.b	#1,ost_bfire_wait_time(a0)		; decrement timer (starts at 3)
-		beq.s	@delete					; branch if time remains
+		beq.s	BFire_TempFireDel					; branch if time remains
 		clr.w	ost_y_vel(a0)				; stop falling
 		move.w	ost_bfire_x_prev(a0),ost_x_pos(a0)	; return to previous position
 		move.w	ost_bfire_y_start(a0),ost_y_pos(a0)
@@ -192,10 +180,6 @@ BFire_FallEdge:
 
 	@not_on_floor:
 		rts	
-; ===========================================================================
-
-@delete:
-		jmp	(DeleteObject).l
 ; ===========================================================================
 
 BFire_TempFire:	; Routine 4
@@ -207,6 +191,7 @@ BFire_TempFire:	; Routine 4
 		clr.b	ost_col_type(a0)			; make fireball harmless
 
 	@wait:
+BFire_animate:
 		lea	(Ani_Fire).l,a1
 		jmp	(AnimateSprite).l			; animate and goto BFire_TempFireDel if 2nd animation ran
 ; ===========================================================================

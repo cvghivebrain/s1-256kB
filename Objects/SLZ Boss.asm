@@ -94,11 +94,7 @@ BSLZ_ShipMain:	; Routine 2
 		jsr	BSLZ_ShipIndex(pc,d0.w)
 		lea	(Ani_Bosses).l,a1
 		jsr	(AnimateSprite).l
-		moveq	#status_xflip+status_yflip,d0
-		and.b	ost_status(a0),d0
-		andi.b	#$FF-render_xflip-render_yflip,ost_render(a0) ; ignore x/yflip bits
-		or.b	d0,ost_render(a0)			; combine x/yflip bits from status instead
-		jmp	(DisplaySprite).l
+		bra.w	BSLZ_Display_sub
 ; ===========================================================================
 BSLZ_ShipIndex:	index *,,2
 		ptr BSLZ_ShipStart
@@ -406,6 +402,7 @@ BSLZ_Tube_Display:
 		move.w	ost_x_pos(a1),ost_x_pos(a0)
 		move.w	ost_y_pos(a1),ost_y_pos(a0)
 		move.b	ost_status(a1),ost_status(a0)
+BSLZ_Display_sub:
 		moveq	#status_xflip+status_yflip,d0
 		and.b	ost_status(a0),d0
 		andi.b	#$FF-render_xflip-render_yflip,ost_render(a0) ; ignore x/yflip bits

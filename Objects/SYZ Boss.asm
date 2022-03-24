@@ -456,15 +456,11 @@ BSYZ_Escape:
 
 @chkdel:
 		tst.b	ost_render(a0)				; is ship on-screen?
-		bpl.s	@delete					; if not, branch
+		bpl.s	BSYZ_delete					; if not, branch
 
 @update:
 		bsr.w	BossMove				; update parent position
 		bra.w	BSYZ_Update				; update actual position
-; ===========================================================================
-
-@delete:
-		jmp	(DeleteObject).l
 ; ===========================================================================
 
 BSYZ_FaceMain:	; Routine 4
@@ -482,6 +478,7 @@ BSYZ_FaceMain:	; Routine 4
 ; ===========================================================================
 
 @delete:
+BSYZ_delete:
 		jmp	(DeleteObject).l
 ; ===========================================================================
 BSYZ_Face_Index:
@@ -548,7 +545,7 @@ BSYZ_FlameMain:; Routine 6
 		bne.s	@chk_moving				; if not, branch
 		move.b	#id_ani_boss_bigflame,ost_anim(a0)	; use big flame animation
 		tst.b	ost_render(a0)				; is object on-screen?
-		bpl.s	@delete					; if not, branch
+		bpl.w	BSYZ_delete					; if not, branch
 		bra.s	@update
 ; ===========================================================================
 
@@ -558,13 +555,6 @@ BSYZ_FlameMain:; Routine 6
 		move.b	#id_ani_boss_flame1,ost_anim(a0)
 
 @update:
-		bra.s	BSYZ_Display
-; ===========================================================================
-
-@delete:
-		jmp	(DeleteObject).l
-; ===========================================================================
-
 BSYZ_Display:
 		lea	(Ani_Bosses).l,a1
 		jsr	(AnimateSprite).l
@@ -589,7 +579,7 @@ BSYZ_SpikeMain:; Routine 8
 		cmpi.b	#id_BSYZ_Escape,ost_routine2(a1)	; is ship on BSYZ_Escape?
 		bne.s	@not_escaping				; if not, branch
 		tst.b	ost_render(a0)				; is object on-screen?
-		bpl.s	@delete					; if not, branch
+		bpl.w	BSYZ_delete					; if not, branch
 
 	@not_escaping:
 		move.w	ost_x_pos(a1),ost_x_pos(a0)
@@ -632,7 +622,3 @@ BSYZ_SpikeMain:; Routine 8
 
 	@display:
 		bra.w	BSYZ_Display_SkipAnim
-; ===========================================================================
-
-@delete:
-		jmp	(DeleteObject).l

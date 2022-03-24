@@ -68,13 +68,7 @@ BMZ_ShipMain:	; Routine 2
 		move.b	ost_routine2(a0),d0
 		move.w	BMZ_ShipIndex(pc,d0.w),d1
 		jsr	BMZ_ShipIndex(pc,d1.w)
-		lea	(Ani_Bosses).l,a1
-		jsr	(AnimateSprite).l
-		moveq	#status_xflip+status_yflip,d0
-		and.b	ost_status(a0),d0
-		andi.b	#$FF-render_xflip-render_yflip,ost_render(a0) ; ignore x/yflip bits
-		or.b	d0,ost_render(a0)			; combine x/yflip bits from status instead
-		jmp	(DisplaySprite).l
+		bra.w	BGHZ_Display_sub
 ; ===========================================================================
 BMZ_ShipIndex:index *,,2
 		ptr BMZ_ShipStart
@@ -337,15 +331,11 @@ BMZ_Escape:
 
 @chkdel:
 		tst.b	ost_render(a0)				; is ship on-screen?
-		bpl.s	@delete					; if not, branch
+		bpl.s	BMZ_delete					; if not, branch
 
 @update:
 		bsr.w	BossMove				; update parent position
 		bra.w	BMZ_Update				; update actual position
-; ===========================================================================
-
-@delete:
-		jmp	(DeleteObject).l
 ; ===========================================================================
 
 BMZ_FaceMain:	; Routine 4
@@ -388,13 +378,13 @@ BMZ_FaceMain:	; Routine 4
 		bne.s	@display				; if not, branch
 		move.b	#id_ani_boss_panic,ost_anim(a0)		; use sweating animation
 		tst.b	ost_render(a0)				; is object on-screen?
-		bpl.s	@delete					; if not, branch
+		bpl.s	BMZ_delete					; if not, branch
 
 	@display:
 		bra.s	BMZ_Display
 ; ===========================================================================
 
-@delete:
+BMZ_delete:
 		jmp	(DeleteObject).l
 ; ===========================================================================
 
@@ -405,7 +395,7 @@ BMZ_FlameMain:	; Routine 6
 		blt.s	@chk_moving				; if not, branch
 		move.b	#id_ani_boss_bigflame,ost_anim(a0)	; use big flame animation
 		tst.b	ost_render(a0)				; is object on-screen?
-		bpl.s	@delete					; if not, branch
+		bpl.s	BMZ_delete					; if not, branch
 		bra.s	@display
 ; ===========================================================================
 
@@ -415,13 +405,6 @@ BMZ_FlameMain:	; Routine 6
 		move.b	#id_ani_boss_flame1,ost_anim(a0)
 
 @display:
-		bra.s	BMZ_Display
-; ===========================================================================
-
-@delete:
-		jmp	(DeleteObject).l
-; ===========================================================================
-
 BMZ_Display:
 		lea	(Ani_Bosses).l,a1
 		jsr	(AnimateSprite).l
@@ -443,14 +426,10 @@ BMZ_TubeMain:	; Routine 8
 		cmpi.b	#id_BMZ_Escape,ost_routine2(a1)		; is ship on BMZ_Escape?
 		bne.s	@display				; if not, branch
 		tst.b	ost_render(a0)				; is object on-screen?
-		bpl.s	@delete					; if not, branch
+		bpl.s	BMZ_delete					; if not, branch
 
 	@display:
 		move.l	#Map_BossItems,ost_mappings(a0)
 		move.w	#tile_Nem_Weapons+tile_pal2,ost_tile(a0)
 		move.b	#id_frame_boss_pipe,ost_frame(a0)
 		bra.s	BMZ_Display_SkipAnim
-; ===========================================================================
-
-@delete:
-		jmp	(DeleteObject).l

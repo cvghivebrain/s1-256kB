@@ -73,11 +73,7 @@ BLZ_ShipMain:	; Routine 2
 		jsr	BLZ_ShipIndex(pc,d1.w)
 		lea	(Ani_Bosses).l,a1
 		jsr	(AnimateSprite).l
-		moveq	#status_xflip+status_yflip,d0
-		and.b	ost_status(a0),d0
-		andi.b	#$FF-render_xflip-render_yflip,ost_render(a0) ; ignore x/yflip bits
-		or.b	d0,ost_render(a0)			; combine x/yflip bits from status instead
-		jmp	(DisplaySprite).l
+		bra.w	BLZ_Display_sub
 ; ===========================================================================
 BLZ_ShipIndex:	index *,,2
 		ptr BLZ_ShipStart
@@ -290,9 +286,7 @@ BLZ_ShipWait:
 
 	@beaten:
 		play.w	0, jsr, mus_LZ				; play LZ music
-		if Revision<>0
-			clr.b	(f_boss_boundary).w
-		endc
+		clr.b	(f_boss_boundary).w
 		bset	#status_xflip_bit,ost_status(a0)	; ship face right
 		addq.b	#2,ost_routine2(a0)			; goto BLZ_Escape1 next
 
@@ -326,14 +320,10 @@ BLZ_Escape2:
 
 @chkdel:
 		tst.b	ost_render(a0)				; is ship on-screen?
-		bpl.s	@delete					; if not, branch
+		bpl.s	BLZ_delete					; if not, branch
 
 @update:
 		bra.w	BLZ_Update				; update position
-; ===========================================================================
-
-@delete:
-		jmp	(DeleteObject).l
 ; ===========================================================================
 
 BLZ_FaceMain:	; Routine 4
@@ -375,6 +365,7 @@ BLZ_FaceMain:	; Routine 4
 ; ===========================================================================
 
 @delete:
+BLZ_delete:
 		jmp	(DeleteObject).l
 ; ===========================================================================
 
@@ -383,12 +374,12 @@ BLZ_FlameMain:; Routine 6
 		movea.l	ost_blz_parent(a0),a1			; get address of OST of parent object
 		move.b	(a1),d0
 		cmp.b	(a0),d0
-		bne.s	@delete					; branch if parent has been deleted
+		bne.s	BLZ_delete					; branch if parent has been deleted
 		cmpi.b	#id_BLZ_Escape2,ost_routine2(a1)	; is boss escaping?
 		bne.s	@display				; if not, branch
 		move.b	#id_ani_boss_bigflame,ost_anim(a0)	; use big flame animation
 		tst.b	ost_render(a0)				; is object on-screen?
-		bpl.s	@delete					; if not, branch
+		bpl.s	BLZ_delete					; if not, branch
 		bra.s	@display
 ; ===========================================================================
 		tst.w	ost_x_vel(a1)
@@ -396,13 +387,6 @@ BLZ_FlameMain:; Routine 6
 		move.b	#id_ani_boss_flame1,ost_anim(a0)
 
 @display:
-		bra.s	BLZ_Display
-; ===========================================================================
-
-@delete:
-		jmp	(DeleteObject).l
-; ===========================================================================
-
 BLZ_Display:
 		lea	(Ani_Bosses).l,a1
 		jsr	(AnimateSprite).l
@@ -410,6 +394,7 @@ BLZ_Display:
 		move.w	ost_x_pos(a1),ost_x_pos(a0)
 		move.w	ost_y_pos(a1),ost_y_pos(a0)
 		move.b	ost_status(a1),ost_status(a0)
+BLZ_Display_sub:
 		moveq	#status_xflip+status_yflip,d0
 		and.b	ost_status(a0),d0
 		andi.b	#$FF-render_xflip-render_yflip,ost_render(a0) ; ignore x/yflip bits

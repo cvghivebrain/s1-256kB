@@ -66,13 +66,7 @@ BGHZ_ShipMain:	; Routine 2
 		move.b	ost_routine2(a0),d0
 		move.w	BGHZ_ShipIndex(pc,d0.w),d1
 		jsr	BGHZ_ShipIndex(pc,d1.w)
-		lea	(Ani_Bosses).l,a1
-		jsr	(AnimateSprite).l
-		move.b	ost_status(a0),d0
-		andi.b	#status_xflip+status_yflip,d0
-		andi.b	#$FF-render_xflip-render_yflip,ost_render(a0) ; ignore x/yflip bits
-		or.b	d0,ost_render(a0)			; combine x/yflip bits from status instead
-		jmp	(DisplaySprite).l
+		bra.w	BGHZ_Display_sub
 ; ===========================================================================
 BGHZ_ShipIndex:	index *,,2
 		ptr BGHZ_ShipStart
@@ -314,15 +308,11 @@ BGHZ_Escape:
 
 @chkdel:
 		tst.b	ost_render(a0)				; is ship on-screen?
-		bpl.s	@delete					; if not, branch
+		bpl.s	BGHZ_delete					; if not, branch
 
 @update:
 		bsr.w	BossMove				; update parent position
 		bra.w	BGHZ_Update				; update actual position, check for hits
-; ===========================================================================
-
-@delete:
-		jmp	(DeleteObject).l
 ; ===========================================================================
 
 BGHZ_FaceMain:	; Routine 4
@@ -361,13 +351,13 @@ BGHZ_FaceMain:	; Routine 4
 		bne.s	@display				; if not, branch
 		move.b	#id_ani_boss_panic,ost_anim(a0)		; use sweating animation
 		tst.b	ost_render(a0)				; is object on-screen?
-		bpl.s	@delete					; if not, branch
+		bpl.s	BGHZ_delete					; if not, branch
 
 	@display:
 		bra.s	BGHZ_Display
 ; ===========================================================================
 
-@delete:
+BGHZ_delete:
 		jmp	(DeleteObject).l
 ; ===========================================================================
 
@@ -378,7 +368,7 @@ BGHZ_FlameMain:	; Routine 6
 		bne.s	@chk_moving				; if not, branch
 		move.b	#id_ani_boss_bigflame,ost_anim(a0)	; use big flame animation
 		tst.b	ost_render(a0)				; is object on-screen?
-		bpl.s	@delete					; if not, branch
+		bpl.s	BGHZ_delete					; if not, branch
 		bra.s	@display
 ; ===========================================================================
 
@@ -388,18 +378,13 @@ BGHZ_FlameMain:	; Routine 6
 		move.b	#id_ani_boss_flame1,ost_anim(a0)
 
 @display:
-		bra.s	BGHZ_Display
-; ===========================================================================
-
-@delete:
-		jmp	(DeleteObject).l
-; ===========================================================================
 
 BGHZ_Display:
 		movea.l	ost_bghz_parent(a0),a1			; get address of OST of parent object
 		move.w	ost_x_pos(a1),ost_x_pos(a0)
 		move.w	ost_y_pos(a1),ost_y_pos(a0)
 		move.b	ost_status(a1),ost_status(a0)
+BGHZ_Display_sub:
 		lea	(Ani_Bosses).l,a1
 		jsr	(AnimateSprite).l
 		move.b	ost_status(a0),d0
