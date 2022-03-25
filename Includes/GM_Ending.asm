@@ -64,6 +64,9 @@ GM_Ending:
 		bsr.w	DrawTilesAtStart
 		move.l	#Col_GHZ,(v_collision_index_ptr).w	; set pointer to GHZ collision index
 		enable_ints
+		lea	(KosArt_GHZ).l,a0
+		lea	(v_ghz_art).w,a1
+		bsr.w	KosDec
 		lea	(Kos_EndFlowers).l,a0			; load extra flower patterns
 		lea	(v_ghz_flower_buffer).w,a1		; RAM address to buffer the patterns ($FFFF9400)
 		bsr.w	KosDec

@@ -36,6 +36,7 @@ Cleaned up title cards and title screen. TM is now part of the logo instead of i
 Removed unused tiles from MZ/LZ/SLZ. | 483504 | -4288
 Removed unused tiles from GHZ/SYZ/SBZ. | 481712 | -1792
 Cleaned up Sonic and boss objects. | 481090 | -622
+Compressed animated level graphics and replaced hardcoded routines with scripts. | 475530 | -5560
 Target | 262144 | 
 
 ## Credits

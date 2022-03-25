@@ -14,6 +14,9 @@ v_error_type:			equ $FFFFFC44 ; error type - v_respawn_list uses same space
 ; Major data blocks:
 
 v_256x256_tiles:		equ   $FF0000 ; 256x256 tile mappings ($A400 bytes)
+v_ghz_art:			equ $FFFF8000
+v_mz_art:			equ $FFFF8A00
+v_sbz_art:			equ $FFFF9200
 				rsset $FFFFA400
 v_level_layout:			rs.b sizeof_level ; $FFFFA400 ; level and background layouts ($400 bytes)
 v_ghz_flower_buffer:		equ v_level_layout-sizeof_art_flowers ; $FFFF9400 ; graphics buffer for GHZ flowers in ending ($1000 bytes)

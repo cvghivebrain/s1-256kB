@@ -1177,19 +1177,11 @@ SS_6:		incbin	"Special Stage Layouts\6 (JP1).eni"
 ; ---------------------------------------------------------------------------
 ; Animated uncompressed graphics
 ; ---------------------------------------------------------------------------
-Art_GhzWater:	incbin	"Graphics\GHZ Waterfall.bin"
+KosArt_GHZ:	incbin	"kosdata\GHZ art.kos"
 		even
-Art_GhzFlower1:	incbin	"Graphics\GHZ Flower Large.bin"
+KosArt_MZ:	incbin	"kosdata\MZ art.kos"
 		even
-Art_GhzFlower2:	incbin	"Graphics\GHZ Flower Small.bin"
-		even
-Art_MzLava1:	incbin	"Graphics\MZ Lava Surface.bin"
-		even
-Art_MzLava2:	incbin	"Graphics\MZ Lava.bin"
-		even
-Art_MzTorch:	incbin	"Graphics\MZ Background Torch.bin"
-		even
-Art_SbzSmoke:	incbin	"Graphics\SBZ Background Smoke.bin"
+KosArt_SBZ:	incbin	"kosdata\SBZ art.kos"
 		even
 
 ; ---------------------------------------------------------------------------

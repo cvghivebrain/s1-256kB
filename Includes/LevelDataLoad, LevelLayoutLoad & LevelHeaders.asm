@@ -2,7 +2,26 @@
 ; Subroutine to load basic level data
 ; ---------------------------------------------------------------------------
 
+LevelArtPtrs:	dc.l KosArt_GHZ, v_ghz_art
+		dc.l 0, 0
+		dc.l KosArt_MZ, v_mz_art
+		dc.l 0, 0
+		dc.l 0, 0
+		dc.l KosArt_SBZ, v_sbz_art
+
 LevelDataLoad:
+		moveq	#0,d0
+		move.b	(v_zone).w,d0				; get zone number
+		lsl.w	#3,d0					; multiply by 8
+		lea	(LevelArtPtrs).l,a2			; address of animated art pointers
+		lea	(a2,d0.w),a2				; jump to relevant pointer
+		tst.l	(a2)
+		beq.s	@no_art					; branch if 0
+		movea.l	(a2)+,a0				; get gfx pointer
+		movea.l	(a2),a1					; get RAM address
+		bsr.w	KosDec					; decompress
+		
+	@no_art:
 		moveq	#0,d0
 		move.b	(v_zone).w,d0				; get zone number
 		lsl.w	#4,d0					; multiply by 16
@@ -17,6 +36,7 @@ LevelDataLoad:
 		movea.l	(a2)+,a0				; load 256x256 mappings pointer
 		lea	(v_256x256_tiles).l,a1			; RAM address for 256x256 mappings
 		bsr.w	KosDec
+
 		bsr.w	LevelLayoutLoad				; load level layout (doesn't involve level headers)
 		move.w	(a2)+,d0				; load music id (unused, overwritten on next line)
 		move.w	(a2),d0					; load palette id

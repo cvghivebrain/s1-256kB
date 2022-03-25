@@ -21,6 +21,7 @@ AddPLC:
 ; ===========================================================================
 
 @copytoRAM:
+AddPLC_sub:
 		move.w	(a1)+,d0				; get PLC item count
 		bmi.s	@skip					; branch if -1 (i.e. 0 items)
 
@@ -49,17 +50,7 @@ NewPLC:
 		lea	(a1,d0.w),a1				; jump to relevant PLC
 		bsr.s	ClearPLC				; erase any data in PLC buffer space
 		lea	(v_plc_buffer).w,a2
-		move.w	(a1)+,d0				; get PLC item count
-		bmi.s	@skip					; branch if -1 (i.e. 0 items)
-
-	@loop:
-		move.l	(a1)+,(a2)+
-		move.w	(a1)+,(a2)+				; copy PLC to RAM
-		dbf	d0,@loop				; repeat for all items in PLC
-
-	@skip:
-		movem.l	(sp)+,a1-a2				; restore a1/a2 from stack
-		rts
+		bra.s	AddPLC_sub
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to	clear the pattern load cue buffer
@@ -128,7 +119,7 @@ ProcessPLC:
 		addi.w	#nem_tile_count*sizeof_cell,(v_plc_buffer_dest).w ; update for next frame
 		bra.s	ProcessPLC_Decompress
 
-nem_tile_count:	= 3
+nem_tile_count:	= 6
 
 ProcessPLC2:
 		tst.w	(v_nem_tile_count).w			; has PLC execution begun?
