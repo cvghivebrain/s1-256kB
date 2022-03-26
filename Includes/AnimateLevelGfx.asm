@@ -46,6 +46,7 @@ AniArt_Run:
 		tst.w	2(a2)
 		bpl.s	@next					; branch if time remains
 
+		moveq	#0,d1
 		movea.l	(a3),a1					; get gfx pointer
 		move.w	4(a3),d1				; get frame size
 		move.b	6(a3),d2				; get frame count
@@ -135,10 +136,10 @@ AniArt_MZ_Magma:
 
 tilecount:	= 4						; 4 per column, 16 total
 
-		subq.b	#1,(v_levelani_2_time).w		; decrement timer
+		subq.b	#1,(v_levelani_4_time).w		; decrement timer
 		bpl.s	@end					; branch if not -1
 		
-		move.b	#1,(v_levelani_2_time).w		; time between each gfx change
+		move.b	#1,(v_levelani_4_time).w		; time between each gfx change
 		moveq	#0,d0
 		move.b	(v_levelani_0_frame).w,d0		; get surface lava frame number
 		lea	(v_mz_art+$300+$300).l,a4			; magma gfx
@@ -146,8 +147,8 @@ tilecount:	= 4						; 4 per column, 16 total
 		adda.w	d0,a4					; jump to appropriate tile
 		locVRAM	$5A40
 		moveq	#0,d3
-		move.b	(v_levelani_2_frame).w,d3
-		addq.b	#1,(v_levelani_2_frame).w		; increment frame counter (unused)
+		move.b	(v_levelani_4_frame).w,d3
+		addq.b	#1,(v_levelani_4_frame).w		; increment frame counter (unused)
 		move.b	(v_oscillating_table+8).w,d3		; get oscillating value
 		move.w	#4-1,d2					; number of columns of tiles
 
@@ -253,7 +254,7 @@ LoadTiles:
 		rept sizeof_cell/4
 		move.l	(a1)+,(a6)				; copy 1 tile to VRAM
 		endr
-		dbf	d1,LoadTiles				; repeat for number of tiles
+		dbf	d1,LoadTiles
 AniArt_none:
 		rts
 

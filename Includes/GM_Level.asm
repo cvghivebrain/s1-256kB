@@ -1,6 +1,53 @@
 ; ---------------------------------------------------------------------------
 ; Level
 ; ---------------------------------------------------------------------------
+LevelArtPtrs:	dc.l KosArt_GHZ, v_ghz_art
+		dc.l 0, 0
+		dc.l KosArt_MZ, v_mz_art
+		dc.l 0, 0
+		dc.l 0, 0
+		dc.l KosArt_SBZ, v_sbz_art
+
+LoadAnimArt:
+		moveq	#0,d0
+		move.b	(v_zone).w,d0				; get zone number
+		lsl.w	#3,d0					; multiply by 8
+		lea	(LevelArtPtrs).l,a2			; address of animated art pointers
+		lea	(a2,d0.w),a2				; jump to relevant pointer
+		tst.l	(a2)
+		beq.s	@no_art					; branch if 0
+		movea.l	(a2)+,a0				; get gfx pointer
+		movea.l	(a2),a1					; get RAM address
+		bsr.w	KosDec					; decompress
+	@no_art:
+		rts
+
+LoadLevelPLC:
+		moveq	#0,d0
+		move.b	(v_zone).w,d0				; get zone number
+		lsl.w	#4,d0					; multiply by $10 (size of each level header)
+		lea	(LevelHeaders).l,a2
+		lea	(a2,d0.w),a2				; jump to relevant level header
+		moveq	#0,d0
+		move.b	(a2),d0					; get 1st PLC id for level
+		beq.s	@no_plc					; branch if 0
+		bsr.w	AddPLC					; load level graphics over next few frames
+
+	@no_plc:
+		moveq	#id_PLC_Main2,d0
+		bsr.w	AddPLC					; load graphics for monitors/shield/stars over next few frames
+		rts
+
+LoadVDPSettings:
+		lea	(vdp_control_port).l,a6
+		move.w	#$8B03,(a6)				; single pixel line horizontal scrolling
+		move.w	#$8200+(vram_fg>>10),(a6)		; set foreground nametable address
+		move.w	#$8400+(vram_bg>>13),(a6)		; set background nametable address
+		move.w	#$8500+(vram_sprites>>9),(a6)		; set sprite table address
+		move.w	#$9001,(a6)				; 64x32 cell plane size
+		move.w	#$8004,(a6)				; normal colour mode
+		move.w	#$9200,(a6)				; window vertical position 0 (i.e. disabled)
+		rts
 
 GM_Level:
 		bset	#7,(v_gamemode).w			; add $80 to gamemode (for pre level sequence)
@@ -18,19 +65,8 @@ GM_Level:
 		lea	(Nem_TitleCard).l,a0			; load title card patterns
 		bsr.w	NemDec
 		enable_ints
-		moveq	#0,d0
-		move.b	(v_zone).w,d0				; get zone number
-		lsl.w	#4,d0					; multiply by $10 (size of each level header)
-		lea	(LevelHeaders).l,a2
-		lea	(a2,d0.w),a2				; jump to relevant level header
-		moveq	#0,d0
-		move.b	(a2),d0					; get 1st PLC id for level
-		beq.s	@no_plc					; branch if 0
-		bsr.w	AddPLC					; load level graphics over next few frames
-
-	@no_plc:
-		moveq	#id_PLC_Main2,d0
-		bsr.w	AddPLC					; load graphics for monitors/shield/stars over next few frames
+		bsr.w	LoadAnimArt
+		bsr.w	LoadLevelPLC
 
 	@skip_gfx:
 		lea	(v_ost_all).w,a1
@@ -69,13 +105,7 @@ GM_Level:
 
 		disable_ints
 		bsr.w	ClearScreen
-		lea	(vdp_control_port).l,a6
-		move.w	#$8B03,(a6)				; single pixel line horizontal scrolling
-		move.w	#$8200+(vram_fg>>10),(a6)		; set foreground nametable address
-		move.w	#$8400+(vram_bg>>13),(a6)		; set background nametable address
-		move.w	#$8500+(vram_sprites>>9),(a6)		; set sprite table address
-		move.w	#$9001,(a6)				; 64x32 cell plane size
-		move.w	#$8004,(a6)				; normal colour mode
+		bsr.w	LoadVDPSettings
 		move.w	#$8720,(a6)				; set background colour (line 3; colour 0)
 		move.w	#$8A00+223,(v_vdp_hint_counter).w	; set palette change position (for water)
 		move.w	(v_vdp_hint_counter).w,(a6)
@@ -156,7 +186,6 @@ Level_Skip_TtlCard:
 		bset	#redraw_left_bit,(v_fg_redraw_direction).w
 		bsr.w	LevelDataLoad				; load block mappings and palettes
 		bsr.w	DrawTilesAtStart
-		jsr	(ConvertCollisionArray).l
 		bsr.w	SetColIndexPtr
 		bsr.w	LZWaterFeatures
 		move.b	#id_SonicPlayer,(v_ost_player).w	; load Sonic object

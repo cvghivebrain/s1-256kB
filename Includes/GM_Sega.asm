@@ -13,12 +13,9 @@ GM_Sega:
 		play.b	1, bsr.w, cmd_Stop			; stop music
 		bsr.w	ClearPLC
 		bsr.w	PaletteFadeOut				; fade out from previous gamemode
-		lea	(vdp_control_port).l,a6
-		move.w	#$8004,(a6)				; use normal colour mode
-		move.w	#$8200+(vram_fg>>10),(a6)		; set foreground nametable address
-		move.w	#$8400+(vram_bg>>13),(a6)		; set background nametable address
+		bsr.w	LoadVDPSettings
 		move.w	#$8700,(a6)				; set background colour (palette entry 0)
-		move.w	#$8B00,(a6)				; full-screen vertical scrolling
+		move.w	#$8B00,(a6)				; full-screen scrolling
 		clr.b	(f_water_pal_full).w
 		disable_ints
 		disable_display
@@ -34,13 +31,6 @@ GM_Sega:
 		copyTilemap	$FF0000,vram_bg,8,$A,sega_bg_width,sega_bg_height
 		copyTilemap	$FF0000+(sega_bg_width*sega_bg_height*2),vram_fg,0,0,sega_fg_width,sega_fg_height
 								; copy mappings to fg/bg nametables in VRAM
-
-		if Revision=0
-		else
-			tst.b   (v_console_region).w		; is console Japanese?
-			bmi.s   @loadpal			; if not, branch
-			copyTilemap	$FF0A40,vram_fg,$1D,$A,3,2 ; hide "TM" with a white 3x2 rectangle
-		endc
 
 	@loadpal:
 		moveq	#id_Pal_SegaBG,d0

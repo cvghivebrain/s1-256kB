@@ -202,8 +202,6 @@ CheckSumError:
 		bra.s	@endlessloop
 ; ===========================================================================
 
-		include	"Includes\Errors.asm"
-
 Art_Text:	incbin	"Graphics\Level Select & Debug Text.bin" ; text used in level select and debug mode
 		even
 
@@ -703,8 +701,6 @@ See_DataFlat:	incbin	"Collision\SLZ Seesaw Heightmap (Flat).bin" ; used by Seesa
 
 		include_Sonic_2					; Objects\Sonic.asm
 		include "Objects\_FindNearestTile, FindFloor & FindWall.asm"
-
-		include	"Includes\ConvertCollisionArray.asm"
 
 		include_Sonic_3					; Objects\Sonic.asm
 		include "Objects\_FindFloorObj, FindWallRightObj, FindCeilingObj & FindWallLeftObj.asm"

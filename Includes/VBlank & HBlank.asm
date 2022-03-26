@@ -30,6 +30,17 @@ VBlank_Music:
 VBlank_Exit:
 		addq.l	#1,(v_vblank_counter).w			; increment frame counter
 		movem.l	(sp)+,d0-a6				; restore all registers from stack
+BusError:
+AddressError:
+IllegalInstr:
+ZeroDivide:
+ChkInstr:
+TrapvInstr:
+PrivilegeViol:
+Trace:
+Line1010Emu:
+Line1111Emu:
+ErrorExcept:
 		rte						; end of VBlank
 ; ===========================================================================
 VBlank_Index:	index *,,2

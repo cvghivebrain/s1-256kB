@@ -5,13 +5,7 @@
 GM_Credits:
 		bsr.w	ClearPLC				; clear PLC buffer
 		bsr.w	PaletteFadeOut				; fade out from previous gamemode
-		lea	(vdp_control_port).l,a6
-		move.w	#$8004,(a6)				; normal colour mode
-		move.w	#$8200+(vram_fg>>10),(a6)		; set foreground nametable address
-		move.w	#$8400+(vram_bg>>13),(a6)		; set background nametable address
-		move.w	#$9001,(a6)				; 64x32 cell plane size
-		move.w	#$9200,(a6)				; window vertical position
-		move.w	#$8B03,(a6)				; line scroll mode
+		bsr.w	LoadVDPSettings
 		move.w	#$8720,(a6)				; set background colour (line 3; colour 0)
 		clr.b	(f_water_pal_full).w
 		bsr.w	ClearScreen
@@ -40,19 +34,8 @@ GM_Credits:
 		jsr	(ExecuteObjects).l
 		jsr	(BuildSprites).l
 		bsr.w	EndDemoSetup				; setup for next mini-demo
-		moveq	#0,d0
-		move.b	(v_zone).w,d0				; get zone number
-		lsl.w	#4,d0					; multiply by $10 (size of each level header)
-		lea	(LevelHeaders).l,a2
-		lea	(a2,d0.w),a2				; jump to relevant level header
-		moveq	#0,d0
-		move.b	(a2),d0					; get 1st PLC id for level
-		beq.s	@no_plc					; branch if 0
-		bsr.w	AddPLC					; load level graphics over next few frames
-
-	@no_plc:
-		moveq	#id_PLC_Main2,d0
-		bsr.w	AddPLC					; load graphics for monitors/shield/stars over next few frames
+		bsr.w	LoadAnimArt
+		bsr.w	LoadLevelPLC
 		move.w	#120,(v_countdown).w			; display a credit for 2 seconds
 		bsr.w	PaletteFadeIn				; fade credits text in from black
 

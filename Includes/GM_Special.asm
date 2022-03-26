@@ -6,9 +6,7 @@ GM_Special:
 		play.w	1, bsr.w, sfx_EnterSS			; play special stage entry sound
 		bsr.w	PaletteWhiteOut				; fade to white from previous gamemode
 		disable_ints
-		lea	(vdp_control_port).l,a6
-		move.w	#$8B03,(a6)				; 1-pixel line scroll mode
-		move.w	#$8004,(a6)				; normal colour mode
+		bsr.w	LoadVDPSettings
 		move.w	#$8A00+175,(v_vdp_hint_counter).w
 		move.w	#$9011,(a6)				; 64x64 cell plane size
 		disable_display
@@ -103,11 +101,7 @@ SS_MainLoop:
 		beq.w	SS_MainLoop				; if yes, branch
 
 		tst.w	(v_demo_mode).w				; is demo mode on?
-		if Revision=0
-			bne.w	SS_ToSegaScreen			; if yes, branch
-		else
-			bne.w	SS_ToLevel
-		endc
+		bne.w	SS_ToLevel
 		move.b	#id_Level,(v_gamemode).w		; set screen mode to $0C (level)
 		cmpi.w	#(id_SBZ<<8)+3,(v_zone).w		; is level number higher than FZ?
 		blo.s	@level_ok				; if not, branch
@@ -189,12 +183,9 @@ SS_ToSegaScreen:
 		move.b	#id_Sega,(v_gamemode).w			; goto Sega screen
 		rts
 
-		if Revision=0
-		else
 	SS_ToLevel:	cmpi.b	#id_Level,(v_gamemode).w
 			beq.s	SS_ToSegaScreen
 			rts
-		endc
 
 ; ---------------------------------------------------------------------------
 ; Special stage	background mappings loading subroutine
@@ -973,24 +964,7 @@ SS_BumperData:	dc.b id_SS_Item_Bump1, id_SS_Item_Bump2, id_SS_Item_Bump1, id_SS_
 ; ===========================================================================
 
 SS_Update1Up:
-		subq.b	#1,ss_update_time(a0)
-		bpl.s	locret_1B596
-		move.b	#5,ss_update_time(a0)
-		moveq	#0,d0
-		move.b	ss_update_frame(a0),d0
-		addq.b	#1,ss_update_frame(a0)
-		movea.l	ss_update_levelptr(a0),a1
-		move.b	SS_1UpData(pc,d0.w),d0
-		move.b	d0,(a1)
-		bne.s	locret_1B596
-		clr.l	(a0)
-		clr.l	ss_update_levelptr(a0)
-
-locret_1B596:
-		rts	
-; ===========================================================================
-SS_1UpData:	dc.b id_SS_Item_EmSp1, id_SS_Item_EmSp2, id_SS_Item_EmSp3, id_SS_Item_EmSp4, 0
-		even
+		rts
 ; ===========================================================================
 
 SS_UpdateR:

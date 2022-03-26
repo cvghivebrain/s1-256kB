@@ -8,13 +8,7 @@ GM_Title:
 		bsr.w	PaletteFadeOut				; fade from previous gamemode to black
 		disable_ints
 		bsr.w	DacDriverLoad
-		lea	(vdp_control_port).l,a6
-		move.w	#$8004,(a6)				; normal colour mode
-		move.w	#$8200+(vram_fg>>10),(a6)		; set foreground nametable address
-		move.w	#$8400+(vram_bg>>13),(a6)		; set background nametable address
-		move.w	#$9001,(a6)				; 64x32 cell plane size
-		move.w	#$9200,(a6)				; window vertical position 0 (i.e. disabled)
-		move.w	#$8B03,(a6)				; single pixel line horizontal scrolling
+		bsr.w	LoadVDPSettings
 		move.w	#$8720,(a6)				; set background colour (palette line 2, entry 0)
 		clr.b	(f_water_pal_full).w
 		bsr.w	ClearScreen
@@ -209,10 +203,7 @@ LevSel_Level_SS:
 		move.w	d0,(v_rings).w				; clear rings
 		move.l	d0,(v_time).w				; clear time
 		move.l	d0,(v_score).w				; clear score
-		if Revision=0
-		else
-			move.l	#5000,(v_score_next_life).w	; extra life is awarded at 50000 points
-		endc
+		move.l	#5000,(v_score_next_life).w	; extra life is awarded at 50000 points
 		rts	
 ; ===========================================================================
 
@@ -232,40 +223,14 @@ PlayLevel:
 		move.l	d0,(v_emerald_list).w			; clear emeralds
 		move.l	d0,(v_emerald_list+4).w			; clear emeralds
 		move.b	d0,(v_continues).w			; clear continues
-		if Revision=0
-		else
-			move.l	#5000,(v_score_next_life).w	; extra life is awarded at 50000 points
-		endc
+		move.l	#5000,(v_score_next_life).w	; extra life is awarded at 50000 points
 		play.b	1, bsr.w, cmd_Fade			; fade out music
 		rts	
 ; ===========================================================================
 ; ---------------------------------------------------------------------------
 ; Level	select - level pointers
 ; ---------------------------------------------------------------------------
-LevSel_Ptrs:	if Revision=0
-		; old level order
-		dc.b id_GHZ, 0
-		dc.b id_GHZ, 1
-		dc.b id_GHZ, 2
-		dc.b id_LZ, 0
-		dc.b id_LZ, 1
-		dc.b id_LZ, 2
-		dc.b id_MZ, 0
-		dc.b id_MZ, 1
-		dc.b id_MZ, 2
-		dc.b id_SLZ, 0
-		dc.b id_SLZ, 1
-		dc.b id_SLZ, 2
-		dc.b id_SYZ, 0
-		dc.b id_SYZ, 1
-		dc.b id_SYZ, 2
-		dc.b id_SBZ, 0
-		dc.b id_SBZ, 1
-		dc.b id_LZ, 3					; Scrap Brain Zone 3
-		dc.b id_SBZ, 2					; Final Zone
-		else
-		; correct level order
-		dc.b id_GHZ, 0
+LevSel_Ptrs:	dc.b id_GHZ, 0
 		dc.b id_GHZ, 1
 		dc.b id_GHZ, 2
 		dc.b id_MZ, 0
@@ -284,22 +249,9 @@ LevSel_Ptrs:	if Revision=0
 		dc.b id_SBZ, 1
 		dc.b id_LZ, 3
 		dc.b id_SBZ, 2
-		endc
 LevSel_Ptr_SS:	dc.b id_SS, 0					; Special Stage ($13)
 LevSel_Ptr_ST:	dc.w $8000					; Sound Test ($14)
 LevSel_Ptr_End:
-		even
-; ---------------------------------------------------------------------------
-; Level	select codes
-; ---------------------------------------------------------------------------
-LevSelCode_J:	if Revision=0
-		dc.b btnUp,btnDn,btnL,btnR,0,$FF
-		else
-		dc.b btnUp,btnDn,btnDn,btnDn,btnL,btnR,0,$FF
-		endc
-		even
-
-LevSelCode_US:	dc.b btnUp,btnDn,btnL,btnR,0,$FF
 		even
 
 ; ---------------------------------------------------------------------------
@@ -356,10 +308,7 @@ PlayDemo:
 		move.w	d0,(v_rings).w				; clear rings
 		move.l	d0,(v_time).w				; clear time
 		move.l	d0,(v_score).w				; clear score
-		if Revision=0
-		else
-			move.l	#5000,(v_score_next_life).w	; extra life is awarded at 50000 points
-		endc
+		move.l	#5000,(v_score_next_life).w	; extra life is awarded at 50000 points
 		rts	
 
 ; ---------------------------------------------------------------------------
@@ -552,20 +501,6 @@ lsline:		macro
 LevSel_Strings:	lsline "GREEN HILL ZONE  STAGE 1"
 		lsline "                 STAGE 2"
 		lsline "                 STAGE 3"
-		if Revision=0
-		lsline "LABYRINTH ZONE   STAGE 1"
-		lsline "                 STAGE 2"
-		lsline "                 STAGE 3"
-		lsline "MARBLE ZONE      STAGE 1"
-		lsline "                 STAGE 2"
-		lsline "                 STAGE 3"
-		lsline "STAR LIGHT ZONE  STAGE 1"
-		lsline "                 STAGE 2"
-		lsline "                 STAGE 3"
-		lsline "SPRING YARD ZONE STAGE 1"
-		lsline "                 STAGE 2"
-		lsline "                 STAGE 3"
-		else
 		lsline "MARBLE ZONE      STAGE 1"
 		lsline "                 STAGE 2"
 		lsline "                 STAGE 3"
@@ -578,7 +513,6 @@ LevSel_Strings:	lsline "GREEN HILL ZONE  STAGE 1"
 		lsline "STAR LIGHT ZONE  STAGE 1"
 		lsline "                 STAGE 2"
 		lsline "                 STAGE 3"
-		endc
 		lsline "SCRAP BRAIN ZONE STAGE 1"
 		lsline "                 STAGE 2"
 		lsline "                 STAGE 3"
