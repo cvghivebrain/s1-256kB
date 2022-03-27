@@ -139,6 +139,7 @@ SS_FinishLoop:
 		locVRAM	vram_Nem_TitleCard			; $B000 - Pattern Load Cues.asm
 		lea	(Nem_TitleCard).l,a0			; load title card patterns
 		bsr.w	NemDec
+		bsr.w	LoadHUDArt
 		jsr	(Hud_Base).l
 		enable_ints
 		moveq	#id_Pal_SSResult,d0

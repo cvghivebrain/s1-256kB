@@ -20,6 +20,10 @@ LoadAnimArt:
 		movea.l	(a2),a1					; get RAM address
 		bsr.w	KosDec					; decompress
 	@no_art:
+LoadHUDArt:
+		lea	(KosArt_Hud).l,a0
+		lea	(v_hud_art).w,a1
+		bsr.w	KosDec
 		rts
 
 LoadLevelPLC:

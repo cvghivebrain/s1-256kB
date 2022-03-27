@@ -38,6 +38,7 @@ Removed unused tiles from GHZ/SYZ/SBZ. | 481712 | -1792
 Cleaned up Sonic and boss objects. | 481090 | -622
 Compressed animated level graphics and replaced hardcoded routines with scripts. | 475530 | -5560
 Removed unused code. Fixed bug where animated graphics weren't loaded until after the title card. | 474628 | -902
+Compressed HUD graphics. | 473734 | -894
 Target | 262144 | 
 
 ## Credits

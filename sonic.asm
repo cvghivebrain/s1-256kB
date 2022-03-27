@@ -907,9 +907,7 @@ SS_Item_Glass8:	ss_sprite Map_SS_Glass,tile_Nem_SSGlass+tile_pal3,0 ; $4E
 ; ---------------------------------------------------------------------------
 ; Uncompressed graphics	- HUD and lives counter
 ; ---------------------------------------------------------------------------
-Art_Hud:	incbin	"Graphics\HUD Numbers.bin"		; 8x16 pixel numbers on HUD
-		even
-Art_LivesNums:	incbin	"Graphics\Lives Counter Numbers.bin"	; 8x8 pixel numbers on lives counter
+KosArt_Hud:	incbin	"kosdata\HUD.kos"		; 8x16 pixel numbers on HUD
 		even
 
 		include_levelheaders				; Includes\LevelDataLoad, LevelLayoutLoad & LevelHeaders.asm

@@ -125,7 +125,7 @@ Hud_Base:
 		move.w	#15-1,d2				; number of characters
 
 Hud_Base_Load:
-		lea	Art_Hud(pc),a1				; address of HUD gfx
+		lea	(v_hud_art).w,a1				; address of HUD gfx
 
 @loop_chars:
 		move.w	#((sizeof_cell/4)*2)-1,d1		; each character consist of 2 cells
@@ -134,10 +134,7 @@ Hud_Base_Load:
 		ext.w	d0
 		lsl.w	#5,d0					; multiply tile id by $20
 		lea	(a1,d0.w),a3				; jump to relevant gfx
-
-	@loop_gfx:
-		move.l	(a3)+,(a6)				; write 2 cells to VRAM
-		dbf	d1,@loop_gfx
+		bsr.w	HUDtoVRAM
 
 @next_char:
 		dbf	d2,@loop_chars				; repeat for all characters
@@ -182,7 +179,7 @@ Hud_Score:
 
 Hud_LoadArt:
 		moveq	#0,d4
-		lea	Art_Hud(pc),a1				; address of HUD number gfx
+		lea	(v_hud_art).w,a1				; address of HUD number gfx
 
 @loop:
 		moveq	#0,d2
@@ -207,14 +204,22 @@ Hud_LoadArt:
 		lsl.w	#6,d2					; multiply by $40 (size of 2 tiles per digit)
 		move.l	d0,4(a6)				; set target VRAM address
 		lea	(a1,d2.w),a3				; jump to relevant gfx source
-		rept (sizeof_cell/4)*2
-		move.l	(a3)+,(a6)				; copy 2 tiles to VRAM
-		endr
+		bsr.s	HUDtoVRAM
 
 	@skip_digit:
 		addi.l	#(sizeof_cell*2)<<16,d0			; next VRAM address, 2 tiles ahead
 		dbf	d6,@loop				; repeat for number of digits
 
+		rts
+
+HUDtoVRAM:
+		rept (sizeof_cell/4)
+		move.l	(a3)+,(a6)
+		endr
+HUDtoVRAM2:
+		rept (sizeof_cell/4)
+		move.l	(a3)+,(a6)
+		endr
 		rts
 
 ; ---------------------------------------------------------------------------
@@ -235,7 +240,7 @@ ContScrCounter:
 		lea	(Hud_10).l,a2
 		moveq	#2-1,d6					; number of digits
 		moveq	#0,d4
-		lea	Art_Hud(pc),a1				; address of number gfx
+		lea	(v_hud_art).w,a1				; address of number gfx
 
 @loop:
 		moveq	#0,d2
@@ -252,9 +257,7 @@ ContScrCounter:
 		add.l	d3,d1
 		lsl.w	#6,d2					; multiply by $40 (size of 2 tiles per digit)
 		lea	(a1,d2.w),a3				; jump to relevant gfx source
-		rept (sizeof_cell/4)*2
-		move.l	(a3)+,(a6)				; copy 2 tiles to VRAM
-		endr
+		bsr.s	HUDtoVRAM
 		dbf	d6,@loop				; repeat 1 more	time
 
 		rts
@@ -292,7 +295,7 @@ Hud_Secs:
 
 Hud_Time_Load:
 		moveq	#0,d4
-		lea	Art_Hud(pc),a1				; address of HUD number gfx
+		lea	(v_hud_art).w,a1				; address of HUD number gfx
 
 @loop:
 		moveq	#0,d2
@@ -315,9 +318,7 @@ Hud_Time_Load:
 		lsl.w	#6,d2					; multiply by $40 (size of 2 tiles per digit)
 		move.l	d0,4(a6)				; set target VRAM address
 		lea	(a1,d2.w),a3				; jump to relevant gfx source
-		rept (sizeof_cell/4)*2
-		move.l	(a3)+,(a6)				; copy 2 tiles to VRAM
-		endr
+		bsr.w	HUDtoVRAM
 		addi.l	#(sizeof_cell*2)<<16,d0			; next VRAM address, 2 tiles ahead
 		dbf	d6,@loop				; repeat for number of digits
 
@@ -338,7 +339,7 @@ Hud_TimeRingBonus:
 		lea	(Hud_1000).l,a2				; multiples of 10
 		moveq	#4-1,d6					; number of digits
 		moveq	#0,d4
-		lea	Art_Hud(pc),a1				; address of HUD number gfx
+		lea	(v_hud_art).w,a1				; address of HUD number gfx
 
 @loop:
 		moveq	#0,d2
@@ -362,9 +363,7 @@ Hud_TimeRingBonus:
 		beq.s	@skip_digit				; branch if digit was 0
 		lsl.w	#6,d2					; multiply by $40 (size of 2 tiles per digit)
 		lea	(a1,d2.w),a3				; jump to relevant gfx source
-		rept (sizeof_cell/4)*2
-		move.l	(a3)+,(a6)				; copy 2 tiles to VRAM
-		endr
+		bsr.w	HUDtoVRAM
 
 @next:
 		dbf	d6,@loop				; repeat for number of digits
@@ -397,7 +396,7 @@ Hud_Lives:
 		lea	(Hud_10).l,a2				; multiples of 10
 		moveq	#2-1,d6					; number of digits
 		moveq	#0,d4
-		lea	Art_LivesNums(pc),a1			; address of lives counter gfx
+		lea	(v_hud_art+$300).w,a1			; address of lives counter gfx
 
 @loop:
 		move.l	d0,4(a6)				; set VRAM address
@@ -424,9 +423,7 @@ Hud_Lives:
 @show_digit:
 		lsl.w	#5,d2					; multiply by $20 (size of cell)
 		lea	(a1,d2.w),a3				; jump to relevant gfx source
-		rept sizeof_cell/4
-		move.l	(a3)+,(a6)				; copy tile to VRAM
-		endr
+		bsr.w	HUDtoVRAM2
 
 @next:
 		addi.l	#(sizeof_cell*2)<<16,d0			; next VRAM address, 2 tiles ahead (1st & 2nd digits are not adjacent)
