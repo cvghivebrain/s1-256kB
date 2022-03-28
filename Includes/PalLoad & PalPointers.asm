@@ -8,18 +8,9 @@
 ; ---------------------------------------------------------------------------
 
 PalLoad_Next:
-		lea	(PalPointers).l,a1
-		lsl.w	#3,d0
-		adda.w	d0,a1
-		movea.l	(a1)+,a2				; get palette data address
-		movea.w	(a1)+,a3				; get target RAM address
+		bsr.s	PalLoad_sub
 		adda.w	#v_pal_dry_next-v_pal_dry,a3		; jump to next palette RAM address
-		move.w	(a1)+,d7				; get length of palette data
-
-	@loop:
-		move.l	(a2)+,(a3)+				; move data to RAM
-		dbf	d7,@loop
-		rts
+		bra.s	PalLoad_sub2
 
 ; ---------------------------------------------------------------------------
 ; Subroutines to load palette immediately
@@ -31,11 +22,9 @@ PalLoad_Next:
 ; ---------------------------------------------------------------------------
 
 PalLoad_Now:
-		lea	(PalPointers).l,a1
-		lsl.w	#3,d0
-		adda.w	d0,a1
-		movea.l	(a1)+,a2				; get palette data address
-		movea.w	(a1)+,a3				; get target RAM address
+		bsr.s	PalLoad_sub
+
+PalLoad_sub2:
 		move.w	(a1)+,d7				; get length of palette
 
 	@loop:
@@ -43,6 +32,13 @@ PalLoad_Now:
 		dbf	d7,@loop
 		rts
 
+PalLoad_sub:
+		lea	(PalPointers).l,a1
+		lsl.w	#3,d0
+		adda.w	d0,a1
+		movea.l	(a1)+,a2				; get palette data address
+		movea.w	(a1)+,a3				; get target RAM address
+		rts
 ; ---------------------------------------------------------------------------
 ; Subroutines to load underwater palette immediately
 
@@ -53,18 +49,9 @@ PalLoad_Now:
 ; ---------------------------------------------------------------------------
 
 PalLoad_Water:
-		lea	(PalPointers).l,a1
-		lsl.w	#3,d0
-		adda.w	d0,a1
-		movea.l	(a1)+,a2				; get palette data address
-		movea.w	(a1)+,a3				; get target RAM address
+		bsr.s	PalLoad_sub
 		suba.w	#v_pal_dry-v_pal_water,a3		; jump to underwater palette RAM address
-		move.w	(a1)+,d7				; get length of palette data
-
-	@loop:
-		move.l	(a2)+,(a3)+				; move data to RAM
-		dbf	d7,@loop
-		rts
+		bra.s	PalLoad_sub2
 
 ; ---------------------------------------------------------------------------
 ; Subroutines to load underwater palette that will be used after fading in
@@ -76,18 +63,9 @@ PalLoad_Water:
 ; ---------------------------------------------------------------------------
 
 PalLoad_Water_Next:
-		lea	(PalPointers).l,a1
-		lsl.w	#3,d0
-		adda.w	d0,a1
-		movea.l	(a1)+,a2				; get palette data address
-		movea.w	(a1)+,a3				; get target RAM address
+		bsr.s	PalLoad_sub
 		suba.w	#v_pal_dry-v_pal_water_next,a3		; jump to next underwater palette RAM address
-		move.w	(a1)+,d7				; get length of palette data
-
-	@loop:
-		move.l	(a2)+,(a3)+				; move data to RAM
-		dbf	d7,@loop
-		rts
+		bra.s	PalLoad_sub2
 
 ; ---------------------------------------------------------------------------
 ; Palette pointers

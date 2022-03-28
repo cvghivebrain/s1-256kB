@@ -23,7 +23,7 @@ OPL_Init:
 		addq.b	#2,(v_opl_routine).w			; goto OPL_Main next
 		move.w	(v_zone).w,d0				; get zone/act numbers
 		lsl.b	#6,d0
-		lsr.w	#4,d0					; combine zone/act into single number, times 4
+		lsr.w	#5,d0					; combine zone/act into single number, times 4
 		lea	(ObjPos_Index).l,a0
 		movea.l	a0,a1					; copy index pointer to a1
 		adda.w	(a0,d0.w),a0				; jump to objpos list for specified zone/act

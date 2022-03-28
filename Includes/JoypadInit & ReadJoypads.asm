@@ -9,8 +9,6 @@ JoypadInit:
 		waitZ80
 		moveq	#$40,d0
 		move.b	d0,(port_1_control).l			; set TH pin of port 1 to write, other pins to read
-		move.b	d0,(port_2_control).l			; set TH pin of port 2 to write, other pins to read
-		move.b	d0,(port_e_control).l			; set TH pin of expansion port to write, other pins to read
 		startZ80
 		rts
 
@@ -27,10 +25,6 @@ JoypadInit:
 ReadJoypads:
 		lea	(v_joypad_hold_actual).w,a0		; address where joypad states are written
 		lea	(port_1_data).l,a1			; first joypad port
-		bsr.s	@read					; do the first joypad
-		addq.w	#2,a1					; do the second	joypad
-
-	@read:
 		move.b	#0,(a1)					; set port to read 00SA00DU
 		nop	
 		nop	

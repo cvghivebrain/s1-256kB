@@ -39,6 +39,7 @@ Cleaned up Sonic and boss objects. | 481090 | -622
 Compressed animated level graphics and replaced hardcoded routines with scripts. | 475530 | -5560
 Removed unused code. Fixed bug where animated graphics weren't loaded until after the title card. | 474628 | -902
 Compressed HUD graphics. | 473734 | -894
+Removed unused code and pointers. | 472670 | -1064
 Target | 262144 | 
 
 ## Credits

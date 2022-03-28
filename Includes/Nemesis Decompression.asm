@@ -16,19 +16,6 @@ NemDec:
 		movem.l	d0-a1/a3-a5,-(sp)
 		lea	(NemPCD_WriteRowToVDP).l,a3		; write all data to the same location
 		lea	(vdp_data_port).l,a4			; specifically, to the VDP data port
-		bra.s	NemDecMain
-
-; ---------------------------------------------------------------------------
-; Nemesis decompression subroutine, decompresses art to RAM (unused)
-
-; input:
-;	a0 = art source address
-;	a4 = destination RAM address
-; ---------------------------------------------------------------------------
-
-NemDecToRAM:
-		movem.l	d0-a1/a3-a5,-(sp)
-		lea	(NemPCD_WriteRowToRAM).l,a3		; advance to the next location after each write
 
 NemDecMain:
 		lea	(v_nem_gfx_buffer).w,a1
@@ -138,23 +125,7 @@ NemPCD_WriteRowToVDP_XOR:
 		subq.w	#1,a5
 		move.w	a5,d4
 		bne.s	NemPCD_NewRow
-		rts	
-; ===========================================================================
-
-NemPCD_WriteRowToRAM:
-		move.l	d4,(a4)+
-		subq.w	#1,a5
-		move.w	a5,d4
-		bne.s	NemPCD_NewRow
-		rts	
-; ===========================================================================
-NemPCD_WriteRowToRAM_XOR:
-		eor.l	d4,d2
-		move.l	d2,(a4)+
-		subq.w	#1,a5
-		move.w	a5,d4
-		bne.s	NemPCD_NewRow
-		rts	
+		rts
 
 ; ---------------------------------------------------------------------------
 ; Part of the Nemesis decompressor, builds the code table (in RAM)

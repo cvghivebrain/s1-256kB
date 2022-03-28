@@ -7,11 +7,8 @@
 LZWaterFeatures:
 		cmpi.b	#id_LZ,(v_zone).w			; check if level is LZ
 		bne.s	@notlabyrinth				; if not, branch
-		if Revision=0
-		else
-			tst.b   (f_disable_scrolling).w
-			bne.s	@set_height
-		endc
+		tst.b   (f_disable_scrolling).w
+		bne.s	@set_height
 		cmpi.b	#id_Sonic_Death,(v_ost_player+ost_routine).w ; has Sonic just died?
 		bcc.s	@set_height				; if yes, skip other effects
 
@@ -455,6 +452,7 @@ LZSlide_Move:
 		play.w	1, jsr, sfx_Waterfall			; play water sound every 32nd frame
 
 	@skip_sound:
+LZSlide_Move_rts:
 		rts
 
 ; ===========================================================================

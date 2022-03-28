@@ -113,39 +113,6 @@ ErrorTrap:
 		include	"Includes\Mega Drive Setup.asm"		; EntryPoint
 
 GameProgram:
-		tst.w	(vdp_control_port).l
-		btst	#6,(port_e_control).l
-		beq.s	CheckSumCheck
-		cmpi.l	#'init',(v_checksum_pass).w		; has checksum routine already run?
-		beq.w	GameInit				; if yes, branch
-
-CheckSumCheck:
-		movea.l	#EndOfHeader,a0				; start	checking bytes after the header	($200)
-		movea.l	#RomEndLoc,a1				; stop at end of ROM
-		move.l	(a1),d0
-		moveq	#0,d1
-
-	@loop:
-		add.w	(a0)+,d1
-		cmp.l	a0,d0
-		bhs.s	@loop
-		movea.l	#Checksum,a1				; read the checksum
-		cmp.w	(a1),d1					; compare checksum in header to ROM
-		bne.w	CheckSumError				; if they don't match, branch
-
-	CheckSumOk:
-		lea	(v_keep_after_reset).w,a6		; $FFFFFE00
-		moveq	#0,d7
-		move.w	#(($FFFFFFFF-v_keep_after_reset+1)/4)-1,d6
-	@clearRAM:
-		move.l	d7,(a6)+
-		dbf	d6,@clearRAM				; clear RAM ($FE00-$FFFF)
-
-		move.b	(console_version).l,d0
-		andi.b	#$C0,d0
-		move.b	d0,(v_console_region).w			; get region setting
-		move.l	#'init',(v_checksum_pass).w		; set flag so checksum won't run again
-
 GameInit:
 		lea	($FF0000).l,a6
 		moveq	#0,d7
@@ -187,19 +154,6 @@ GameModeArray:
 		gmptr Ending					; End of game sequence ($18)
 		gmptr Credits					; Credits ($1C)
 		rts
-; ===========================================================================
-
-CheckSumError:
-		bsr.w	VDPSetupGame
-		move.l	#$C0000000,(vdp_control_port).l		; set VDP to CRAM write
-		moveq	#(sizeof_pal_all/2)-1,d7
-
-	@fillred:
-		move.w	#cRed,(vdp_data_port).l			; fill palette with red
-		dbf	d7,@fillred				; repeat $3F more times
-
-	@endlessloop:
-		bra.s	@endlessloop
 ; ===========================================================================
 
 Art_Text:	incbin	"Graphics\Level Select & Debug Text.bin" ; text used in level select and debug mode
@@ -1185,150 +1139,108 @@ Level_Index:	index *
 		; GHZ
 		ptr Level_GHZ1
 		ptr Level_GHZbg
-		ptr byte_68D70
 		
 		ptr Level_GHZ2
 		ptr Level_GHZbg
-		ptr byte_68E3C
 		
 		ptr Level_GHZ3
 		ptr Level_GHZbg
-		ptr byte_68F84
 		
-		ptr byte_68F88
-		ptr byte_68F88
-		ptr byte_68F88
+		ptr Level_GHZ3
+		ptr Level_GHZbg
 		
 		; LZ
 		ptr Level_LZ1
 		ptr Level_LZbg
-		ptr byte_69190
 		
 		ptr Level_LZ2
 		ptr Level_LZbg
-		ptr byte_6922E
 		
 		ptr Level_LZ3
 		ptr Level_LZbg
-		ptr byte_6934C
 		
 		ptr Level_SBZ3
 		ptr Level_LZbg
-		ptr byte_6940A
 		
 		; MZ
 		ptr Level_MZ1
 		ptr Level_MZ1bg
-		ptr Level_MZ1
 		
 		ptr Level_MZ2
 		ptr Level_MZ2bg
-		ptr byte_6965C
 		
 		ptr Level_MZ3
 		ptr Level_MZ3bg
-		ptr byte_697E6
 		
-		ptr byte_697EA
-		ptr byte_697EA
-		ptr byte_697EA
+		ptr Level_MZ3
+		ptr Level_MZ3bg
 		
 		; SLZ
 		ptr Level_SLZ1
 		ptr Level_SLZbg
-		ptr byte_69B84
 		
 		ptr Level_SLZ2
 		ptr Level_SLZbg
-		ptr byte_69B84
 		
 		ptr Level_SLZ3
 		ptr Level_SLZbg
-		ptr byte_69B84
 		
-		ptr byte_69B84
-		ptr byte_69B84
-		ptr byte_69B84
+		ptr Level_SLZ3
+		ptr Level_SLZbg
 		
 		; SYZ
 		ptr Level_SYZ1
 		ptr Level_SYZbg
-		ptr byte_69C7E
 		
 		ptr Level_SYZ2
 		ptr Level_SYZbg
-		ptr byte_69D86
 		
 		ptr Level_SYZ3
 		ptr Level_SYZbg
-		ptr byte_69EE4
 		
-		ptr byte_69EE8
-		ptr byte_69EE8
-		ptr byte_69EE8
+		ptr Level_SYZ3
+		ptr Level_SYZbg
 		
 		; SBZ
 		ptr Level_SBZ1
 		ptr Level_SBZ1bg
-		ptr Level_SBZ1bg
 		
 		ptr Level_SBZ2
 		ptr Level_SBZ2bg
+		
+		ptr Level_SBZ2
 		ptr Level_SBZ2bg
 		
 		ptr Level_SBZ2
 		ptr Level_SBZ2bg
-		ptr byte_6A2F8
-		
-		ptr byte_6A2FC
-		ptr byte_6A2FC
-		ptr byte_6A2FC
-		zonewarning Level_Index,24
+		zonewarning Level_Index,16
 		
 		; Ending
 		ptr Level_End
 		ptr Level_GHZbg
-		ptr byte_6A320
 		
 		ptr Level_End
 		ptr Level_GHZbg
-		ptr byte_6A320
-		
-		ptr byte_6A320
-		ptr byte_6A320
-		ptr byte_6A320
-		
-		ptr byte_6A320
-		ptr byte_6A320
-		ptr byte_6A320
 
 Level_GHZ1:	incbin	"Level Layouts\ghz1.bin"
 		even
-byte_68D70:	dc.b 0,	0, 0, 0
 Level_GHZ2:	incbin	"Level Layouts\ghz2.bin"
 		even
-byte_68E3C:	dc.b 0,	0, 0, 0
 Level_GHZ3:	incbin	"Level Layouts\ghz3.bin"
 		even
 Level_GHZbg:	incbin	"Level Layouts\ghzbg.bin"
 		even
-byte_68F84:	dc.b 0,	0, 0, 0
-byte_68F88:	dc.b 0,	0, 0, 0
 
 Level_LZ1:	incbin	"Level Layouts\lz1.bin"
 		even
 Level_LZbg:	incbin	"Level Layouts\lzbg.bin"
 		even
-byte_69190:	dc.b 0,	0, 0, 0
 Level_LZ2:	incbin	"Level Layouts\lz2.bin"
 		even
-byte_6922E:	dc.b 0,	0, 0, 0
 Level_LZ3:	incbin	"Level Layouts\lz3.bin"
 		even
-byte_6934C:	dc.b 0,	0, 0, 0
 Level_SBZ3:	incbin	"Level Layouts\sbz3.bin"
 		even
-byte_6940A:	dc.b 0,	0, 0, 0
 
 Level_MZ1:	incbin	"Level Layouts\mz1.bin"
 		even
@@ -1338,13 +1250,10 @@ Level_MZ2:	incbin	"Level Layouts\mz2.bin"
 		even
 Level_MZ2bg:	incbin	"Level Layouts\mz2bg.bin"
 		even
-byte_6965C:	dc.b 0,	0, 0, 0
 Level_MZ3:	incbin	"Level Layouts\mz3.bin"
 		even
 Level_MZ3bg:	incbin	"Level Layouts\mz3bg.bin"
 		even
-byte_697E6:	dc.b 0,	0, 0, 0
-byte_697EA:	dc.b 0,	0, 0, 0
 
 Level_SLZ1:	incbin	"Level Layouts\slz1.bin"
 		even
@@ -1354,20 +1263,15 @@ Level_SLZ2:	incbin	"Level Layouts\slz2.bin"
 		even
 Level_SLZ3:	incbin	"Level Layouts\slz3.bin"
 		even
-byte_69B84:	dc.b 0,	0, 0, 0
 
 Level_SYZ1:	incbin	"Level Layouts\syz1.bin"
 		even
 Level_SYZbg:	incbin	"Level Layouts\syzbg (JP1).bin"
 		even
-byte_69C7E:	dc.b 0,	0, 0, 0
 Level_SYZ2:	incbin	"Level Layouts\syz2.bin"
 		even
-byte_69D86:	dc.b 0,	0, 0, 0
 Level_SYZ3:	incbin	"Level Layouts\syz3.bin"
 		even
-byte_69EE4:	dc.b 0,	0, 0, 0
-byte_69EE8:	dc.b 0,	0, 0, 0
 
 Level_SBZ1:	incbin	"Level Layouts\sbz1.bin"
 		even
@@ -1377,11 +1281,8 @@ Level_SBZ2:	incbin	"Level Layouts\sbz2.bin"
 		even
 Level_SBZ2bg:	incbin	"Level Layouts\sbz2bg.bin"
 		even
-byte_6A2F8:	dc.b 0,	0, 0, 0
-byte_6A2FC:	dc.b 0,	0, 0, 0
 Level_End:	incbin	"Level Layouts\ending.bin"
 		even
-byte_6A320:	dc.b 0,	0, 0, 0
 
 ; ---------------------------------------------------------------------------
 ; Object position index
@@ -1389,68 +1290,38 @@ byte_6A320:	dc.b 0,	0, 0, 0
 ObjPos_Index:	index *
 		; GHZ
 		ptr ObjPos_GHZ1
-		ptr ObjPos_Null
 		ptr ObjPos_GHZ2
-		ptr ObjPos_Null
 		ptr ObjPos_GHZ3
-		ptr ObjPos_Null
 		ptr ObjPos_GHZ1
-		ptr ObjPos_Null
 		; LZ
 		ptr ObjPos_LZ1
-		ptr ObjPos_Null
 		ptr ObjPos_LZ2
-		ptr ObjPos_Null
 		ptr ObjPos_LZ3
-		ptr ObjPos_Null
 		ptr ObjPos_SBZ3
-		ptr ObjPos_Null
 		; MZ
 		ptr ObjPos_MZ1
-		ptr ObjPos_Null
 		ptr ObjPos_MZ2
-		ptr ObjPos_Null
 		ptr ObjPos_MZ3
-		ptr ObjPos_Null
 		ptr ObjPos_MZ1
-		ptr ObjPos_Null
 		; SLZ
 		ptr ObjPos_SLZ1
-		ptr ObjPos_Null
 		ptr ObjPos_SLZ2
-		ptr ObjPos_Null
 		ptr ObjPos_SLZ3
-		ptr ObjPos_Null
 		ptr ObjPos_SLZ1
-		ptr ObjPos_Null
 		; SYZ
 		ptr ObjPos_SYZ1
-		ptr ObjPos_Null
 		ptr ObjPos_SYZ2
-		ptr ObjPos_Null
 		ptr ObjPos_SYZ3
-		ptr ObjPos_Null
 		ptr ObjPos_SYZ1
-		ptr ObjPos_Null
 		; SBZ
 		ptr ObjPos_SBZ1
-		ptr ObjPos_Null
 		ptr ObjPos_SBZ2
-		ptr ObjPos_Null
 		ptr ObjPos_FZ
-		ptr ObjPos_Null
 		ptr ObjPos_SBZ1
-		ptr ObjPos_Null
 		zonewarning ObjPos_Index,$10
 		; Ending
 		ptr ObjPos_End
-		ptr ObjPos_Null
 		ptr ObjPos_End
-		ptr ObjPos_Null
-		ptr ObjPos_End
-		ptr ObjPos_Null
-		ptr ObjPos_End
-		ptr ObjPos_Null
 		; --- Put extra object data here. ---
 ObjPosLZPlatform_Index:
 		ptr ObjPos_LZ1pf1
@@ -1495,7 +1366,6 @@ ObjPosSBZPlatform_Index:
 		include	"Object Placement\FZ.asm"
 		include	"Object Placement\SBZ Platforms.asm"
 		include	"Object Placement\Ending.asm"
-ObjPos_Null:	endobj
 
 ; ---------------------------------------------------------------------------
 ; Sound driver data

@@ -38,7 +38,6 @@ VDPSetupGame:
 		btst	#1,d1					; is dma_fill still running?
 		bne.s	@waitforDMA				; if yes, branch
 
-		move.w	#$8F02,(a5)				; set VDP increment size
 		move.l	(sp)+,d1
 		rts
 
@@ -46,18 +45,13 @@ VDPSetupGame:
 VDPSetupArray:	dc.w $8004					; normal colour mode
 		dc.w $8134					; enable V.interrupts, enable DMA
 		dc.w $8200+(vram_fg>>10)			; set foreground nametable address
-		dc.w $8300+(vram_window>>10)			; set window nametable address
 		dc.w $8400+(vram_bg>>13)			; set background nametable address
 		dc.w $8500+(vram_sprites>>9)			; set sprite table address
-		dc.w $8600					; unused
 		dc.w $8700					; set background colour (palette entry 0)
-		dc.w $8800					; unused
-		dc.w $8900					; unused
 		dc.w $8A00					; default H.interrupt register
 		dc.w $8B00					; full-screen vertical scrolling
 		dc.w $8C81					; 40-cell display mode
 		dc.w $8D00+(vram_hscroll>>10)			; set background hscroll address
-		dc.w $8E00					; unused
 		dc.w $8F02					; set VDP increment size
 		dc.w $9001					; 64x32 cell plane size
 		dc.w $9100					; window horizontal position

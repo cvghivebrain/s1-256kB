@@ -47,11 +47,9 @@ VBlank_Index:	index *,,2
 		ptr VBlank_Lag					; 0
 		ptr VBlank_Sega					; 2
 		ptr VBlank_Title				; 4
-		ptr VBlank_06					; 6
 		ptr VBlank_Level				; 8
 		ptr VBlank_Special				; $A
 		ptr VBlank_TitleCard				; $C
-		ptr VBlank_0E					; $E
 		ptr VBlank_Pause				; $10
 		ptr VBlank_Fade					; $12
 		ptr VBlank_Sega_SkipLoad			; $14
@@ -121,12 +119,6 @@ VBlank_Title:
 		subq.w	#1,(v_countdown).w			; decrement timer
 
 	@end:
-		rts	
-; ===========================================================================
-
-; 6 - unused
-VBlank_06:
-		bsr.w	ReadPad_Palette_Sprites_HScroll		; read joypad, DMA palettes, sprites and hscroll
 		rts	
 ; ===========================================================================
 
@@ -251,16 +243,7 @@ VBlank_Ending:
 		bsr.w	DrawTilesWhenMoving			; display new tiles if camera has moved
 		jsr	(AnimateLevelGfx).l			; update animated level graphics
 		jsr	(HUD_Update).l				; update HUD graphics
-		bsr.w	ProcessPLC				; decompress up to 9 cells of Nemesis gfx
-		rts	
-; ===========================================================================
-
-; $E - unused
-VBlank_0E:
-		bsr.w	ReadPad_Palette_Sprites_HScroll		; read joypad, DMA palettes, sprites and hscroll
-		addq.b	#1,(v_vblank_0e_counter).w		; increment unused counter
-		move.b	#id_VBlank_0E,(v_vblank_routine).w
-		rts	
+		bra.w	ProcessPLC				; decompress up to 9 cells of Nemesis gfx
 ; ===========================================================================
 
 ; $12 - PaletteWhiteIn, PaletteWhiteOut, PaletteFadeIn, PaletteFadeOut

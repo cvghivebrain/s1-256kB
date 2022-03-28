@@ -29,14 +29,11 @@ LoadHUDArt:
 LoadLevelPLC:
 		moveq	#0,d0
 		move.b	(v_zone).w,d0				; get zone number
-		lsl.w	#4,d0					; multiply by $10 (size of each level header)
-		lea	(LevelHeaders).l,a2
-		lea	(a2,d0.w),a2				; jump to relevant level header
-		moveq	#0,d0
-		move.b	(a2),d0					; get 1st PLC id for level
-		beq.s	@no_plc					; branch if 0
+		lsl.w	#1,d0
+		add.w	#4,d0
+		cmp.b	#id_PLC_TitleCard,d0
+		beq.s	@no_plc
 		bsr.w	AddPLC					; load level graphics over next few frames
-
 	@no_plc:
 		moveq	#id_PLC_Main2,d0
 		bsr.w	AddPLC					; load graphics for monitors/shield/stars over next few frames
