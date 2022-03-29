@@ -41,24 +41,11 @@ GM_Title:
 		bsr.w	PaletteFadeIn				; fade in to "SONIC TEAM PRESENTS" screen from black
 		disable_ints
 
-		locVRAM	vram_title
-		lea	(Nem_TitleFg).l,a0			; load title screen gfx
-		bsr.w	NemDec
-		locVRAM	vram_title_sonic
-		lea	(Nem_TitleSonic).l,a0			; load Sonic title screen gfx
-		bsr.w	NemDec
-		lea	(vdp_data_port).l,a6
-		locVRAM	vram_text,4(a6)
-		lea	(Art_Text).l,a5				; load level select font
-		move.w	#(sizeof_art_text/2)-1,d1
-
-	@load_text:
-		move.w	(a5)+,(a6)
-		dbf	d1,@load_text				; load level select font
+		moveq	#id_KPLC_Title,d0
+		bsr.w	KosPLC
 
 		move.b	#0,(v_last_lamppost).w			; clear lamppost counter
 		move.w	#0,(v_demo_mode).w			; disable debug mode
-		move.w	#0,(v_title_unused).w			; unused variable
 		move.w	#(id_GHZ<<8),(v_zone).w			; set level to GHZ act 1 (0000)
 		move.w	#0,(v_palcycle_time).w			; disable palette cycling
 		bsr.w	LevelParameterLoad			; set level boundaries and Sonic's start position
@@ -148,8 +135,8 @@ Title_PressedStart:
 		move.l	d0,(v_fg_y_pos_vsram).w
 		disable_ints
 		lea	(vdp_data_port).l,a6
-		locVRAM	vram_bg
-		move.w	#(sizeof_vram_bg/4)-1,d1
+		locVRAM	vram_fg
+		move.w	#(sizeof_vram_fg/4)-1,d1
 
 	@clear_bg:
 		move.l	d0,(a6)
@@ -400,7 +387,7 @@ soundtest_pos:	= (sizeof_vram_row*$18)+($18*2)
 
 		lea	(LevSel_Strings).l,a1
 		lea	(vdp_data_port).l,a6
-		locVRAM	vram_bg+text_pos,d4			; $E210
+		locVRAM	vram_fg+text_pos,d4			; $E210
 		move.w	#(vram_text/sizeof_cell)+tile_pal4+tile_hi,d3 ; VRAM setting ($E680: 4th palette, $680th tile)
 		moveq	#$14,d1					; number of lines of text
 
@@ -413,7 +400,7 @@ soundtest_pos:	= (sizeof_vram_row*$18)+($18*2)
 		moveq	#0,d0
 		move.w	(v_levelselect_item).w,d0		; get number of line currently highlighted
 		move.w	d0,d1					; copy to d1
-		locVRAM	vram_bg+text_pos,d4			; $E210
+		locVRAM	vram_fg+text_pos,d4			; $E210
 		lsl.w	#7,d0					; multiply by $80
 		swap	d0					; convert to VDP format
 		add.l	d0,d4					; d4 = VDP address of highlighted line
@@ -433,7 +420,7 @@ soundtest_pos:	= (sizeof_vram_row*$18)+($18*2)
 		move.w	#(vram_text/sizeof_cell)+tile_pal3+tile_hi,d3 ; yellow text for sound test
 
 	@soundtest:
-		locVRAM	vram_bg+soundtest_pos			; $EC30	- sound test position on screen
+		locVRAM	vram_fg+soundtest_pos			; $EC30	- sound test position on screen
 		move.w	(v_levelselect_sound).w,d0		; get sound test number
 		addi.w	#$80,d0					; add $80
 		move.b	d0,d2					; copy to d2
@@ -451,7 +438,7 @@ LevSel_DrawSound:
 		andi.w	#$F,d0					; read only low nybble
 		cmpi.b	#$A,d0					; is digit $A-$F?
 		blo.s	@is_0_9					; if not, branch
-		addi.b	#7,d0					; graphics for A-F start 7 cells later
+		addi.b	#2,d0					; graphics for A-F start 7 cells later
 
 	@is_0_9:
 		add.w	d3,d0					; d0 = character + VRAM setting ($EC30)
@@ -489,7 +476,9 @@ lsline:		macro
 		ls_chr:	substr ,1,"\ls_str"
 		ls_str:	substr 2,,"\ls_str"
 		if instr("YZ","\ls_chr")
-			dc.b "\ls_chr"-$4A			; Y and Z gfx are stored before A
+			dc.b "\ls_chr"-$4F			; Y and Z gfx are stored before A
+		elseif instr("ABCDEFGHIJKLMNOPQRSTUVW","\ls_chr")
+			dc.b "\ls_chr"-$35
 		elseif instr(" ","\ls_chr")
 			dc.b $FF				; space = $FF
 		else
@@ -498,25 +487,25 @@ lsline:		macro
 		endr
 		endm
 
-LevSel_Strings:	lsline "GREEN HILL ZONE  STAGE 1"
-		lsline "                 STAGE 2"
-		lsline "                 STAGE 3"
-		lsline "MARBLE ZONE      STAGE 1"
-		lsline "                 STAGE 2"
-		lsline "                 STAGE 3"
-		lsline "SPRING YARD ZONE STAGE 1"
-		lsline "                 STAGE 2"
-		lsline "                 STAGE 3"
-		lsline "LABYRINTH ZONE   STAGE 1"
-		lsline "                 STAGE 2"
-		lsline "                 STAGE 3"
-		lsline "STAR LIGHT ZONE  STAGE 1"
-		lsline "                 STAGE 2"
-		lsline "                 STAGE 3"
-		lsline "SCRAP BRAIN ZONE STAGE 1"
-		lsline "                 STAGE 2"
-		lsline "                 STAGE 3"
+LevSel_Strings:	lsline "GREEN HILL ZONE  QKAGE 1"
+		lsline "                 QKAGE 2"
+		lsline "                 QKAGE 3"
+		lsline "MARBLE ZONE      QKAGE 1"
+		lsline "                 QKAGE 2"
+		lsline "                 QKAGE 3"
+		lsline "QPRING YARD ZONE QKAGE 1"
+		lsline "                 QKAGE 2"
+		lsline "                 QKAGE 3"
+		lsline "LABYRINKH ZONE   QKAGE 1"
+		lsline "                 QKAGE 2"
+		lsline "                 QKAGE 3"
+		lsline "QKAR LIGHK ZONE  QKAGE 1"
+		lsline "                 QKAGE 2"
+		lsline "                 QKAGE 3"
+		lsline "QCRAP BRAIN ZONE QKAGE 1"
+		lsline "                 QKAGE 2"
+		lsline "                 QKAGE 3"
 		lsline "FINAL ZONE              "
-		lsline "SPECIAL STAGE           "
-		lsline "SOUND SELECT            "
+		lsline "QPECIAL QKAGE           "
+		lsline "QOJND QELECK            "
 		even

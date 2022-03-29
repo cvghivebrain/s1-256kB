@@ -202,3 +202,53 @@ QuickPLC:
 		bsr.w	NemDec					; decompress
 		dbf	d1,@loop				; repeat for length of PLC
 		rts
+
+; ---------------------------------------------------------------------------
+; Subroutine to	decompress graphics using Kosinksi compression
+
+; input:
+;	d0 = index of PLC list
+; ---------------------------------------------------------------------------
+
+KosPLC:
+		lea	(KosLoadCues).l,a2			; load the PLC index
+		add.w	d0,d0
+		move.w	(a2,d0.w),d0
+		lea	(a2,d0.w),a2				; jump to actual PLC
+		move.w	(a2)+,d7				; get number of items in PLC
+		lea	(vdp_data_port).l,a6
+
+	@loop:
+		movea.l	(a2)+,a0				; get graphics pointer
+		lea	($FF0000).l,a1				; decompress to start of RAM
+		bsr.w	KosDec
+		
+		moveq	#0,d0
+		move.w	(a2)+,d0				; get VRAM address
+		lsl.l	#2,d0
+		lsr.w	#2,d0
+		ori.w	#$4000,d0
+		swap	d0
+		move.l	d0,4(a6)				; convert VRAM address to VDP format
+		
+		move.l	a1,d1					; get address of end of decompressed data
+		and.l	#$FFFF,d1				; read only low word
+		lsr.w	#5,d1					; divide by $20
+		sub.w	#1,d1					; d1 = number of tiles minus 1
+		lea	($FF0000).l,a1				; read graphics from here
+		jsr	LoadTiles				; copy to VRAM
+		
+		dbf	d7,@loop				; repeat for length of PLC
+		rts
+
+KosLoadCues:
+		index *
+		ptr KPLC_Title
+
+KPLC_Title:	dc.w 2
+		dc.l KosArt_TitleFG
+		dc.w vram_title
+		dc.l KosArt_TitleSonic
+		dc.w vram_title_sonic
+		dc.l KosArt_Text
+		dc.w vram_text

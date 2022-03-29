@@ -156,7 +156,7 @@ GameModeArray:
 		rts
 ; ===========================================================================
 
-Art_Text:	incbin	"Graphics\Level Select & Debug Text.bin" ; text used in level select and debug mode
+KosArt_Text:	incbin	"kosdata\Level Select Text.kos" ; text used in level select and debug mode
 		even
 
 		include	"Includes\VBlank & HBlank.asm"
@@ -872,8 +872,10 @@ Eni_SegaLogo:	incbin	"Tilemaps\Sega Logo.eni"		; large Sega logo (mappings)
 		even
 Eni_Title:	incbin	"Tilemaps\Title Screen.eni"		; title screen foreground (mappings)
 		even
-		nemfile	Nem_TitleFg
-		nemfile	Nem_TitleSonic
+KosArt_TitleFG:	incbin	"kosdata\Title Screen Foreground.kos"
+		even
+KosArt_TitleSonic:	incbin	"kosdata\Title Screen Sonic.kos"
+		even
 
 		include "Objects\Sonic [Mappings].asm"		; Map_Sonic
 
@@ -1318,7 +1320,7 @@ ObjPos_Index:	index *
 		ptr ObjPos_SBZ2
 		ptr ObjPos_FZ
 		ptr ObjPos_SBZ1
-		zonewarning ObjPos_Index,$10
+		zonewarning ObjPos_Index,8
 		; Ending
 		ptr ObjPos_End
 		ptr ObjPos_End

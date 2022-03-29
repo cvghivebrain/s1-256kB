@@ -40,6 +40,7 @@ Compressed animated level graphics and replaced hardcoded routines with scripts.
 Removed unused code. Fixed bug where animated graphics weren't loaded until after the title card. | 474628 | -902
 Compressed HUD graphics. | 473734 | -894
 Removed unused code and pointers. | 472670 | -1064
+Compressed title screen graphics and removed unused text characters. Added Kosinski-based PLC routine. | 471758 | -912
 Target | 262144 | 
 
 ## Credits
