@@ -20,7 +20,7 @@ Pow_Index:	index *,,2
 
 Pow_Main:	; Routine 0
 		addq.b	#2,ost_routine(a0)			; goto Pow_Move next
-		move.w	#tile_Nem_Monitors,ost_tile(a0)
+		move.w	#$D000/sizeof_cell,ost_tile(a0)
 		move.b	#render_rel+render_rawmap,ost_render(a0) ; use raw mappings
 		move.b	#3,ost_priority(a0)
 		move.b	#8,ost_actwidth(a0)

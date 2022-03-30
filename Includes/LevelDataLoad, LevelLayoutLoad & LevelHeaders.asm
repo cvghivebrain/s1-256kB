@@ -35,7 +35,7 @@ LevelDataLoad:
 		bsr.w	PalLoad_Next				; load palette (based on d0)
 		move.b	(v_zone).w,d0				; get zone number
 		lsl.w	#1,d0
-		add.w	#5,d0
+		add.w	#1,d0
 		cmp.b	#id_PLC_Boss,d0
 		beq.s	@no_plc
 		bsr.w	AddPLC					; load level graphics over next few frames

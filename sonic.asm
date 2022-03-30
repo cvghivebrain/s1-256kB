@@ -818,7 +818,7 @@ SS_Item_Bump2:	ss_sprite Map_Bump,tile_Nem_Bumper_SS,id_frame_bump_bumped2
 		ss_sprite Map_SS_R,0,0		; $37 - Zone 4
 		ss_sprite Map_SS_R,0,0		; $38 - Zone 5
 		ss_sprite Map_SS_R,0,0		; $39 - Zone 6
-SS_Item_Ring:	ss_sprite Map_Ring,tile_Nem_Ring+tile_pal2,0	; $3A - ring
+SS_Item_Ring:	ss_sprite Map_Ring,($F640/sizeof_cell)+tile_pal2,0	; $3A - ring
 SS_Item_Em1:	ss_sprite Map_SS_Chaos3,tile_Nem_SSEmerald,0	; $3B - emerald
 SS_Item_Em2:	ss_sprite Map_SS_Chaos3,tile_Nem_SSEmerald+tile_pal2,0 ; $3C - emerald
 SS_Item_Em3:	ss_sprite Map_SS_Chaos3,tile_Nem_SSEmerald+tile_pal3,0 ; $3D - emerald
@@ -826,10 +826,10 @@ SS_Item_Em4:	ss_sprite Map_SS_Chaos3,tile_Nem_SSEmerald+tile_pal4,0 ; $3E - emer
 SS_Item_Em5:	ss_sprite Map_SS_Chaos1,tile_Nem_SSEmerald,0	; $3F - emerald
 SS_Item_Em6:	ss_sprite Map_SS_Chaos2,tile_Nem_SSEmerald,0	; $40 - emerald
 SS_Item_Ghost:	ss_sprite Map_SS_R,tile_Nem_SSGhost,0		; $41 - ghost block
-SS_Item_Spark1:	ss_sprite Map_Ring,tile_Nem_Ring+tile_pal2,id_frame_ring_sparkle1 ; $42 - sparkle
-SS_Item_Spark2:	ss_sprite Map_Ring,tile_Nem_Ring+tile_pal2,id_frame_ring_sparkle2 ; $43 - sparkle
-SS_Item_Spark3:	ss_sprite Map_Ring,tile_Nem_Ring+tile_pal2,id_frame_ring_sparkle3 ; $44 - sparkle
-SS_Item_Spark4:	ss_sprite Map_Ring,tile_Nem_Ring+tile_pal2,id_frame_ring_sparkle4 ; $45 - sparkle
+SS_Item_Spark1:	ss_sprite Map_Ring,($F640/sizeof_cell)+tile_pal2,id_frame_ring_sparkle1 ; $42 - sparkle
+SS_Item_Spark2:	ss_sprite Map_Ring,($F640/sizeof_cell)+tile_pal2,id_frame_ring_sparkle2 ; $43 - sparkle
+SS_Item_Spark3:	ss_sprite Map_Ring,($F640/sizeof_cell)+tile_pal2,id_frame_ring_sparkle3 ; $44 - sparkle
+SS_Item_Spark4:	ss_sprite Map_Ring,($F640/sizeof_cell)+tile_pal2,id_frame_ring_sparkle4 ; $45 - sparkle
 SS_Item_EmSp1:	ss_sprite Map_SS_Glass,tile_Nem_SSEmStars+tile_pal2,0 ; $46 - emerald sparkle
 SS_Item_EmSp2:	ss_sprite Map_SS_Glass,tile_Nem_SSEmStars+tile_pal2,1 ; $47 - emerald sparkle
 SS_Item_EmSp3:	ss_sprite Map_SS_Glass,tile_Nem_SSEmStars+tile_pal2,2 ; $48 - emerald sparkle
@@ -887,8 +887,8 @@ Art_Sonic:	incbin	"Graphics\Sonic.bin"			; Sonic
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - various
 ; ---------------------------------------------------------------------------
-		nemfile	Nem_Shield
-		nemfile	Nem_Stars
+KosArt_Shield:	incbin	"kosdata\Shield.kos"
+		even
 
 		include "Objects\Special Stage Walls [Mappings].asm" ; Map_SSWalls
 
@@ -1007,17 +1007,23 @@ Eni_SSBg2:	incbin	"Tilemaps\SS Background 2.eni"		; special stage background (ma
 ; Compressed graphics - various
 ; ---------------------------------------------------------------------------
 		nemfile	Nem_TitleCard
-		nemfile	Nem_Hud
-		nemfile	Nem_Lives
-		nemfile	Nem_Ring
-		nemfile	Nem_Monitors
+KosArt_HudMain:	incbin	"kosdata\HUD text.kos"
+		even
+KosArt_Lives:	incbin	"kosdata\Lives Counter.kos"
+		even
+KosArt_Ring:	incbin	"kosdata\Rings.kos"
+		even
+KosArt_Monitors:	incbin	"kosdata\Monitors.kos"
+		even
 		nemfile	Nem_Explode
-		nemfile	Nem_Points
+KosArt_Points:	incbin	"kosdata\Points.kos"
+		even
 		nemfile	Nem_GameOver
 		nemfile	Nem_HSpring
 		nemfile	Nem_VSpring
 		nemfile	Nem_SignPost
-		nemfile	Nem_Lamp
+KosArt_Lamp:	incbin	"kosdata\Lamppost.kos"
+		even
 		nemfile	Nem_BigRing
 		nemfile	Nem_BigFlash
 		nemfile	Nem_Bonus
@@ -1041,33 +1047,38 @@ Eni_SSBg2:	incbin	"Tilemaps\SS Background 2.eni"		; special stage background (ma
 ; ---------------------------------------------------------------------------
 Blk16_GHZ:	incbin	"16x16 Mappings\GHZ.eni"
 		even
-		nemfile	Nem_GHZ_1st
-		nemfile	Nem_GHZ_2nd
+KosArt_GHZMain:	incbin	"kosdata\GHZ main.kos"
+		even
 Blk256_GHZ:	incbin	"256x256 Mappings\GHZ.kos"
 		even
 Blk16_LZ:	incbin	"16x16 Mappings\LZ.eni"
 		even
-		nemfile	Nem_LZ
+KosArt_LZMain:	incbin	"kosdata\LZ main.kos"
+		even
 Blk256_LZ:	incbin	"256x256 Mappings\LZ.kos"
 		even
 Blk16_MZ:	incbin	"16x16 Mappings\MZ.eni"
 		even
-		nemfile	Nem_MZ
+KosArt_MZMain:	incbin	"kosdata\MZ main.kos"
+		even
 Blk256_MZ:	incbin	"256x256 Mappings\MZ (JP1).kos"
 		even
 Blk16_SLZ:	incbin	"16x16 Mappings\SLZ.eni"
 		even
-		nemfile	Nem_SLZ
+KosArt_SLZMain:	incbin	"kosdata\SLZ main.kos"
+		even
 Blk256_SLZ:	incbin	"256x256 Mappings\SLZ.kos"
 		even
 Blk16_SYZ:	incbin	"16x16 Mappings\SYZ.eni"
 		even
-		nemfile	Nem_SYZ
+KosArt_SYZMain:	incbin	"kosdata\SYZ main.kos"
+		even
 Blk256_SYZ:	incbin	"256x256 Mappings\SYZ.kos"
 		even
 Blk16_SBZ:	incbin	"16x16 Mappings\SBZ.eni"
 		even
-		nemfile	Nem_SBZ
+KosArt_SBZMain:	incbin	"kosdata\SBZ main.kos"
+		even
 Blk256_SBZ:	incbin	"256x256 Mappings\SBZ (JP1).kos"
 		even
 ; ---------------------------------------------------------------------------

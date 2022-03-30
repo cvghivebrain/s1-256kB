@@ -31,7 +31,7 @@ ost_lamp_twirl_time:	equ $36					; length of time to twirl the lamp (2 bytes)
 Lamp_Main:	; Routine 0
 		addq.b	#2,ost_routine(a0)			; goto Lamp_Blue next
 		move.l	#Map_Lamp,ost_mappings(a0)
-		move.w	#tile_Nem_Lamp,ost_tile(a0)
+		move.w	#$F400/sizeof_cell,ost_tile(a0)
 		move.b	#render_rel,ost_render(a0)
 		move.b	#8,ost_actwidth(a0)
 		move.b	#5,ost_priority(a0)
@@ -94,7 +94,7 @@ Lamp_Blue:	; Routine 2
 		move.w	ost_y_pos(a0),ost_lamp_y_start(a1)
 		subi.w	#$18,ost_lamp_y_start(a1)
 		move.l	#Map_Lamp,ost_mappings(a1)
-		move.w	#tile_Nem_Lamp,ost_tile(a1)
+		move.w	#$F400/sizeof_cell,ost_tile(a1)
 		move.b	#render_rel,ost_render(a1)
 		move.b	#8,ost_actwidth(a1)
 		move.b	#4,ost_priority(a1)

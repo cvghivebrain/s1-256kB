@@ -8,6 +8,37 @@ Can I get Sonic the Hedgehog to fit into 256kB?
 * Normal gameplay must appear the same. Debug mode can go.
 * Extra loading time is allowed.
 
+## Methods
+
+* Removal of unused objects.
+  * MZ sideways stomper.
+  * Buzz Bomber missile exploding.
+  * Mystery switch that triggers when touched.
+  * Sonic CD-style special stage entry effect.
+  * Blank objects.
+* Removal of unused variants of objects.
+  * Crabmeat climbing a slope.
+  * Flashing button.
+  * GHZ swinging ball on chain.
+* Removal of unused graphics.
+  * Sonic getting a bubble, surfing, leaping, warping, shrinking and burning.
+  * GHZ grey totem pole.
+  * GHZ rolling ball. The boss only uses 2 frames for its ball.
+  * SYZ "let's go" sign.
+  * SLZ blinking lightbulbs.
+  * Burrobot facing down.
+  * Letters in title cards and level select text.
+  * Special stage zone signs, 1up and W.
+  * Eggman, S and goggles monitors.
+* Removal of unused and duplicate level tiles.
+* Removal of cheats, except level select.
+* Removal of unused code.
+* Reorganising duplicate code into subroutines.
+* More and better compression.
+  * Replacing stock compression with mdcomp.
+  * Kosinski compression replaces Nemesis compression where possible.
+  * Compressed animated graphics by storing it in RAM (much like the flowers from the ending sequence).
+
 ## Progress
 
 Description | Size | Difference
@@ -41,6 +72,7 @@ Removed unused code. Fixed bug where animated graphics weren't loaded until afte
 Compressed HUD graphics. | 473734 | -894
 Removed unused code and pointers. | 472670 | -1064
 Compressed title screen graphics and removed unused text characters. Added Kosinski-based PLC routine. | 471758 | -912
+Kosinski compression for level graphics and some other things. | 457982 | -13776
 Target | 262144 | 
 
 ## Credits

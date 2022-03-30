@@ -211,6 +211,7 @@ QuickPLC:
 ; ---------------------------------------------------------------------------
 
 KosPLC:
+		disable_ints
 		lea	(KosLoadCues).l,a2			; load the PLC index
 		add.w	d0,d0
 		move.w	(a2,d0.w),d0
@@ -239,16 +240,78 @@ KosPLC:
 		jsr	LoadTiles				; copy to VRAM
 		
 		dbf	d7,@loop				; repeat for length of PLC
+		enable_ints
 		rts
 
 KosLoadCues:
 		index *
+		ptr KPLC_GHZ
+		ptr KPLC_LZ
+		ptr KPLC_MZ
+		ptr KPLC_SLZ
+		ptr KPLC_SYZ
+		ptr KPLC_SBZ
 		ptr KPLC_Title
+		ptr KPLC_Main
+		ptr KPLC_Main2
 
-KPLC_Title:	dc.w 2
+KPLC_GHZ:	dc.w ((@end-KPLC_GHZ)/6)-1
+		dc.l KosArt_GHZMain
+		dc.w 0
+	@end:
+
+KPLC_LZ:	dc.w ((@end-KPLC_LZ)/6)-1
+		dc.l KosArt_LZMain
+		dc.w 0
+	@end:
+
+KPLC_MZ:	dc.w ((@end-KPLC_MZ)/6)-1
+		dc.l KosArt_MZMain
+		dc.w 0
+	@end:
+
+KPLC_SLZ:	dc.w ((@end-KPLC_SLZ)/6)-1
+		dc.l KosArt_SLZMain
+		dc.w 0
+	@end:
+
+KPLC_SYZ:	dc.w ((@end-KPLC_SYZ)/6)-1
+		dc.l KosArt_SYZMain
+		dc.w 0
+	@end:
+
+KPLC_SBZ:	dc.w ((@end-KPLC_SBZ)/6)-1
+		dc.l KosArt_SBZMain
+		dc.w 0
+	@end:
+
+KPLC_Title:	dc.w ((@end-KPLC_Title)/6)-1
+		dc.l KosArt_GHZMain
+		dc.w 0
 		dc.l KosArt_TitleFG
 		dc.w vram_title
 		dc.l KosArt_TitleSonic
 		dc.w vram_title_sonic
 		dc.l KosArt_Text
 		dc.w vram_text
+	@end:
+
+KPLC_Main:	dc.w ((@end-KPLC_Main)/6)-1
+		dc.l KosArt_Lamp
+		dc.w $F400
+		dc.l KosArt_HudMain
+		dc.w $D940
+		dc.l KosArt_Lives
+		dc.w $FA80
+		dc.l KosArt_Ring
+		dc.w $F640
+		dc.l KosArt_Points
+		dc.w $F2E0
+	@end:
+
+KPLC_Main2:	dc.w ((@end-KPLC_Main2)/6)-1
+		dc.l KosArt_Monitors
+		dc.w $D000
+		dc.l KosArt_Shield
+		dc.w $A820
+	@end:

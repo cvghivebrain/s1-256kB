@@ -3,9 +3,6 @@
 ; ---------------------------------------------------------------------------
 		nemesis	Nem_SegaLogo,"Sega Logo (JP1)"; large Sega logo
 		
-		nemesis Nem_Shield,"Shield"
-		nemesis Nem_Stars,"Invincibility"
-		
 		; Special Stage
 		nemesis Nem_SSWalls,"Special Stage Walls" ; special stage walls
 		nemesis Nem_SSBgFish,"Special Stage Birds & Fish" ; special stage birds and fish background
@@ -107,17 +104,11 @@
 		
 		; Items
 		nemesis Nem_TitleCard,"Title Cards"
-		nemesis Nem_Hud,"HUD"	; HUD (rings, time, score)
-		nemesis Nem_Lives,"HUD - Life Counter Icon"
-		nemesis Nem_Ring,"Rings"
-		nemesis Nem_Monitors,"Monitors"
 		nemesis Nem_Explode,"Explosion"
-		nemesis Nem_Points,"Points" ; points from destroyed enemy or object
 		nemesis Nem_GameOver,"Game Over" ; game over / time over
 		nemesis Nem_HSpring,"Spring Horizontal"
 		nemesis Nem_VSpring,"Spring Vertical"
 		nemesis Nem_SignPost,"Signpost" ; end of level signpost
-		nemesis Nem_Lamp,"Lamppost"
 		nemesis Nem_BigFlash,"Giant Ring Flash"
 		nemesis Nem_BigRing,"Giant Ring"
 		nemesis Nem_Bonus,"Hidden Bonuses" ; hidden bonuses at end of a level
@@ -134,15 +125,6 @@
 		nemesis Nem_Pig,"Animal Pig"
 		nemesis Nem_Flicky,"Animal Flicky"
 		nemesis Nem_Squirrel,"Animal Squirrel"
-		
-		; Levels
-		nemesis Nem_GHZ_1st,"8x8 - GHZ1" ; GHZ primary patterns
-		nemesis Nem_GHZ_2nd,"8x8 - GHZ2" ; GHZ secondary patterns
-		nemesis Nem_LZ,"8x8 - LZ" ; LZ primary patterns
-		nemesis Nem_MZ,"8x8 - MZ" ; MZ primary patterns
-		nemesis Nem_SLZ,"8x8 - SLZ" ; SLZ primary patterns
-		nemesis Nem_SYZ,"8x8 - SYZ" ; SYZ primary patterns
-		nemesis Nem_SBZ,"8x8 - SBZ" ; SBZ primary patterns
 		
 		; Bosses & ending
 		nemesis Nem_Eggman,"Boss - Main"

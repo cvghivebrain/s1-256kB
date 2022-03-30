@@ -27,13 +27,13 @@ Shi_Main:	; Routine 0
 		move.b	#$10,ost_actwidth(a0)
 		tst.b	ost_anim(a0)				; is object a shield?
 		bne.s	@stars					; if not, branch
-		move.w	#tile_Nem_Shield,ost_tile(a0)		; shield specific code
+		move.w	#$A820/sizeof_cell,ost_tile(a0)		; shield specific code
 		rts	
 ; ===========================================================================
 
 @stars:
 		addq.b	#2,ost_routine(a0)			; goto Shi_Stars next
-		move.w	#tile_Nem_Stars,ost_tile(a0)
+		move.w	#$AB80/sizeof_cell,ost_tile(a0)
 Shi_Shield_rts:
 		rts	
 ; ===========================================================================

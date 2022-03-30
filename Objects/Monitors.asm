@@ -29,7 +29,7 @@ Mon_Main:	; Routine 0
 		move.b	#$E,ost_height(a0)
 		move.b	#$E,ost_width(a0)
 		move.l	#Map_Monitor,ost_mappings(a0)
-		move.w	#tile_Nem_Monitors,ost_tile(a0)
+		move.w	#$D000/sizeof_cell,ost_tile(a0)
 		move.b	#render_rel,ost_render(a0)
 		move.b	#3,ost_priority(a0)
 		move.b	#$F,ost_actwidth(a0)

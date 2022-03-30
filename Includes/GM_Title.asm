@@ -74,9 +74,6 @@ GM_Title:
 
 		copyTilemap	$FF0000,vram_fg,3,4,$22,$16	; copy title screen mappings to fg nametable in VRAM
 
-		locVRAM	0
-		lea	(Nem_GHZ_1st).l,a0			; load GHZ patterns
-		bsr.w	NemDec
 		moveq	#id_Pal_Title,d0			; load title screen palette
 		bsr.w	PalLoad_Next
 		play.b	1, bsr.w, mus_TitleScreen		; play title screen music
@@ -85,8 +82,8 @@ GM_Title:
 		jsr	(ExecuteObjects).l
 		bsr.w	DeformLayers
 		jsr	(BuildSprites).l
-		moveq	#id_PLC_Main,d0				; load lamppost, HUD, lives, ring & points graphics
-		bsr.w	NewPLC					; do it over the next few frames
+		moveq	#id_KPLC_Main,d0
+		bsr.w	KosPLC
 		enable_display
 		bsr.w	PaletteFadeIn				; fade in to title screen from black
 

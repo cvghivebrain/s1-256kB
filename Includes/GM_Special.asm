@@ -144,8 +144,8 @@ SS_FinishLoop:
 		enable_ints
 		moveq	#id_Pal_SSResult,d0
 		bsr.w	PalLoad_Now				; load results screen palette
-		moveq	#id_PLC_Main,d0
-		bsr.w	NewPLC
+		moveq	#id_KPLC_Main,d0
+		bsr.w	KosPLC
 		moveq	#id_PLC_SSResult,d0
 		bsr.w	AddPLC					; load results screen patterns
 		move.b	#1,(f_hud_score_update).w		; update score counter
