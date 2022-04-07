@@ -28,7 +28,7 @@ Msl_Main:	; Routine 0
 		bpl.s	Msl_ChkCancel				; branch if time remains
 		addq.b	#2,ost_routine(a0)			; goto Msl_Animate next
 		move.l	#Map_Missile,ost_mappings(a0)
-		move.w	#tile_Nem_Buzz+tile_pal2,ost_tile(a0)
+		move.w	#(vram_buzz/32)+tile_pal2,ost_tile(a0)
 		move.b	#render_rel,ost_render(a0)
 		move.b	#3,ost_priority(a0)
 		move.b	#8,ost_actwidth(a0)

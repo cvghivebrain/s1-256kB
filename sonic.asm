@@ -915,13 +915,14 @@ Eni_SSBg2:	incbin	"Tilemaps\SS Background 2.eni"		; special stage background (ma
 ; Compressed graphics - GHZ stuff
 ; ---------------------------------------------------------------------------
 		nemfile	Nem_Stalk
-		nemfile	Nem_Swing
+KosArt_Swing:	incbin	"kosdata\GHZ Swinging Platform.kos"
+		even
 		nemfile	Nem_Bridge
 		nemfile	Nem_Ball
-		nemfile	Nem_Spikes
 		nemfile	Nem_SpikePole
 		nemfile	Nem_PplRock
-		nemfile	Nem_GhzWall1
+KosArt_GHZWall1:	incbin	"kosdata\GHZ Smashable Wall.kos"
+		even
 		nemfile	Nem_GhzWall2
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - LZ stuff
@@ -990,14 +991,15 @@ Eni_SSBg2:	incbin	"Tilemaps\SS Background 2.eni"		; special stage background (ma
 ; Compressed graphics - enemies
 ; ---------------------------------------------------------------------------
 		nemfile	Nem_BallHog
-		nemfile	Nem_Crabmeat
-		nemfile	Nem_Buzz
+KosArt_Crabmeat:	incbin	"kosdata\Crabmeat.kos"
+		even
+KosArt_Buzz:	incbin	"kosdata\Buzz Bomber.kos"
+		even
 		nemfile	Nem_Burrobot
-		nemfile	Nem_Chopper
+KosArt_ChopNewtMoto:	incbin	"kosdata\ChopNewtMoto.kos"
+		even
 		nemfile	Nem_Jaws
 		nemfile	Nem_Roller
-		nemfile	Nem_Motobug
-		nemfile	Nem_Newtron
 		nemfile	Nem_Yadrin
 		nemfile	Nem_Batbrain
 		nemfile	Nem_Bomb
@@ -1019,10 +1021,10 @@ KosArt_Monitors:	incbin	"kosdata\Monitors.kos"
 KosArt_Points:	incbin	"kosdata\Points.kos"
 		even
 		nemfile	Nem_GameOver
-		nemfile	Nem_HSpring
-		nemfile	Nem_VSpring
 		nemfile	Nem_SignPost
 KosArt_Lamp:	incbin	"kosdata\Lamppost.kos"
+		even
+KosArt_SpikeSpring:	incbin	"kosdata\SpikeSpring.kos"
 		even
 		nemfile	Nem_BigRing
 		nemfile	Nem_BigFlash

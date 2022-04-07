@@ -40,7 +40,7 @@ ost_spring_power:	equ $30					; power of current spring (2 bytes)
 Spring_Main:	; Routine 0
 		addq.b	#2,ost_routine(a0)			; goto Spring_Up next
 		move.l	#Map_Spring,ost_mappings(a0)
-		move.w	#tile_Nem_HSpring,ost_tile(a0)
+		move.w	#vram_hspring/32,ost_tile(a0)
 		ori.b	#render_rel,ost_render(a0)
 		move.b	#$10,ost_actwidth(a0)
 		move.b	#4,ost_priority(a0)
@@ -51,7 +51,7 @@ Spring_Main:	; Routine 0
 		move.b	#id_Spring_LR,ost_routine(a0)		; goto Spring_LR next
 		move.b	#id_ani_spring_left,ost_anim(a0)
 		move.b	#id_frame_spring_left,ost_frame(a0)
-		move.w	#tile_Nem_VSpring,ost_tile(a0)
+		move.w	#vram_vspring/32,ost_tile(a0)
 		move.b	#8,ost_actwidth(a0)
 
 	@not_horizontal:

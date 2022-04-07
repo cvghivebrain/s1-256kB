@@ -19,13 +19,10 @@
 		
 		; GHZ
 		nemesis Nem_Stalk,"GHZ Flower Stalk"
-		nemesis Nem_Swing,"GHZ Swinging Platform"
 		nemesis Nem_Bridge,"GHZ Bridge"
 		nemesis Nem_Ball,"GHZ Giant Ball"
-		nemesis Nem_Spikes,"Spikes"
 		nemesis Nem_SpikePole,"GHZ Spiked Helix Pole"
 		nemesis Nem_PplRock,"GHZ Purple Rock"
-		nemesis Nem_GhzWall1,"GHZ Smashable Wall"
 		nemesis Nem_GhzWall2,"GHZ Walls"
 		
 		; LZ
@@ -88,14 +85,9 @@
 		
 		; Enemies
 		nemesis Nem_BallHog,"Ball Hog"
-		nemesis Nem_Crabmeat,"Crabmeat"
-		nemesis Nem_Buzz,"Buzz Bomber"
 		nemesis Nem_Burrobot,"Burrobot"
-		nemesis Nem_Chopper,"Chopper"
 		nemesis Nem_Jaws,"Jaws"
 		nemesis Nem_Roller,"Roller"
-		nemesis Nem_Motobug,"Motobug"
-		nemesis Nem_Newtron,"Newtron"
 		nemesis Nem_Yadrin,"Yadrin"
 		nemesis Nem_Batbrain,"Batbrain"
 		nemesis Nem_Bomb,"Bomb Enemy"
@@ -106,8 +98,6 @@
 		nemesis Nem_TitleCard,"Title Cards"
 		nemesis Nem_Explode,"Explosion"
 		nemesis Nem_GameOver,"Game Over" ; game over / time over
-		nemesis Nem_HSpring,"Spring Horizontal"
-		nemesis Nem_VSpring,"Spring Vertical"
 		nemesis Nem_SignPost,"Signpost" ; end of level signpost
 		nemesis Nem_BigFlash,"Giant Ring Flash"
 		nemesis Nem_BigRing,"Giant Ring"

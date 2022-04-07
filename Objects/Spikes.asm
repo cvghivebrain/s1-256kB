@@ -36,7 +36,7 @@ ost_spike_move_time:	equ $38					; time until object moves again (2 bytes)
 Spike_Main:	; Routine 0
 		addq.b	#2,ost_routine(a0)			; goto Spike_Solid next
 		move.l	#Map_Spike,ost_mappings(a0)
-		move.w	#tile_Nem_Spikes,ost_tile(a0)
+		move.w	#vram_spikes/32,ost_tile(a0)
 		ori.b	#render_rel,ost_render(a0)
 		move.b	#4,ost_priority(a0)
 		move.b	ost_subtype(a0),d0

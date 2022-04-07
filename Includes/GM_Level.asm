@@ -71,8 +71,8 @@ GM_Level:
 		lea	(Nem_TitleCard).l,a0			; load title card patterns
 		bsr.w	NemDec
 		enable_ints
-		bsr.w	LoadAnimArt
 		bsr.w	LoadLevelPLC
+		bsr.w	LoadAnimArt
 
 	@skip_gfx:
 		lea	(v_ost_all).w,a1

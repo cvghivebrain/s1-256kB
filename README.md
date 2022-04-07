@@ -73,6 +73,7 @@ Compressed HUD graphics. | 473734 | -894
 Removed unused code and pointers. | 472670 | -1064
 Compressed title screen graphics and removed unused text characters. Added Kosinski-based PLC routine. | 471758 | -912
 Kosinski compression for level graphics and some other things. | 457982 | -13776
+Compressed some GHZ graphics. | 457152 | -830
 Target | 262144 | 
 
 ## Credits

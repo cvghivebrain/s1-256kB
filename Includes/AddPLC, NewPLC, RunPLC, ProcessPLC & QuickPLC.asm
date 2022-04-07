@@ -258,6 +258,16 @@ KosLoadCues:
 KPLC_GHZ:	dc.w ((@end-KPLC_GHZ)/6)-1
 		dc.l KosArt_GHZMain
 		dc.w 0
+		dc.l KosArt_Crabmeat
+		dc.w vram_crabmeat
+		dc.l KosArt_ChopNewtMoto
+		dc.w $8F60
+		dc.l KosArt_Buzz
+		dc.w vram_buzz
+		dc.l KosArt_Swing
+		dc.w $7000
+		dc.l KosArt_GHZWall1
+		dc.w $A1E0
 	@end:
 
 KPLC_LZ:	dc.w ((@end-KPLC_LZ)/6)-1
@@ -268,6 +278,10 @@ KPLC_LZ:	dc.w ((@end-KPLC_LZ)/6)-1
 KPLC_MZ:	dc.w ((@end-KPLC_MZ)/6)-1
 		dc.l KosArt_MZMain
 		dc.w 0
+		dc.l KosArt_Buzz
+		dc.w vram_buzz
+		dc.l KosArt_Swing
+		dc.w $7000
 	@end:
 
 KPLC_SLZ:	dc.w ((@end-KPLC_SLZ)/6)-1
@@ -278,6 +292,10 @@ KPLC_SLZ:	dc.w ((@end-KPLC_SLZ)/6)-1
 KPLC_SYZ:	dc.w ((@end-KPLC_SYZ)/6)-1
 		dc.l KosArt_SYZMain
 		dc.w 0
+		dc.l KosArt_Crabmeat
+		dc.w vram_crabmeat
+		dc.l KosArt_Buzz
+		dc.w vram_buzz
 	@end:
 
 KPLC_SBZ:	dc.w ((@end-KPLC_SBZ)/6)-1
@@ -314,4 +332,6 @@ KPLC_Main2:	dc.w ((@end-KPLC_Main2)/6)-1
 		dc.w $D000
 		dc.l KosArt_Shield
 		dc.w $A820
+		dc.l KosArt_SpikeSpring
+		dc.w vram_spikes
 	@end:
