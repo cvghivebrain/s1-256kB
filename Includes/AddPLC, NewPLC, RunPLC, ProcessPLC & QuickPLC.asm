@@ -273,6 +273,8 @@ KPLC_GHZ:	dc.w ((@end-KPLC_GHZ)/6)-1
 KPLC_LZ:	dc.w ((@end-KPLC_LZ)/6)-1
 		dc.l KosArt_LZMain
 		dc.w 0
+		dc.l KosArt_Button
+		dc.w vram_button
 	@end:
 
 KPLC_MZ:	dc.w ((@end-KPLC_MZ)/6)-1
@@ -280,8 +282,18 @@ KPLC_MZ:	dc.w ((@end-KPLC_MZ)/6)-1
 		dc.w 0
 		dc.l KosArt_Buzz
 		dc.w vram_buzz
+		dc.l KosArt_Caterkiller
+		dc.w vram_cater
 		dc.l KosArt_Swing
 		dc.w $7000
+		dc.l KosArt_MZMetal
+		dc.w $6000
+		dc.l KosArt_MZGlass
+		dc.w $71C0
+		dc.l KosArt_MZButton
+		dc.w $A260
+		dc.l KosArt_MZBlock
+		dc.w $5700
 	@end:
 
 KPLC_SLZ:	dc.w ((@end-KPLC_SLZ)/6)-1
@@ -296,11 +308,19 @@ KPLC_SYZ:	dc.w ((@end-KPLC_SYZ)/6)-1
 		dc.w vram_crabmeat
 		dc.l KosArt_Buzz
 		dc.w vram_buzz
+		dc.l KosArt_Yadrin
+		dc.w vram_yadrin
+		dc.l KosArt_Button
+		dc.w vram_button
 	@end:
 
 KPLC_SBZ:	dc.w ((@end-KPLC_SBZ)/6)-1
 		dc.l KosArt_SBZMain
 		dc.w 0
+		dc.l KosArt_Caterkiller
+		dc.w $5600
+		dc.l KosArt_Button
+		dc.w vram_button
 	@end:
 
 KPLC_Title:	dc.w ((@end-KPLC_Title)/6)-1

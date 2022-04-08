@@ -44,12 +44,8 @@
 		nemesis Nem_LzBlock1,"LZ 32x32 Block"
 		
 		; MZ
-		nemesis Nem_MzMetal,"MZ Metal Blocks"
-		nemesis Nem_MzSwitch,"MZ Switch"
-		nemesis Nem_MzGlass,"MZ Green Glass Block"
 		nemesis Nem_Fireball,"Fireballs"
 		nemesis Nem_Lava,"MZ Lava"
-		nemesis Nem_MzBlock,"MZ Green Pushable Block"
 		
 		; SLZ
 		nemesis Nem_Seesaw,"SLZ Seesaw"
@@ -64,7 +60,6 @@
 		; SYZ
 		nemesis Nem_Bumper,"SYZ Bumper"
 		nemesis Nem_SmallSpike,"SYZ Small Spikeball"
-		nemesis Nem_LzSwitch,"Switch"
 		nemesis Nem_BigSpike,"SYZ Large Spikeball"
 		
 		; SBZ
@@ -88,11 +83,9 @@
 		nemesis Nem_Burrobot,"Burrobot"
 		nemesis Nem_Jaws,"Jaws"
 		nemesis Nem_Roller,"Roller"
-		nemesis Nem_Yadrin,"Yadrin"
 		nemesis Nem_Batbrain,"Batbrain"
 		nemesis Nem_Bomb,"Bomb Enemy"
 		nemesis Nem_Orbinaut,"Orbinaut"
-		nemesis Nem_Cater,"Caterkiller"
 		
 		; Items
 		nemesis Nem_TitleCard,"Title Cards"

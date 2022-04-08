@@ -36,7 +36,7 @@ ost_mblock_move_flag:	equ $36					; 1 = move platform back to its original posit
 MBlock_Main:	; Routine 0
 		addq.b	#2,ost_routine(a0)			; goto MBlock_Platform next
 		move.l	#Map_MBlock,ost_mappings(a0)
-		move.w	#tile_Nem_MzBlock+tile_pal3,ost_tile(a0)
+		move.w	#($5700/32)+tile_pal3,ost_tile(a0)
 		cmpi.b	#id_LZ,(v_zone).w			; check if level is LZ
 		bne.s	@not_lz
 
@@ -49,7 +49,7 @@ MBlock_Main:	; Routine 0
 		bne.s	@not_sbz
 
 		move.w	#tile_Nem_Stomper+tile_pal2,ost_tile(a0) ; SBZ specific code (object 5228)
-		cmpi.b	#$28,ost_subtype(a0)			; is object 5228 ?
+		cmpi.b	#$18,ost_subtype(a0)			; is object 5228 ?
 		beq.s	@not_sbz_28				; if yes, branch
 		move.w	#tile_Nem_SlideFloor+tile_pal3,ost_tile(a0) ; SBZ specific code (object 523x)
 

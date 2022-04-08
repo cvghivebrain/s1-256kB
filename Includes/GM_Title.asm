@@ -119,6 +119,8 @@ Title_PressedStart:
 		btst	#bitA,(v_joypad_hold_actual).w		; check if A is pressed
 		beq.w	PlayLevel				; if not, play level
 
+		clr.b	(v_ost_titlesonic).w
+		jsr	(BuildSprites).l
 		moveq	#id_Pal_LevelSel,d0
 		bsr.w	PalLoad_Now				; load level select palette
 		lea	(v_hscroll_buffer).w,a1
@@ -385,7 +387,7 @@ soundtest_pos:	= (sizeof_vram_row*$18)+($18*2)
 		lea	(LevSel_Strings).l,a1
 		lea	(vdp_data_port).l,a6
 		locVRAM	vram_fg+text_pos,d4			; $E210
-		move.w	#(vram_text/sizeof_cell)+tile_pal4+tile_hi,d3 ; VRAM setting ($E680: 4th palette, $680th tile)
+		move.w	#(vram_text/sizeof_cell)+tile_pal2+tile_hi,d3 ; VRAM setting ($E680: 4th palette, $680th tile)
 		moveq	#$14,d1					; number of lines of text
 
 	@loop_lines:
@@ -407,14 +409,14 @@ soundtest_pos:	= (sizeof_vram_row*$18)+($18*2)
 		add.w	d1,d1
 		add.w	d0,d1					; d1 = line number * 24
 		adda.w	d1,a1					; jump to string for highlighted line
-		move.w	#(vram_text/sizeof_cell)+tile_pal3+tile_hi,d3 ; VRAM setting ($C680: 3rd palette, $680th tile)
+		move.w	#(vram_text/sizeof_cell)+tile_hi,d3 ; VRAM setting ($C680: 3rd palette, $680th tile)
 		move.l	d4,4(a6)
 		bsr.w	LevSel_DrawLine				; recolour selected line
 
-		move.w	#(vram_text/sizeof_cell)+tile_pal4+tile_hi,d3 ; white text for sound test
+		move.w	#(vram_text/sizeof_cell)+tile_pal2+tile_hi,d3 ; white text for sound test
 		cmpi.w	#(LevSel_Ptr_ST-LevSel_Ptrs)/2,(v_levelselect_item).w ; is highlighted line the sound test? ($14)
 		bne.s	@soundtest				; if not, branch
-		move.w	#(vram_text/sizeof_cell)+tile_pal3+tile_hi,d3 ; yellow text for sound test
+		move.w	#(vram_text/sizeof_cell)+tile_hi,d3	; yellow text for sound test
 
 	@soundtest:
 		locVRAM	vram_fg+soundtest_pos			; $EC30	- sound test position on screen

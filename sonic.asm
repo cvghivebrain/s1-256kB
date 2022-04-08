@@ -946,12 +946,16 @@ KosArt_GHZWall1:	incbin	"kosdata\GHZ Smashable Wall.kos"
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - MZ stuff
 ; ---------------------------------------------------------------------------
-		nemfile	Nem_MzMetal
-		nemfile	Nem_MzSwitch
-		nemfile	Nem_MzGlass
+KosArt_MZMetal:	incbin	"kosdata\MZ Metal Blocks.kos"
+		even
+KosArt_MZButton:	incbin	"kosdata\MZ Button.kos"
+		even
+KosArt_MZGlass:	incbin	"kosdata\MZ Green Glass Block.kos"
+		even
 		nemfile	Nem_Fireball
 		nemfile	Nem_Lava
-		nemfile	Nem_MzBlock
+KosArt_MZBlock:	incbin	"kosdata\MZ Green Pushable Block.kos"
+		even
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - SLZ stuff
 ; ---------------------------------------------------------------------------
@@ -968,7 +972,8 @@ KosArt_GHZWall1:	incbin	"kosdata\GHZ Smashable Wall.kos"
 ; ---------------------------------------------------------------------------
 		nemfile	Nem_Bumper
 		nemfile	Nem_SmallSpike
-		nemfile	Nem_LzSwitch
+KosArt_Button:	incbin	"kosdata\Button.kos"
+		even
 		nemfile	Nem_BigSpike
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - SBZ stuff
@@ -1000,11 +1005,13 @@ KosArt_ChopNewtMoto:	incbin	"kosdata\ChopNewtMoto.kos"
 		even
 		nemfile	Nem_Jaws
 		nemfile	Nem_Roller
-		nemfile	Nem_Yadrin
+KosArt_Yadrin:	incbin	"kosdata\Yadrin.kos"
+		even
 		nemfile	Nem_Batbrain
 		nemfile	Nem_Bomb
 		nemfile	Nem_Orbinaut
-		nemfile	Nem_Cater
+KosArt_Caterkiller:	incbin	"kosdata\Caterkiller.kos"
+		even
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - various
 ; ---------------------------------------------------------------------------

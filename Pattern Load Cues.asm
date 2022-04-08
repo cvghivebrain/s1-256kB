@@ -114,24 +114,18 @@ PLC_LZ2:	plcheader
 		plcm	Nem_LzPlatfm, $89E0			; rising platform
 		plcm	Nem_Orbinaut,,LZ			; orbinaut enemy ($8CE0)
 		plcm	Nem_Jaws				; jaws enemy ($90C0)
-		plcm	Nem_LzSwitch, vram_button		; button ($A1E0)
 		plcm	Nem_Cork, $A000				; cork block
 	PLC_LZ2_end:
 ; ---------------------------------------------------------------------------
 ; Pattern load cues - Marble
 ; ---------------------------------------------------------------------------
 PLC_MZ:		plcheader
-		plcm	Nem_MzMetal, $6000			; metal	blocks
-		plcm	Nem_Fireball				; fireballs ($68A0)
-		plcm	Nem_MzGlass,$71C0				; green	glassy block ($71C0)
-		plcm	Nem_Lava				; lava ($7500)
-		plcm	Nem_Batbrain,$9700				; basaran enemy ($9700)
-		plcm	Nem_Cater, vram_cater			; caterkiller enemy ($9FE0)
+		plcm	Nem_Fireball,$68A0				; fireballs ($68A0)
+		plcm	Nem_Lava,$7500				; lava ($7500)
 	PLC_MZ_end:
 
 PLC_MZ2:	plcheader
-		plcm	Nem_MzSwitch, $A260			; button
-		plcm	Nem_MzBlock, $5700			; green	stone block
+		plcm	Nem_Batbrain,$9700				; basaran enemy ($9700)
 	PLC_MZ2_end:
 ; ---------------------------------------------------------------------------
 ; Pattern load cues - Star Light
@@ -156,15 +150,13 @@ PLC_SLZ2:	plcheader
 ; Pattern load cues - Spring Yard
 ; ---------------------------------------------------------------------------
 PLC_SYZ:	plcheader
-		plcm	Nem_Yadrin, vram_yadrin			; yadrin enemy ($8F60)
-		plcm	Nem_Roller				; roller enemy ($9700)
+		plcm	Nem_Roller,$9700				; roller enemy ($9700)
 	PLC_SYZ_end:
 
 PLC_SYZ2:	plcheader
 		plcm	Nem_Bumper, $7000			; bumper
-		plcm	Nem_BigSpike				; large	spikeball ($72C0)
+		plcm	Nem_BigSpike,$72C0				; large	spikeball ($72C0)
 		plcm	Nem_SmallSpike				; small	spikeball ($7740)
-		plcm	Nem_LzSwitch, vram_button		; button ($A1E0)
 	PLC_SYZ2_end:
 ; ---------------------------------------------------------------------------
 ; Pattern load cues - Scrap Brain
@@ -184,7 +176,6 @@ PLC_SBZ:	plcheader
 	PLC_SBZ_end:
 
 PLC_SBZ2:	plcheader
-		plcm	Nem_Cater, $5600, SBZ			; caterkiller enemy
 		plcm	Nem_Bomb, vram_bomb			; bomb enemy ($8000)
 		plcm	Nem_SlideFloor, $8C00			; floor	that slides away
 		plcm	Nem_SbzDoor2				; horizontal door ($8DE0)
@@ -192,7 +183,6 @@ PLC_SBZ2:	plcheader
 		plcm	Nem_TrapDoor				; trapdoor ($9240)
 		plcm	Nem_SbzFloor, $7F20			; collapsing floor
 		plcm	Nem_SpinPform, $9BE0			; small	spinning platform
-		plcm	Nem_LzSwitch, vram_button		; button ($A1E0)
 	PLC_SBZ2_end:
 ; ---------------------------------------------------------------------------
 ; Pattern load cues - title card
@@ -317,9 +307,8 @@ PLC_TryAgain:	plcheader
 ; Pattern load cues - Eggman on SBZ 2
 ; ---------------------------------------------------------------------------
 PLC_EggmanSBZ2:	plcheader
-		plcm	Nem_SbzBlock, $A300, SBZ2		; block
+		plcm	Nem_SbzBlock, $A400, SBZ2		; block
 		plcm	Nem_Sbz2Eggman, $8000			; Eggman
-		plcm	Nem_LzSwitch, $9400, SBZ2		; button
 	PLC_EggmanSBZ2_end:
 ; ---------------------------------------------------------------------------
 ; Pattern load cues - final boss

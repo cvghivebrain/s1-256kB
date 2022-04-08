@@ -42,7 +42,7 @@ vram_animal1:	equ $B000	; animal graphics
 vram_animal2:	equ $B240	; animal graphics
 vram_credits:	equ $B400	; credits font graphics
 
-vram_title_credits:	equ $14C0	; "Sonic Team Presents" title screen graphics
+vram_title_credits:	equ $A200	; "Sonic Team Presents" title screen graphics
 vram_title:		equ $4000	; main title screen graphics
 vram_title_sonic:	equ $6000	; Sonic title screen graphics
 vram_title_tm:		equ $A200	; "TM" graphics
