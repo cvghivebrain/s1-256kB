@@ -37,28 +37,17 @@ SSS_Main:	; Routine 0
 
 SSS_ChkDebug:	; Routine 2
 		move.b	#0,ost_ss_item(a0)
-		moveq	#0,d0
-		move.b	ost_status(a0),d0
-		andi.w	#status_air,d0				; read air bit of status
-		move.w	SSS_Modes(pc,d0.w),d1
-		jsr	SSS_Modes(pc,d1.w)
+		bsr.s	SSS_Modes
 		jsr	(Sonic_LoadGfx).l
 		jmp	(DisplaySprite).l
 ; ===========================================================================
-SSS_Modes:	index *
-		ptr SSS_OnWall
-		ptr SSS_InAir
-; ===========================================================================
-
+SSS_Modes:
 SSS_OnWall:
+		btst	#status_air_bit,ost_status(a0)
+		bne.s	SSS_InAir
 		bsr.w	SSS_Jump
-		bsr.w	SSS_Move
-		bsr.w	SSS_Fall
-		bra.s	SSS_Display
-; ===========================================================================
 
 SSS_InAir:
-		bsr.w	nullsub_2
 		bsr.w	SSS_Move
 		bsr.w	SSS_Fall
 
@@ -70,8 +59,7 @@ SSS_Display:
 		move.w	(v_ss_angle).w,d0
 		add.w	(v_ss_rotation_speed).w,d0
 		move.w	d0,(v_ss_angle).w
-		jsr	(Sonic_Animate).l
-		rts	
+		jmp	(Sonic_Animate).l
 
 ; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
 
@@ -224,26 +212,6 @@ SSS_Jump:
 		rts	
 ; End of function SSS_Jump
 
-
-; ---------------------------------------------------------------------------
-; unused subroutine to limit Sonic's upward vertical speed
-; ---------------------------------------------------------------------------
-; ||||||||||||||| S U B	R O U T	I N E |||||||||||||||||||||||||||||||||||||||
-
-
-nullsub_2:
-		rts
-		
-		move.w	#-$400,d1
-		cmp.w	ost_y_vel(a0),d1
-		ble.s	locret_1BBB4
-		move.b	(v_joypad_hold).w,d0
-		andi.b	#btnABC,d0
-		bne.s	locret_1BBB4
-		move.w	d1,ost_y_vel(a0)
-
-locret_1BBB4:
-		rts	
 ; ---------------------------------------------------------------------------
 ; Subroutine to	fix the	camera on Sonic's position (special stage)
 ; ---------------------------------------------------------------------------
@@ -291,18 +259,15 @@ SSS_ExitStage:
 		move.w	(v_ss_angle).w,d0
 		add.w	(v_ss_rotation_speed).w,d0
 		move.w	d0,(v_ss_angle).w
-		jsr	(Sonic_Animate).l
-		jsr	(Sonic_LoadGfx).l
-		bsr.w	SS_FixCamera
-		jmp	(DisplaySprite).l
+		bra.s	SSS_Exit2_wait
 ; ===========================================================================
 
 SSS_Exit2:
 		subq.w	#1,ost_ss_restart_time(a0)
-		bne.s	@wait
+		bne.s	SSS_Exit2_wait
 		move.b	#id_Level,(v_gamemode).w
 
-	@wait:
+	SSS_Exit2_wait:
 		jsr	(Sonic_Animate).l
 		jsr	(Sonic_LoadGfx).l
 		bsr.w	SS_FixCamera
@@ -420,21 +385,13 @@ SSS_FindWall:
 
 SSS_FindWall_Chk:
 		beq.s	@no_collide				; branch if 0
-		cmpi.b	#id_SS_Item_1Up,d4			; is the item an extra life?
-		beq.s	@no_collide				; if yes, branch
-		cmpi.b	#id_SS_Item_Em1-1,d4			; is the item an emerald or ghost block ($3B+)?
-		bcs.s	@collide				; if yes, branch
-		cmpi.b	#id_SS_Item_Glass5,d4			; is the item a flashing glass block ($4B+)?
-		bcc.s	@collide				; if not, branch
-
-	@no_collide:
-		rts	
-; ===========================================================================
-
-@collide:
+		cmpi.b	#id_SS_Item_Ring,d4			; is the item an emerald or ghost block ($3B+)?
+		bcc.s	@no_collide				; if not, branch
 		move.b	d4,ost_ss_item(a0)
 		move.l	a1,ost_ss_item_address(a0)
 		moveq	#-1,d5					; set flag for collision
+
+	@no_collide:
 		rts	
 ; End of function SSS_FindWall_Chk
 
@@ -465,7 +422,7 @@ SSS_ChkItems:
 
 SSS_ChkRing:
 		cmpi.b	#id_SS_Item_Ring,d4			; is the item a	ring?
-		bne.s	SSS_Chk1Up				; if not, branch
+		bne.s	SSS_ChkEmerald				; if not, branch
 		bsr.w	SS_FindFreeUpdate			; find free item update slot
 		bne.s	@noslot
 		move.b	#id_SS_UpdateRing,(a2)			; item sparkles and vanishes
@@ -482,23 +439,7 @@ SSS_ChkRing:
 
 	@nocontinue:
 		moveq	#0,d4
-		rts	
-; ===========================================================================
-
-SSS_Chk1Up:
-		cmpi.b	#id_SS_Item_1Up,d4			; is the item an extra life?
-		bne.s	SSS_ChkEmerald
-		bsr.w	SS_FindFreeUpdate
-		bne.s	@noslot
-		move.b	#id_SS_Update1Up,(a2)
-		move.l	a1,4(a2)
-
-	@noslot:
-		addq.b	#1,(v_lives).w				; add 1 to number of lives
-		addq.b	#1,(f_hud_lives_update).w		; update the lives counter
-		play.w	0, jsr, mus_ExtraLife			; play extra life music
-		moveq	#0,d4
-		rts	
+		rts
 ; ===========================================================================
 
 SSS_ChkEmerald:

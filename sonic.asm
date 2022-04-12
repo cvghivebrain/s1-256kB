@@ -798,9 +798,9 @@ SS_ItemIndex:
 		ss_sprite Map_SSWalls,tile_Nem_SSWalls+tile_pal4,0
 	SS_ItemIndex_wall_end:
 SS_Item_Bumper:	ss_sprite Map_Bump,tile_Nem_Bumper_SS,0		; $25 - bumper
-		ss_sprite Map_SS_R,0,0		; $26 - W
+SS_Item_Glass8:	ss_sprite Map_SS_Glass,tile_Nem_SSGlass+tile_pal3,0 ; $4E
 SS_Item_GOAL:	ss_sprite Map_SS_R,tile_Nem_SSGOAL,0		; $27 - GOAL
-SS_Item_1Up:	ss_sprite Map_SS_R,0,0	; $28 - 1UP
+SS_Item_Glass7:	ss_sprite Map_SS_Glass,tile_Nem_SSGlass+tile_pal2,0 ; $4D
 SS_Item_Up:	ss_sprite Map_SS_Up,tile_Nem_SSUpDown,0		; $29 - Up
 SS_Item_Down:	ss_sprite Map_SS_Down,tile_Nem_SSUpDown,0	; $2A - Down
 SS_Item_R:	ss_sprite Map_SS_R,tile_Nem_SSRBlock+tile_pal2,0 ; $2B - R
@@ -812,12 +812,8 @@ SS_Item_Glass4:	ss_sprite Map_SS_Glass,tile_Nem_SSGlass+tile_pal3,0
 SS_Item_R2:	ss_sprite Map_SS_R,tile_Nem_SSRBlock,0		; $31 - R
 SS_Item_Bump1:	ss_sprite Map_Bump,tile_Nem_Bumper_SS,id_frame_bump_bumped1
 SS_Item_Bump2:	ss_sprite Map_Bump,tile_Nem_Bumper_SS,id_frame_bump_bumped2
-		ss_sprite Map_SS_R,0,0		; $34 - Zone 1
-		ss_sprite Map_SS_R,0,0		; $35 - Zone 2
-		ss_sprite Map_SS_R,0,0		; $36 - Zone 3
-		ss_sprite Map_SS_R,0,0		; $37 - Zone 4
-		ss_sprite Map_SS_R,0,0		; $38 - Zone 5
-		ss_sprite Map_SS_R,0,0		; $39 - Zone 6
+SS_Item_Glass5:	ss_sprite Map_SS_Glass,tile_Nem_SSGlass,0	; $4B
+SS_Item_Glass6:	ss_sprite Map_SS_Glass,tile_Nem_SSGlass+tile_pal4,0 ; $4C
 SS_Item_Ring:	ss_sprite Map_Ring,($F640/sizeof_cell)+tile_pal2,0	; $3A - ring
 SS_Item_Em1:	ss_sprite Map_SS_Chaos3,tile_Nem_SSEmerald,0	; $3B - emerald
 SS_Item_Em2:	ss_sprite Map_SS_Chaos3,tile_Nem_SSEmerald+tile_pal2,0 ; $3C - emerald
@@ -835,10 +831,6 @@ SS_Item_EmSp2:	ss_sprite Map_SS_Glass,tile_Nem_SSEmStars+tile_pal2,1 ; $47 - eme
 SS_Item_EmSp3:	ss_sprite Map_SS_Glass,tile_Nem_SSEmStars+tile_pal2,2 ; $48 - emerald sparkle
 SS_Item_EmSp4:	ss_sprite Map_SS_Glass,tile_Nem_SSEmStars+tile_pal2,3 ; $49 - emerald sparkle
 SS_Item_Ghost2:	ss_sprite Map_SS_R,tile_Nem_SSGhost,2
-SS_Item_Glass5:	ss_sprite Map_SS_Glass,tile_Nem_SSGlass,0	; $4B
-SS_Item_Glass6:	ss_sprite Map_SS_Glass,tile_Nem_SSGlass+tile_pal4,0 ; $4C
-SS_Item_Glass7:	ss_sprite Map_SS_Glass,tile_Nem_SSGlass+tile_pal2,0 ; $4D
-SS_Item_Glass8:	ss_sprite Map_SS_Glass,tile_Nem_SSGlass+tile_pal3,0 ; $4E
 	SS_ItemIndex_end:
 
 		include "Objects\Special Stage R [Mappings].asm" ; Map_SS_R
@@ -1132,17 +1124,17 @@ Col_SBZ:	incbin	"Collision\SBZ.bin"			; SBZ index
 ; ---------------------------------------------------------------------------
 ; Special Stage layouts
 ; ---------------------------------------------------------------------------
-SS_1:		incbin	"Special Stage Layouts\1.eni"
+SS_1:		incbin	"Special Stage Layouts\1.kos"
 		even
-SS_2:		incbin	"Special Stage Layouts\2.eni"
+SS_2:		incbin	"Special Stage Layouts\2.kos"
 		even
-SS_3:		incbin	"Special Stage Layouts\3.eni"
+SS_3:		incbin	"Special Stage Layouts\3.kos"
 		even
-SS_4:		incbin	"Special Stage Layouts\4.eni"
+SS_4:		incbin	"Special Stage Layouts\4.kos"
 		even
-SS_5:		incbin	"Special Stage Layouts\5 (JP1).eni"
+SS_5:		incbin	"Special Stage Layouts\5.kos"
 		even
-SS_6:		incbin	"Special Stage Layouts\6 (JP1).eni"
+SS_6:		incbin	"Special Stage Layouts\6.kos"
 		even
 ; ---------------------------------------------------------------------------
 ; Animated uncompressed graphics

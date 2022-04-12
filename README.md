@@ -75,6 +75,7 @@ Compressed title screen graphics and removed unused text characters. Added Kosin
 Kosinski compression for level graphics and some other things. | 457982 | -13776
 Compressed some GHZ graphics. | 457152 | -830
 Compressed MZ/SYZ graphics. Fixed title screen glitch and altered level select. | 456580 | -572
+Kosinski compression for special stages. Removed unused special stage code. | 454012 | -2568
 Target | 262144 | 
 
 ## Credits

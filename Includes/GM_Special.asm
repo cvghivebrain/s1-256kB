@@ -748,6 +748,8 @@ SS_AniWallsRings:
 		move.b	(v_syncani_0_frame).w,d0
 		add.w	d0,d0
 		lea	(a0,d0.w),a0
+		moveq	#3,d2
+	@loop:
 		move.w	(a0),(a1)
 		move.w	2(a0),8(a1)
 		move.w	4(a0),$10(a1)
@@ -758,36 +760,7 @@ SS_AniWallsRings:
 		move.w	$E(a0),$38(a1)
 		adda.w	#$20,a0
 		adda.w	#$48,a1
-		move.w	(a0),(a1)
-		move.w	2(a0),8(a1)
-		move.w	4(a0),$10(a1)
-		move.w	6(a0),$18(a1)
-		move.w	8(a0),$20(a1)
-		move.w	$A(a0),$28(a1)
-		move.w	$C(a0),$30(a1)
-		move.w	$E(a0),$38(a1)
-		adda.w	#$20,a0
-		adda.w	#$48,a1
-		move.w	(a0),(a1)
-		move.w	2(a0),8(a1)
-		move.w	4(a0),$10(a1)
-		move.w	6(a0),$18(a1)
-		move.w	8(a0),$20(a1)
-		move.w	$A(a0),$28(a1)
-		move.w	$C(a0),$30(a1)
-		move.w	$E(a0),$38(a1)
-		adda.w	#$20,a0
-		adda.w	#$48,a1
-		move.w	(a0),(a1)
-		move.w	2(a0),8(a1)
-		move.w	4(a0),$10(a1)
-		move.w	6(a0),$18(a1)
-		move.w	8(a0),$20(a1)
-		move.w	$A(a0),$28(a1)
-		move.w	$C(a0),$30(a1)
-		move.w	$E(a0),$38(a1)
-		adda.w	#$20,a0
-		adda.w	#$48,a1
+		dbf	d2,@loop
 		rts
 
 ; ===========================================================================
@@ -911,7 +884,6 @@ SS_UpdateItems:
 SS_UpdateIndex:	index.l 0,1
 		ptr SS_UpdateRing				; 1
 		ptr SS_UpdateBumper				; 2
-		ptr SS_Update1Up				; 3
 		ptr SS_UpdateR					; 4
 		ptr SS_UpdateEmerald				; 5
 		ptr SS_UpdateGlass				; 6
@@ -962,10 +934,6 @@ SS_UpdateBumper:
 ; ===========================================================================
 SS_BumperData:	dc.b id_SS_Item_Bump1, id_SS_Item_Bump2, id_SS_Item_Bump1, id_SS_Item_Bump2, 0
 		even
-; ===========================================================================
-
-SS_Update1Up:
-		rts
 ; ===========================================================================
 
 SS_UpdateR:
@@ -1101,8 +1069,7 @@ SS_LoadData:
 		move.w	(a1)+,(v_ost_player+ost_y_pos).w
 		movea.l	SS_LayoutIndex(pc,d0.w),a0
 		lea	(v_ss_layout_buffer).l,a1		; load level layout ($FF4000)
-		move.w	#0,d0
-		jsr	(EniDec).l
+		jsr	(KosDec).l
 		lea	(v_ss_layout).l,a1
 		move.w	#($4000/4)-1,d0
 
