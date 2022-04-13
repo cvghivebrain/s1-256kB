@@ -23,7 +23,7 @@ Gar_Index:	index *,,2
 Gar_Main:	; Routine 0
 		addq.b	#2,ost_routine(a0)			; goto Gar_MakeFire next
 		move.l	#Map_Gar,ost_mappings(a0)
-		move.w	#tile_Nem_Gargoyle+tile_pal3,ost_tile(a0)
+		move.w	#$2CE+tile_pal3,ost_tile(a0)
 		ori.b	#render_rel,ost_render(a0)
 		move.b	#3,ost_priority(a0)
 		move.b	#$10,ost_actwidth(a0)
@@ -55,7 +55,7 @@ Gar_MakeFire:	; Routine 2
 Gar_FireBall:	; Routine 4
 		addq.b	#2,ost_routine(a0)			; goto Gar_AniFire next
 		move.l	#Map_GarFire,ost_mappings(a0)
-		move.w	#tile_Nem_Gargoyle,ost_tile(a0)
+		move.w	#$2CE,ost_tile(a0)
 		ori.b	#render_rel,ost_render(a0)
 		move.b	#4,ost_priority(a0)
 		move.b	#id_col_4x4+id_col_hurt,ost_col_type(a0)

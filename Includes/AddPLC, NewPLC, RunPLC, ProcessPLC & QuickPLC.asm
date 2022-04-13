@@ -273,6 +273,8 @@ KPLC_GHZ:	dc.w ((@end-KPLC_GHZ)/6)-1
 KPLC_LZ:	dc.w ((@end-KPLC_LZ)/6)-1
 		dc.l KosArt_LZMain
 		dc.w 0
+		dc.l KosArt_Orbinaut
+		dc.w $9600
 		dc.l KosArt_Button
 		dc.w vram_button
 	@end:
@@ -299,6 +301,8 @@ KPLC_MZ:	dc.w ((@end-KPLC_MZ)/6)-1
 KPLC_SLZ:	dc.w ((@end-KPLC_SLZ)/6)-1
 		dc.l KosArt_SLZMain
 		dc.w 0
+		dc.l KosArt_Orbinaut
+		dc.w vram_orbinaut
 	@end:
 
 KPLC_SYZ:	dc.w ((@end-KPLC_SYZ)/6)-1

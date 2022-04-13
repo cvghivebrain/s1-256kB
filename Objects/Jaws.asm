@@ -22,7 +22,7 @@ ost_jaws_turn_master:	equ $32					; time between turns, copied to ost_jaws_turn_
 Jaws_Main:	; Routine 0
 		addq.b	#2,ost_routine(a0)			; goto Jaws_Turn next
 		move.l	#Map_Jaws,ost_mappings(a0)
-		move.w	#tile_Nem_Jaws+tile_pal2,ost_tile(a0)
+		move.w	#$445+tile_pal2,ost_tile(a0)
 		ori.b	#render_rel,ost_render(a0)
 		move.b	#id_col_16x12,ost_col_type(a0)
 		move.b	#4,ost_priority(a0)

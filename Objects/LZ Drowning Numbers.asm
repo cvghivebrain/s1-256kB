@@ -37,7 +37,7 @@ ost_drown_delay_time	equ $3A					; delay between bubbles (2 bytes)
 Drown_Main:	; Routine 0
 		addq.b	#2,ost_routine(a0)			; goto Drown_Animate next
 		move.l	#Map_Bub,ost_mappings(a0)
-		move.w	#tile_Nem_Bubbles+tile_hi,ost_tile(a0)
+		move.w	#$327+tile_hi,ost_tile(a0)
 		move.b	#render_onscreen+render_rel,ost_render(a0)
 		move.b	#$10,ost_actwidth(a0)
 		move.b	#1,ost_priority(a0)

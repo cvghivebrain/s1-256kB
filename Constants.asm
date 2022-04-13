@@ -28,7 +28,7 @@ draw_fg:	equ $4000+(vram_fg-draw_base)	; VRAM write command + fg nametable addre
 draw_bg:	equ $4000+(vram_bg-draw_base)	; VRAM write command + bg nametable address relative to base
 
 vram_crabmeat:	equ $8000	; crabmeat graphics
-vram_bomb:	equ $8000	; bomb enemy graphics
+vram_bomb:	equ $8900	; bomb enemy graphics
 vram_giantring:	equ $8000	; giant ring graphics
 vram_orbinaut:	equ $8520	; orbinaut graphics
 vram_buzz:	equ $8880	; buzz bomber graphics

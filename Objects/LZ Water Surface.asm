@@ -22,7 +22,7 @@ ost_surf_freeze:	equ $32					; flag to freeze animation
 Surf_Main:	; Routine 0
 		addq.b	#2,ost_routine(a0)			; goto Surf_Action next
 		move.l	#Map_Surf,ost_mappings(a0)
-		move.w	#tile_Nem_Water+tile_pal3+tile_hi,ost_tile(a0)
+		move.w	#$2DF+tile_pal3+tile_hi,ost_tile(a0)
 		move.b	#render_rel,ost_render(a0)
 		move.b	#$80,ost_actwidth(a0)
 		move.w	ost_x_pos(a0),ost_surf_x_start(a0)	; save initial x position ($60 or $120)

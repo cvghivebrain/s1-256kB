@@ -22,7 +22,7 @@ ost_flap_time:	equ $32						; time between opening/closing (2 bytes)
 Flap_Main:	; Routine 0
 		addq.b	#2,ost_routine(a0)			; goto Flap_OpenClose next
 		move.l	#Map_Flap,ost_mappings(a0)
-		move.w	#tile_Nem_FlapDoor+tile_pal3,ost_tile(a0)
+		move.w	#$307+tile_pal3,ost_tile(a0)
 		ori.b	#render_rel,ost_render(a0)
 		move.b	#$28,ost_actwidth(a0)
 		move.w	#120,ost_flap_time(a0)			; set flap delay time

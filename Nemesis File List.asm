@@ -25,37 +25,9 @@
 		nemesis Nem_PplRock,"GHZ Purple Rock"
 		nemesis Nem_GhzWall2,"GHZ Walls"
 		
-		; LZ
-		nemesis Nem_Water,"LZ Water Surface"
-		nemesis Nem_Splash,"LZ Waterfall & Splashes"
-		nemesis Nem_LzSpikeBall,"LZ Spiked Ball & Chain"
-		nemesis Nem_FlapDoor,"LZ Flapping Door"
-		nemesis Nem_Bubbles,"LZ Bubbles & Countdown"
-		nemesis Nem_LzBlock3,"LZ 32x16 Block"
-		nemesis Nem_LzDoor1,"LZ Vertical Door"
-		nemesis Nem_Harpoon,"LZ Harpoon"
-		nemesis Nem_LzPole,"LZ Breakable Pole"
-		nemesis Nem_LzDoor2,"LZ Horizontal Door"
-		nemesis Nem_LzWheel,"LZ Wheel"
-		nemesis Nem_Gargoyle,"LZ Gargoyle & Fireball"
-		nemesis Nem_LzBlock2,"LZ Blocks"
-		nemesis Nem_LzPlatfm,"LZ Rising Platform"
-		nemesis Nem_Cork,"LZ Cork"
-		nemesis Nem_LzBlock1,"LZ 32x32 Block"
-		
 		; MZ
 		nemesis Nem_Fireball,"Fireballs"
 		nemesis Nem_Lava,"MZ Lava"
-		
-		; SLZ
-		nemesis Nem_Seesaw,"SLZ Seesaw"
-		nemesis Nem_SlzSpike,"SLZ Little Spikeball"
-		nemesis Nem_Fan,"SLZ Fan"
-		nemesis Nem_SlzWall,"SLZ Breakable Wall"
-		nemesis Nem_Pylon,"SLZ Pylon"
-		nemesis Nem_SlzSwing,"SLZ Swinging Platform"
-		nemesis Nem_SlzBlock,"SLZ 32x32 Block"
-		nemesis Nem_SlzCannon,"SLZ Cannon"
 		
 		; SYZ
 		nemesis Nem_Bumper,"SYZ Bumper"
@@ -80,12 +52,9 @@
 		
 		; Enemies
 		nemesis Nem_BallHog,"Ball Hog"
-		nemesis Nem_Burrobot,"Burrobot"
-		nemesis Nem_Jaws,"Jaws"
 		nemesis Nem_Roller,"Roller"
 		nemesis Nem_Batbrain,"Batbrain"
 		nemesis Nem_Bomb,"Bomb Enemy"
-		nemesis Nem_Orbinaut,"Orbinaut"
 		
 		; Items
 		nemesis Nem_TitleCard,"Title Cards"

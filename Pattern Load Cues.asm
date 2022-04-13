@@ -93,28 +93,9 @@ PLC_GHZ2:	plcheader
 ; Pattern load cues - Labyrinth
 ; ---------------------------------------------------------------------------
 PLC_LZ:		plcheader
-		plcm	Nem_LzBlock1, $3C00			; block
-		plcm	Nem_LzBlock2				; blocks ($3E00)
-		plcm	Nem_Splash, $4B20			; waterfalls and splash
-		plcm	Nem_Water, $6000			; water	surface
-		plcm	Nem_LzSpikeBall				; spiked ball ($6200)
-		plcm	Nem_FlapDoor				; flapping door ($6500)
-		plcm	Nem_Bubbles				; bubbles and numbers ($6900)
-		plcm	Nem_LzBlock3				; block ($7780)
-		plcm	Nem_LzDoor1				; vertical door ($7880)
-		plcm	Nem_Harpoon				; harpoon ($7980)
-		plcm	Nem_Burrobot, $94C0			; burrobot enemy
 	PLC_LZ_end:
 
 PLC_LZ2:	plcheader
-		plcm	Nem_LzPole, $7BC0			; pole that breaks
-		plcm	Nem_LzDoor2				; large	horizontal door ($7CC0)
-		plcm	Nem_LzWheel				; wheel ($7EC0)
-		plcm	Nem_Gargoyle, $5D20			; gargoyle head
-		plcm	Nem_LzPlatfm, $89E0			; rising platform
-		plcm	Nem_Orbinaut,,LZ			; orbinaut enemy ($8CE0)
-		plcm	Nem_Jaws				; jaws enemy ($90C0)
-		plcm	Nem_Cork, $A000				; cork block
 	PLC_LZ2_end:
 ; ---------------------------------------------------------------------------
 ; Pattern load cues - Marble
@@ -132,19 +113,10 @@ PLC_MZ2:	plcheader
 ; ---------------------------------------------------------------------------
 PLC_SLZ:	plcheader
 		plcm	Nem_Bomb, vram_bomb			; bomb enemy ($8000)
-		plcm	Nem_Orbinaut, vram_orbinaut		; orbinaut enemy ($8520)
 		plcm	Nem_Fireball, $9000,SLZ			; fireballs
-		plcm	Nem_SlzBlock, $9C00			; block
-		plcm	Nem_SlzWall, $A260			; breakable wall
 	PLC_SLZ_end:
 
 PLC_SLZ2:	plcheader
-		plcm	Nem_Seesaw, $6E80			; seesaw
-		plcm	Nem_Fan					; fan ($7400)
-		plcm	Nem_Pylon				; foreground pylon ($7980)
-		plcm	Nem_SlzSwing				; swinging platform ($7B80)
-		plcm	Nem_SlzCannon, $9B00			; fireball launcher
-		plcm	Nem_SlzSpike, $9E00			; spikeball
 	PLC_SLZ2_end:
 ; ---------------------------------------------------------------------------
 ; Pattern load cues - Spring Yard
@@ -198,7 +170,6 @@ PLC_Boss:	plcheader
 		plcm	Nem_Weapons				; Eggman's weapons ($8D80)
 		plcm	Nem_Prison, $93A0			; prison capsule
 		plcm	Nem_Bomb, $A300, Boss			; bomb enemy (partially overwritten - shrapnel remains)
-		plcm	Nem_SlzSpike, $A300, Boss		; spikeball (SLZ boss)
 		plcm	Nem_Exhaust, $A540			; exhaust flame
 	PLC_Boss_end:
 ; ---------------------------------------------------------------------------

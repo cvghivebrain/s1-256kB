@@ -37,7 +37,7 @@ ost_bspike_seesaw:	equ $3C					; address of OST of seesaw (4 bytes)
 
 BSpike_Main:	; Routine 0
 		move.l	#Map_SSawBall,ost_mappings(a0)
-		move.w	#tile_Nem_SlzSpike_Boss,ost_tile(a0)
+		move.w	#$38B,ost_tile(a0)
 		move.b	#id_frame_seesaw_silver,ost_frame(a0)
 		ori.b	#render_rel,ost_render(a0)
 		move.b	#4,ost_priority(a0)

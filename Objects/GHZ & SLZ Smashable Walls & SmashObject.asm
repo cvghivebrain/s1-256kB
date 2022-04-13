@@ -25,6 +25,10 @@ Smash_Main:	; Routine 0
 		addq.b	#2,ost_routine(a0)			; goto Smash_Solid next
 		move.l	#Map_Smash,ost_mappings(a0)
 		move.w	#($A1E0/32)+tile_pal3,ost_tile(a0)
+		cmpi.b	#id_SLZ,(v_zone).w
+		bne.s	@not_slz
+		move.w	#$411+tile_pal3,ost_tile(a0)
+	@not_slz:
 		move.b	#render_rel,ost_render(a0)
 		move.b	#$10,ost_actwidth(a0)
 		move.b	#4,ost_priority(a0)

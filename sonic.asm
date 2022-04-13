@@ -919,25 +919,6 @@ KosArt_GHZWall1:	incbin	"kosdata\GHZ Smashable Wall.kos"
 		even
 		nemfile	Nem_GhzWall2
 ; ---------------------------------------------------------------------------
-; Compressed graphics - LZ stuff
-; ---------------------------------------------------------------------------
-		nemfile	Nem_Water
-		nemfile	Nem_Splash
-		nemfile	Nem_LzSpikeBall
-		nemfile	Nem_FlapDoor
-		nemfile	Nem_Bubbles
-		nemfile	Nem_LzBlock3
-		nemfile	Nem_LzDoor1
-		nemfile	Nem_Harpoon
-		nemfile	Nem_LzPole
-		nemfile	Nem_LzDoor2
-		nemfile	Nem_LzWheel
-		nemfile	Nem_Gargoyle
-		nemfile	Nem_LzBlock2
-		nemfile	Nem_LzPlatfm
-		nemfile	Nem_Cork
-		nemfile	Nem_LzBlock1
-; ---------------------------------------------------------------------------
 ; Compressed graphics - MZ stuff
 ; ---------------------------------------------------------------------------
 KosArt_MZMetal:	incbin	"kosdata\MZ Metal Blocks.kos"
@@ -950,17 +931,6 @@ KosArt_MZGlass:	incbin	"kosdata\MZ Green Glass Block.kos"
 		nemfile	Nem_Lava
 KosArt_MZBlock:	incbin	"kosdata\MZ Green Pushable Block.kos"
 		even
-; ---------------------------------------------------------------------------
-; Compressed graphics - SLZ stuff
-; ---------------------------------------------------------------------------
-		nemfile	Nem_Seesaw
-		nemfile	Nem_SlzSpike
-		nemfile	Nem_Fan
-		nemfile	Nem_SlzWall
-		nemfile	Nem_Pylon
-		nemfile	Nem_SlzSwing
-		nemfile	Nem_SlzBlock
-		nemfile	Nem_SlzCannon
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - SYZ stuff
 ; ---------------------------------------------------------------------------
@@ -994,16 +964,15 @@ KosArt_Crabmeat:	incbin	"kosdata\Crabmeat.kos"
 		even
 KosArt_Buzz:	incbin	"kosdata\Buzz Bomber.kos"
 		even
-		nemfile	Nem_Burrobot
 KosArt_ChopNewtMoto:	incbin	"kosdata\ChopNewtMoto.kos"
 		even
-		nemfile	Nem_Jaws
 		nemfile	Nem_Roller
 KosArt_Yadrin:	incbin	"kosdata\Yadrin.kos"
 		even
 		nemfile	Nem_Batbrain
 		nemfile	Nem_Bomb
-		nemfile	Nem_Orbinaut
+KosArt_Orbinaut:	incbin	"kosdata\Orbinaut.kos"
+		even
 KosArt_Caterkiller:	incbin	"kosdata\Caterkiller.kos"
 		even
 ; ---------------------------------------------------------------------------

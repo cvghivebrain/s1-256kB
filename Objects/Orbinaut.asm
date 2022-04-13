@@ -29,15 +29,10 @@ ost_orb_parent:		equ $3C					; address of OST of parent object (4 bytes)
 
 Orb_Main:	; Routine 0
 		move.l	#Map_Orb,ost_mappings(a0)
-		move.w	#tile_Nem_Orbinaut,ost_tile(a0)		; SBZ specific code
-		cmpi.b	#id_SBZ,(v_zone).w			; check if level is SBZ
-		beq.s	@isscrap
-		move.w	#tile_Nem_Orbinaut+tile_pal2,ost_tile(a0) ; SLZ specific code
-
-	@isscrap:
+		move.w	#(vram_orbinaut/32)+tile_pal2,ost_tile(a0) ; SLZ specific code
 		cmpi.b	#id_LZ,(v_zone).w			; check if level is LZ
 		bne.s	@notlabyrinth
-		move.w	#tile_Nem_Orbinaut_LZ,ost_tile(a0)	; LZ specific code
+		move.w	#$9600/32,ost_tile(a0)	; LZ specific code
 
 	@notlabyrinth:
 		ori.b	#render_rel,ost_render(a0)

@@ -41,7 +41,7 @@ ost_seesaw_parent:	equ $3C					; address of OST of parent object (4 bytes)
 See_Main:	; Routine 0
 		addq.b	#2,ost_routine(a0)			; goto See_Slope next
 		move.l	#Map_Seesaw,ost_mappings(a0)
-		move.w	#tile_Nem_Seesaw,ost_tile(a0)
+		move.w	#$35F,ost_tile(a0)
 		ori.b	#render_rel,ost_render(a0)
 		move.b	#4,ost_priority(a0)
 		move.b	#$30,ost_actwidth(a0)
@@ -143,7 +143,7 @@ See_ChgFrame:
 See_Spikeball:	; Routine 6
 		addq.b	#2,ost_routine(a0)			; goto See_SpikeAction next
 		move.l	#Map_SSawBall,ost_mappings(a0)
-		move.w	#tile_Nem_SlzSpike,ost_tile(a0)
+		move.w	#$38B,ost_tile(a0)
 		ori.b	#render_rel,ost_render(a0)
 		move.b	#4,ost_priority(a0)
 		move.b	#id_col_8x8+id_col_hurt,ost_col_type(a0)

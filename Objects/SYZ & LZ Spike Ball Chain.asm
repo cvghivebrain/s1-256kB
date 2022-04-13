@@ -28,7 +28,7 @@ ost_sball_speed:	equ $3E					; rate of spin (2 bytes)
 
 SBall_Main:	; Routine 0
 		addq.b	#2,ost_routine(a0)			; goto SBall_Move next
-		move.w	#tile_Nem_LzSpikeBall,ost_tile(a0)
+		move.w	#$2EF,ost_tile(a0)
 		move.l	#Map_SBall2,ost_mappings(a0)
 		move.b	#render_rel,ost_render(a0)
 		move.b	#4,ost_priority(a0)

@@ -33,7 +33,7 @@ ost_bubble_type_list:	equ $3C					; address of bubble type list (4 bytes)
 Bub_Main:	; Routine 0
 		addq.b	#2,ost_routine(a0)			; goto Bub_Animate next
 		move.l	#Map_Bub,ost_mappings(a0)
-		move.w	#tile_Nem_Bubbles+tile_hi,ost_tile(a0)
+		move.w	#$327+tile_hi,ost_tile(a0)
 		move.b	#render_onscreen+render_rel,ost_render(a0)
 		move.b	#$10,ost_actwidth(a0)
 		move.b	#1,ost_priority(a0)
