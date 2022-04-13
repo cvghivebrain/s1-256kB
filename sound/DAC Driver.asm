@@ -17,8 +17,8 @@
 		include	"Macros - More CPUs.asm"	; include language macros
 		cpu	z80				; also start a new z80 program
 
-SEGAPCM		equ $DEADBEEF				; give Sega PCM an arbitary value. Basically, just avoid getting optimized by Kosinski
-SEGAPCM_Len	equ $AC1D				; give Sega PCM an arbitary size. Basically, just avoid getting optimized by Kosinski
+SEGAPCM		equ $200
+SEGAPCM_Len	equ filesize("\SegaPCM_File")
 SEGAPCM_Pitch	equ 0Bh					; the pitch of the SEGA sound
 
 	rsset 1FFCh					; extra RAM variables
@@ -43,11 +43,11 @@ Z80Driver_Start:
 		xor	a				; a=0
 		ld	(zDAC_Status),a			; Disable DAC
 		ld	(zDAC_Sample),a			; Clear sample
-		ld	a,(SEGAPCM>>24)&$FF		; least significant bit from ROM bank ID
+		ld	a,((SegaPCM&$FF8000)/$8000)&1	; least significant bit from ROM bank ID
 		ld	(zBankSelect),a			; Latch it to bank register, initializing bank switch
 
 		ld	b,8				; Number of bits to latch to ROM bank
-		ld	a,(SEGAPCM>>16)&$FF		; Bank ID without the least significant bit
+		ld	a,((SegaPCM&$FF8000)/$8000)>>1	; Bank ID without the least significant bit
 
 .bankswitch
 		ld	(zBankSelect),a			; Latch another bit to bank register.
@@ -194,8 +194,8 @@ PlaySampleLoop:
 ; ---------------------------------------------------------------------------
 
 Play_Sega:
-		ld	de,SEGAPCM&$FFFF		; de = bank-relative location of the SEGA sound
-		ld	hl,SEGAPCM_Len&$FFFF		; hl = size of the SEGA sound
+		ld	de,(SEGAPCM&$FFFF)|$8000	; de = bank-relative location of the SEGA sound
+		ld	hl,$6978			; hl = size of the SEGA sound
 		ld	c,2Ah				; c = DAC data register
 
 .play

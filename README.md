@@ -76,9 +76,9 @@ Kosinski compression for level graphics and some other things. | 457982 | -13776
 Compressed some GHZ graphics. | 457152 | -830
 Compressed MZ/SYZ graphics. Fixed title screen glitch and altered level select. | 456580 | -572
 Kosinski compression for special stages. Removed unused special stage code. | 454012 | -2568
+Better compression for DAC driver. Moved Sega PCM to start of ROM so it's always in a $8000 bank. | 453910 | -102
 Target | 262144 | 
 
 ## Credits
 
-* [Clownacy](https://github.com/Clownacy) for [the accurate Kosinski compressor](https://github.com/Clownacy/accurate-kosinski)
 * [flamewing](https://github.com/flamewing) for [mdcomp](https://github.com/flamewing/mdcomp)

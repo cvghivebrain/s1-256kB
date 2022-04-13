@@ -101,6 +101,8 @@ MusicList:	dc.b mus_GHZ, mus_LZ, mus_MZ, mus_SLZ, mus_SYZ, mus_SBZ, mus_FZ
 Region:		dc.b "JUE             "				; Region (Country code)
 EndOfHeader:
 
+SegaPCM:	incbin	"\SegaPCM_File"
+		even
 ; ===========================================================================
 ; Crash/Freeze the 68000. Unlike Sonic 2, Sonic 1 uses the 68000 for playing music, so it stops too
 
