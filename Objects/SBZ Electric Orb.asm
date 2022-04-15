@@ -21,7 +21,7 @@ ost_electric_rate:	equ $34					; zap rate - applies bitmask to frame counter (2 
 Elec_Main:	; Routine 0
 		addq.b	#2,ost_routine(a0)			; goto Elec_Shock next
 		move.l	#Map_Elec,ost_mappings(a0)
-		move.w	#tile_Nem_Electric,ost_tile(a0)
+		move.w	#$3CD,ost_tile(a0)
 		ori.b	#render_rel,ost_render(a0)
 		move.b	#$28,ost_actwidth(a0)
 		moveq	#0,d0

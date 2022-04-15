@@ -46,7 +46,7 @@ Sto_Main:	; Routine 0
 		lsr.w	#2,d0
 		move.b	d0,ost_frame(a0)			; high nybble without bit 7 = frame
 		move.l	#Map_Stomp,ost_mappings(a0)
-		move.w	#tile_Nem_Stomper+tile_pal2,ost_tile(a0)
+		move.w	#$2A9+tile_pal2,ost_tile(a0)
 		cmpi.b	#id_LZ,(v_zone).w			; check if level is LZ/SBZ3
 		bne.s	@skip_sbz3_init				; if not, branch
 		bset	#0,(f_stomp_sbz3_init).w		; flag object as loaded

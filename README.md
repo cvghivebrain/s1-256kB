@@ -79,6 +79,7 @@ Compressed MZ/SYZ graphics. Fixed title screen glitch and altered level select. 
 Kosinski compression for special stages. Removed unused special stage code. | 454012 | -2568
 Better compression for DAC driver. Moved Sega PCM to start of ROM so it's always in a $8000 bank. | 453910 | -102
 Compressed LZ/SLZ graphics. | 451908 | -2002
+Compressed SBZ graphics. Removed unused MZ palette. | 450426 | -1482
 Target | 262144 | 
 
 ## Credits

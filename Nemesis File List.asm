@@ -32,29 +32,10 @@
 		; SYZ
 		nemesis Nem_Bumper,"SYZ Bumper"
 		nemesis Nem_SmallSpike,"SYZ Small Spikeball"
-		nemesis Nem_BigSpike,"SYZ Large Spikeball"
-		
-		; SBZ
-		nemesis Nem_SbzWheel1,"SBZ Running Disc"
-		nemesis Nem_SbzWheel2,"SBZ Junction Wheel"
-		nemesis Nem_Cutter,"SBZ Pizza Cutter"
-		nemesis Nem_Stomper,"SBZ Stomper"
-		nemesis Nem_SpinPform,"SBZ Spinning Platform"
-		nemesis Nem_TrapDoor,"SBZ Trapdoor"
-		nemesis Nem_SbzFloor,"SBZ Collapsing Floor"
-		nemesis Nem_Electric,"SBZ Electrocuter"
-		nemesis Nem_SbzBlock,"SBZ Vanishing Block"
-		nemesis Nem_FlamePipe,"SBZ Flaming Pipe"
-		nemesis Nem_SbzDoor1,"SBZ Small Vertical Door"
-		nemesis Nem_SlideFloor,"SBZ Sliding Floor Trap"
-		nemesis Nem_SbzDoor2,"SBZ Large Horizontal Door"
-		nemesis Nem_Girder,"SBZ Crushing Girder"
 		
 		; Enemies
-		nemesis Nem_BallHog,"Ball Hog"
 		nemesis Nem_Roller,"Roller"
 		nemesis Nem_Batbrain,"Batbrain"
-		nemesis Nem_Bomb,"Bomb Enemy"
 		
 		; Items
 		nemesis Nem_TitleCard,"Title Cards"

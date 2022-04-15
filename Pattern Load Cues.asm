@@ -112,7 +112,6 @@ PLC_MZ2:	plcheader
 ; Pattern load cues - Star Light
 ; ---------------------------------------------------------------------------
 PLC_SLZ:	plcheader
-		plcm	Nem_Bomb, vram_bomb			; bomb enemy ($8000)
 		plcm	Nem_Fireball, $9000,SLZ			; fireballs
 	PLC_SLZ_end:
 
@@ -127,34 +126,15 @@ PLC_SYZ:	plcheader
 
 PLC_SYZ2:	plcheader
 		plcm	Nem_Bumper, $7000			; bumper
-		plcm	Nem_BigSpike,$72C0				; large	spikeball ($72C0)
-		plcm	Nem_SmallSpike				; small	spikeball ($7740)
+		plcm	Nem_SmallSpike,$7740
 	PLC_SYZ2_end:
 ; ---------------------------------------------------------------------------
 ; Pattern load cues - Scrap Brain
 ; ---------------------------------------------------------------------------
 PLC_SBZ:	plcheader
-		plcm	Nem_Stomper, $5800			; moving platform and stomper
-		plcm	Nem_SbzDoor1				; door ($5D00)
-		plcm	Nem_Girder				; girder ($5E00)
-		plcm	Nem_BallHog				; ball hog enemy ($6040)
-		plcm	Nem_SbzWheel1, $6880			; spot on large	wheel
-		plcm	Nem_SbzWheel2				; wheel	that grabs Sonic ($6900)
-		plcm	Nem_BigSpike,,SBZ			; large	spikeball ($7220)
-		plcm	Nem_Cutter				; pizza	cutter ($76A0)
-		plcm	Nem_FlamePipe				; flaming pipe ($7B20)
-		plcm	Nem_SbzFloor				; collapsing floor ($7EA0)
-		plcm	Nem_SbzBlock, $9860			; vanishing block
 	PLC_SBZ_end:
 
 PLC_SBZ2:	plcheader
-		plcm	Nem_Bomb, vram_bomb			; bomb enemy ($8000)
-		plcm	Nem_SlideFloor, $8C00			; floor	that slides away
-		plcm	Nem_SbzDoor2				; horizontal door ($8DE0)
-		plcm	Nem_Electric				; electric orb ($8FC0)
-		plcm	Nem_TrapDoor				; trapdoor ($9240)
-		plcm	Nem_SbzFloor, $7F20			; collapsing floor
-		plcm	Nem_SpinPform, $9BE0			; small	spinning platform
 	PLC_SBZ2_end:
 ; ---------------------------------------------------------------------------
 ; Pattern load cues - title card
@@ -169,7 +149,6 @@ PLC_Boss:	plcheader
 		plcm	Nem_Eggman, $8000			; Eggman main patterns
 		plcm	Nem_Weapons				; Eggman's weapons ($8D80)
 		plcm	Nem_Prison, $93A0			; prison capsule
-		plcm	Nem_Bomb, $A300, Boss			; bomb enemy (partially overwritten - shrapnel remains)
 		plcm	Nem_Exhaust, $A540			; exhaust flame
 	PLC_Boss_end:
 ; ---------------------------------------------------------------------------
@@ -278,8 +257,7 @@ PLC_TryAgain:	plcheader
 ; Pattern load cues - Eggman on SBZ 2
 ; ---------------------------------------------------------------------------
 PLC_EggmanSBZ2:	plcheader
-		plcm	Nem_SbzBlock, $A400, SBZ2		; block
-		plcm	Nem_Sbz2Eggman, $8000			; Eggman
+		plcm	Nem_Sbz2Eggman, $8800			; Eggman
 	PLC_EggmanSBZ2_end:
 ; ---------------------------------------------------------------------------
 ; Pattern load cues - final boss

@@ -347,7 +347,7 @@ BSpike_Explode:	; Routine 8
 		move.b	#id_BSpike_MoveFrag,ost_routine(a1)	; goto BSpike_MoveFrag next
 		move.l	#Map_BSBall,ost_mappings(a1)
 		move.b	#3,ost_priority(a1)
-		move.w	#tile_Nem_Bomb_Boss,ost_tile(a1)
+		move.w	#0,ost_tile(a1)
 		move.w	ost_x_pos(a0),ost_x_pos(a1)
 		move.w	ost_y_pos(a0),ost_y_pos(a1)
 		move.w	(a2)+,ost_x_vel(a1)

@@ -938,28 +938,11 @@ KosArt_MZBlock:	incbin	"kosdata\MZ Green Pushable Block.kos"
 		nemfile	Nem_SmallSpike
 KosArt_Button:	incbin	"kosdata\Button.kos"
 		even
-		nemfile	Nem_BigSpike
-; ---------------------------------------------------------------------------
-; Compressed graphics - SBZ stuff
-; ---------------------------------------------------------------------------
-		nemfile	Nem_SbzWheel1
-		nemfile	Nem_SbzWheel2
-		nemfile	Nem_Cutter
-		nemfile	Nem_Stomper
-		nemfile	Nem_SpinPform
-		nemfile	Nem_TrapDoor
-		nemfile	Nem_SbzFloor
-		nemfile	Nem_Electric
-		nemfile	Nem_SbzBlock
-		nemfile	Nem_FlamePipe
-		nemfile	Nem_SbzDoor1
-		nemfile	Nem_SlideFloor
-		nemfile	Nem_SbzDoor2
-		nemfile	Nem_Girder
+KosArt_BigSpike:	incbin	"kosdata\SYZ Big Spikeball.kos"
+		even
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - enemies
 ; ---------------------------------------------------------------------------
-		nemfile	Nem_BallHog
 KosArt_Crabmeat:	incbin	"kosdata\Crabmeat.kos"
 		even
 KosArt_Buzz:	incbin	"kosdata\Buzz Bomber.kos"
@@ -970,7 +953,8 @@ KosArt_ChopNewtMoto:	incbin	"kosdata\ChopNewtMoto.kos"
 KosArt_Yadrin:	incbin	"kosdata\Yadrin.kos"
 		even
 		nemfile	Nem_Batbrain
-		nemfile	Nem_Bomb
+KosArt_Bomb:	incbin	"kosdata\Bomb Enemy.kos"
+		even
 KosArt_Orbinaut:	incbin	"kosdata\Orbinaut.kos"
 		even
 KosArt_Caterkiller:	incbin	"kosdata\Caterkiller.kos"

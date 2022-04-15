@@ -303,6 +303,8 @@ KPLC_SLZ:	dc.w ((@end-KPLC_SLZ)/6)-1
 		dc.w 0
 		dc.l KosArt_Orbinaut
 		dc.w vram_orbinaut
+		dc.l KosArt_Bomb
+		dc.w vram_bomb
 	@end:
 
 KPLC_SYZ:	dc.w ((@end-KPLC_SYZ)/6)-1
@@ -314,6 +316,8 @@ KPLC_SYZ:	dc.w ((@end-KPLC_SYZ)/6)-1
 		dc.w vram_buzz
 		dc.l KosArt_Yadrin
 		dc.w vram_yadrin
+		dc.l KosArt_BigSpike
+		dc.w $72C0
 		dc.l KosArt_Button
 		dc.w vram_button
 	@end:
@@ -321,8 +325,12 @@ KPLC_SYZ:	dc.w ((@end-KPLC_SYZ)/6)-1
 KPLC_SBZ:	dc.w ((@end-KPLC_SBZ)/6)-1
 		dc.l KosArt_SBZMain
 		dc.w 0
+		dc.l KosArt_BigSpike
+		dc.w $8BC0
 		dc.l KosArt_Caterkiller
-		dc.w $5600
+		dc.w $9040
+		dc.l KosArt_Bomb
+		dc.w $9240
 		dc.l KosArt_Button
 		dc.w vram_button
 	@end:

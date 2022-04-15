@@ -165,6 +165,7 @@ tilecount:	= 4						; 4 per column, 16 total
 		addq.w	#4,d3					; increment initial oscillating value
 		dbf	d2,@loop				; repeat 3 times
 	@end:
+AniArt_SBZ_none:
 		rts
 
 ; ---------------------------------------------------------------------------
@@ -178,13 +179,13 @@ AniArt_SBZ_Script:
 		dc.w 12*sizeof_cell				; cells per frame
 		dc.b 8, 7					; frame count, time
 		dc.l Art_SBZ_Seq				; sequence pointer
-		dc.l $40000000+(($8900&$3FFF)<<16)+(($8900&$C000)>>14) ; VRAM address
+		dc.l $40000000+(($9E00&$3FFF)<<16)+(($9E00&$C000)>>14) ; VRAM address
 		
 		dc.l v_sbz_art					; gfx pointer
 		dc.w 12*sizeof_cell				; cells per frame
 		dc.b 8, 7					; frame count, time
 		dc.l Art_SBZ_Seq2				; sequence pointer
-		dc.l $40000000+(($8A80&$3FFF)<<16)+(($8A80&$C000)>>14) ; VRAM address
+		dc.l $40000000+(($9F80&$3FFF)<<16)+(($9F80&$C000)>>14) ; VRAM address
 
 		dc.w 180
 Art_SBZ_Seq:	dc.b $80, 1, 2, 3, 4, 5, 6, 7
@@ -192,6 +193,8 @@ Art_SBZ_Seq:	dc.b $80, 1, 2, 3, 4, 5, 6, 7
 Art_SBZ_Seq2:	dc.b $80, 1, 2, 3, 4, 5, 6, 7
 
 AniArt_SBZ:
+		cmpi.b	#1,(v_act).w
+		beq.s	AniArt_SBZ_none
 		lea	(AniArt_SBZ_Script).l,a3
 		bra.w	AniArt_Run
 

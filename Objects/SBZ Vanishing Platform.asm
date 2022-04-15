@@ -26,7 +26,7 @@ ost_vanish_sync_mask:	equ $38					; bitmask for synchronising (2 bytes)
 VanP_Main:	; Routine 0
 		addq.b	#6,ost_routine(a0)			; goto VanP_Sync next
 		move.l	#Map_VanP,ost_mappings(a0)
-		move.w	#tile_Nem_SbzBlock+tile_pal3,ost_tile(a0)
+		move.w	#$412+tile_pal3,ost_tile(a0)
 		ori.b	#render_rel,ost_render(a0)
 		move.b	#$10,ost_actwidth(a0)
 		move.b	#4,ost_priority(a0)

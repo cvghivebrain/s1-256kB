@@ -48,10 +48,10 @@ MBlock_Main:	; Routine 0
 		cmpi.b	#id_SBZ,(v_zone).w			; check if level is SBZ
 		bne.s	@not_sbz
 
-		move.w	#tile_Nem_Stomper+tile_pal2,ost_tile(a0) ; SBZ specific code (object 5228)
+		move.w	#$2A9+tile_pal2,ost_tile(a0) ; SBZ specific code (object 5228)
 		cmpi.b	#$18,ost_subtype(a0)			; is object 5228 ?
 		beq.s	@not_sbz_28				; if yes, branch
-		move.w	#tile_Nem_SlideFloor+tile_pal3,ost_tile(a0) ; SBZ specific code (object 523x)
+		move.w	#$3AF+tile_pal3,ost_tile(a0) ; SBZ specific code (object 523x)
 
 	@not_sbz:
 	@not_sbz_28:

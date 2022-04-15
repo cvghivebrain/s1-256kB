@@ -31,25 +31,25 @@ frame_monitor_static2:
 		
 frame_monitor_sonic:
 		spritemap					; Sonic	monitor
-		piece	-8, -$B, 2x2, $1C
+		piece	-8, -$B, 2x2, ($7D4-$680)
 		piece	-$10, -$11, 4x4, 0
 		endsprite
 		
 frame_monitor_shoes:
 		spritemap					; speed	shoes monitor
-		piece	-8, -$B, 2x2, $24
+		piece	-8, -$B, 2x2, $20
 		piece	-$10, -$11, 4x4, 0
 		endsprite
 		
 frame_monitor_shield:
 		spritemap					; shield monitor
-		piece	-8, -$B, 2x2, $28
+		piece	-8, -$B, 2x2, $24
 		piece	-$10, -$11, 4x4, 0
 		endsprite
 		
 frame_monitor_invincible:
 		spritemap					; invincibility	monitor
-		piece	-8, -$B, 2x2, $20
+		piece	-8, -$B, 2x2, $1C
 		piece	-$10, -$11, 4x4, 0
 		endsprite
 		
@@ -61,6 +61,6 @@ frame_monitor_rings:
 		
 frame_monitor_broken:
 		spritemap					; broken monitor
-		piece	-$10, -1, 4x2, $2C
+		piece	-$10, -1, 4x2, $28
 		endsprite
 		even
