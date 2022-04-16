@@ -258,16 +258,10 @@ KosLoadCues:
 KPLC_GHZ:	dc.w ((@end-KPLC_GHZ)/6)-1
 		dc.l KosArt_GHZMain
 		dc.w 0
+		dc.l KosArt_GHZOther
+		dc.w $71C0
 		dc.l KosArt_Crabmeat
-		dc.w vram_crabmeat
-		dc.l KosArt_ChopNewtMoto
-		dc.w $8F60
-		dc.l KosArt_Buzz
-		dc.w vram_buzz
-		dc.l KosArt_Swing
-		dc.w $7000
-		dc.l KosArt_GHZWall1
-		dc.w $A1E0
+		dc.w $8BC0
 	@end:
 
 KPLC_LZ:	dc.w ((@end-KPLC_LZ)/6)-1
@@ -275,27 +269,19 @@ KPLC_LZ:	dc.w ((@end-KPLC_LZ)/6)-1
 		dc.w 0
 		dc.l KosArt_Orbinaut
 		dc.w $9600
-		dc.l KosArt_Button
-		dc.w vram_button
 	@end:
 
 KPLC_MZ:	dc.w ((@end-KPLC_MZ)/6)-1
 		dc.l KosArt_MZMain
 		dc.w 0
-		dc.l KosArt_Buzz
-		dc.w vram_buzz
+		dc.l KosArt_MZMetal
+		dc.w $5E00
+		dc.l KosArt_Fireball
+		dc.w $7CC0+$2C0
 		dc.l KosArt_Caterkiller
 		dc.w vram_cater
-		dc.l KosArt_Swing
-		dc.w $7000
-		dc.l KosArt_MZMetal
-		dc.w $6000
-		dc.l KosArt_MZGlass
-		dc.w $71C0
-		dc.l KosArt_MZButton
-		dc.w $A260
-		dc.l KosArt_MZBlock
-		dc.w $5700
+		dc.l KosArt_Crabmeat
+		dc.w $8440
 	@end:
 
 KPLC_SLZ:	dc.w ((@end-KPLC_SLZ)/6)-1
@@ -310,16 +296,12 @@ KPLC_SLZ:	dc.w ((@end-KPLC_SLZ)/6)-1
 KPLC_SYZ:	dc.w ((@end-KPLC_SYZ)/6)-1
 		dc.l KosArt_SYZMain
 		dc.w 0
-		dc.l KosArt_Crabmeat
-		dc.w vram_crabmeat
-		dc.l KosArt_Buzz
-		dc.w vram_buzz
-		dc.l KosArt_Yadrin
-		dc.w vram_yadrin
 		dc.l KosArt_BigSpike
-		dc.w $72C0
-		dc.l KosArt_Button
-		dc.w vram_button
+		dc.w $7C60
+		dc.l KosArt_Bumper
+		dc.w $7F60
+		dc.l KosArt_Crabmeat
+		dc.w $8220
 	@end:
 
 KPLC_SBZ:	dc.w ((@end-KPLC_SBZ)/6)-1
@@ -331,8 +313,6 @@ KPLC_SBZ:	dc.w ((@end-KPLC_SBZ)/6)-1
 		dc.w $9040
 		dc.l KosArt_Bomb
 		dc.w $9240
-		dc.l KosArt_Button
-		dc.w vram_button
 	@end:
 
 KPLC_Title:	dc.w ((@end-KPLC_Title)/6)-1
@@ -347,14 +327,10 @@ KPLC_Title:	dc.w ((@end-KPLC_Title)/6)-1
 	@end:
 
 KPLC_Main:	dc.w ((@end-KPLC_Main)/6)-1
-		dc.l KosArt_Lamp
-		dc.w $F400
 		dc.l KosArt_HudMain
 		dc.w $D940
 		dc.l KosArt_Lives
 		dc.w $FA80
-		dc.l KosArt_Ring
-		dc.w $F640
 		dc.l KosArt_Points
 		dc.w $F2E0
 	@end:

@@ -42,6 +42,6 @@ Scen_Values_0:	dc.l Map_Scen					; mappings address
 		dc.b id_frame_scen_cannon, 8, 2, 0		; frame, width, priority, collision response
 		
 Scen_Values_3:	dc.l Map_Bri
-		dc.w tile_Nem_Bridge+tile_pal3
+		dc.w $33E+tile_pal3
 		dc.b id_frame_bridge_stump, $10, 1, 0
 		even

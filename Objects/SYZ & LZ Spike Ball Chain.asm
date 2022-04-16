@@ -39,7 +39,7 @@ SBall_Main:	; Routine 0
 		bne.s	@notlz
 
 		move.l	#Map_SBall,ost_mappings(a0)
-		move.w	#tile_Nem_SmallSpike,ost_tile(a0)
+		move.w	#$352,ost_tile(a0)
 		move.b	#id_col_4x4+id_col_hurt,ost_col_type(a0) ; SYZ specific code (chain hurts Sonic)
 
 	@notlz:

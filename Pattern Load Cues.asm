@@ -79,15 +79,9 @@ PLC_GameOver:	plcheader
 ; Pattern load cues - Green Hill
 ; ---------------------------------------------------------------------------
 PLC_GHZ:	plcheader
-		plcm	Nem_Stalk, $6B00			; flower stalk
-		plcm	Nem_PplRock, $7A00			; purple rock
 	PLC_GHZ_end:
 
 PLC_GHZ2:	plcheader
-		plcm	Nem_Bridge,$71C0				; bridge ($71C0)
-		plcm	Nem_SpikePole				; spiked pole ($7300)
-		plcm	Nem_Ball				; giant	ball ($7540)
-		plcm	Nem_GhzWall2, $6980			; normal wall
 	PLC_GHZ2_end:
 ; ---------------------------------------------------------------------------
 ; Pattern load cues - Labyrinth
@@ -101,18 +95,14 @@ PLC_LZ2:	plcheader
 ; Pattern load cues - Marble
 ; ---------------------------------------------------------------------------
 PLC_MZ:		plcheader
-		plcm	Nem_Fireball,$68A0				; fireballs ($68A0)
-		plcm	Nem_Lava,$7500				; lava ($7500)
 	PLC_MZ_end:
 
 PLC_MZ2:	plcheader
-		plcm	Nem_Batbrain,$9700				; basaran enemy ($9700)
 	PLC_MZ2_end:
 ; ---------------------------------------------------------------------------
 ; Pattern load cues - Star Light
 ; ---------------------------------------------------------------------------
 PLC_SLZ:	plcheader
-		plcm	Nem_Fireball, $9000,SLZ			; fireballs
 	PLC_SLZ_end:
 
 PLC_SLZ2:	plcheader
@@ -121,12 +111,9 @@ PLC_SLZ2:	plcheader
 ; Pattern load cues - Spring Yard
 ; ---------------------------------------------------------------------------
 PLC_SYZ:	plcheader
-		plcm	Nem_Roller,$9700				; roller enemy ($9700)
 	PLC_SYZ_end:
 
 PLC_SYZ2:	plcheader
-		plcm	Nem_Bumper, $7000			; bumper
-		plcm	Nem_SmallSpike,$7740
 	PLC_SYZ2_end:
 ; ---------------------------------------------------------------------------
 ; Pattern load cues - Scrap Brain
@@ -167,7 +154,7 @@ PLC_SpecialStage:	plcheader
 		plcm	Nem_SSBgCloud, 0			; bubble and cloud background
 		plcm	Nem_SSBgFish				; bird and fish	background ($A20)
 		plcm	Nem_SSWalls				; walls ($2840)
-		plcm	Nem_Bumper,,SS				; bumper ($4760)
+		;plcm	Nem_Bumper,,SS				; bumper ($4760)
 		plcm	Nem_SSGOAL				; GOAL block ($4A20)
 		plcm	Nem_SSUpDown				; UP and DOWN blocks ($4C60)
 		plcm	Nem_SSRBlock, $5E00			; R block
@@ -232,7 +219,6 @@ PLC_SSResult:	plcheader
 PLC_Ending:	plcheader
 		;plcm	Nem_GHZ_1st,0				; GHZ main patterns
 		;plcm	Nem_GHZ_2nd, $39A0			; GHZ secondary	patterns
-		plcm	Nem_Stalk, $6B00			; flower stalk
 		plcm	Nem_EndFlower, $7400			; flowers
 		plcm	Nem_EndEm				; emeralds ($78A0)
 		plcm	Nem_EndSonic				; Sonic ($7C20)

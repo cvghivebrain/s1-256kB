@@ -28,7 +28,7 @@ ost_cfloor_flag:	equ $3A					; 1 = Sonic has touched the floor
 CFlo_Main:	; Routine 0
 		addq.b	#2,ost_routine(a0)			; goto CFlo_Touch next
 		move.l	#Map_CFlo,ost_mappings(a0)
-		move.w	#$2B8+tile_pal3,ost_tile(a0)
+		move.w	#$297+tile_pal3,ost_tile(a0)
 		cmpi.b	#id_SLZ,(v_zone).w			; check if level is SLZ
 		bne.s	@notSLZ
 

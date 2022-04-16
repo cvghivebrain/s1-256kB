@@ -25,7 +25,15 @@ ost_buzz_mode:		equ $34					; current action - 0 = flying; 1 = recently fired; 2
 Buzz_Main:	; Routine 0
 		addq.b	#2,ost_routine(a0)
 		move.l	#Map_Buzz,ost_mappings(a0)
-		move.w	#vram_buzz/32,ost_tile(a0)
+		move.w	#$488,ost_tile(a0)			; GHZ
+		cmpi.b	#id_GHZ,(v_zone).w
+		beq.s	@is_ghz
+		move.w	#$44C,ost_tile(a0)			; MZ
+		cmpi.b	#id_MZ,(v_zone).w
+		beq.s	@is_ghz
+		move.w	#$43B,ost_tile(a0)			; SYZ
+		
+	@is_ghz:
 		move.b	#render_rel,ost_render(a0)
 		move.b	#3,ost_priority(a0)
 		move.b	#id_col_24x12,ost_col_type(a0)
@@ -66,6 +74,7 @@ Buzz_Move:
 		bsr.w	FindFreeObj
 		bne.s	@fail
 		move.b	#id_Missile,ost_id(a1)			; load missile object
+		move.w	ost_tile(a0),ost_tile(a1)
 		move.w	ost_x_pos(a0),ost_x_pos(a1)
 		move.w	ost_y_pos(a0),ost_y_pos(a1)
 		addi.w	#$1C,ost_y_pos(a1)

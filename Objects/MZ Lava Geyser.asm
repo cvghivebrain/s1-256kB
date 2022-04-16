@@ -50,7 +50,7 @@ Geyser_Main:	; Routine 0
 @makelava:
 		move.b	#id_LavaGeyser,ost_id(a1)
 		move.l	#Map_Geyser,ost_mappings(a1)
-		move.w	#tile_Nem_Lava+tile_pal4,ost_tile(a1)
+		move.w	#$34A+tile_pal4,ost_tile(a1)
 		move.b	#render_rel,ost_render(a1)
 		move.b	#$20,ost_actwidth(a1)
 		move.w	ost_x_pos(a0),ost_x_pos(a1)
@@ -93,45 +93,24 @@ Geyser_Main:	; Routine 0
 		play.w	1, jsr, sfx_Burning			; play flame sound
 
 Geyser_Action:	; Routine 2
-		moveq	#0,d0
-		move.b	ost_subtype(a0),d0
-		add.w	d0,d0
-		move.w	Geyser_Types(pc,d0.w),d1
-		jsr	Geyser_Types(pc,d1.w)
-		bsr.w	SpeedToPos				; update position
-		lea	(Ani_Geyser).l,a1
-		bsr.w	AnimateSprite
-
-Geyser_ChkDel:
-		out_of_range	DeleteObject
-		rts	
-; ===========================================================================
-Geyser_Types:	index *
-		ptr Geyser_Type00
-		ptr Geyser_Type01
-; ===========================================================================
-
-Geyser_Type00:
-		bsr.s	Geyser_Type00_sub
-		move.b	#id_ani_geyser_bubble3,ost_anim(a1)
-		rts
-		
-Geyser_Type00_sub:
 		addi.w	#$18,ost_y_vel(a0)			; apply gravity
 		move.w	ost_geyser_y_start(a0),d0
 		cmp.w	ost_y_pos(a0),d0			; is geyser back at start position?
 		bcc.s	@exit					; if not, branch
 		addq.b	#4,ost_routine(a0)			; goto Geyser_Delete next
 		movea.l	ost_geyser_parent(a0),a1
+		move.b	ost_subtype(a0),d0
+		add.b	#1,d0
+		move.b	d0,ost_anim(a1)
 
 	@exit:
-		rts	
-; ===========================================================================
+		bsr.w	SpeedToPos				; update position
+		lea	(Ani_Geyser).l,a1
+		bsr.w	AnimateSprite
 
-Geyser_Type01:
-		bsr.s	Geyser_Type00_sub
-		move.b	#id_ani_geyser_bubble2,ost_anim(a1)
-		rts	
+Geyser_ChkDel:
+		out_of_range	DeleteObject
+		rts
 ; ===========================================================================
 
 Geyser_Middle:	; Routine 4
@@ -180,9 +159,9 @@ include_LavaGeyser_animation:	macro
 
 Ani_Geyser:	index *
 		ptr ani_geyser_bubble1
+		ptr ani_geyser_bubble3
 		ptr ani_geyser_bubble2
 		ptr ani_geyser_end
-		ptr ani_geyser_bubble3
 		ptr ani_geyser_blank
 		ptr ani_geyser_bubble4
 		

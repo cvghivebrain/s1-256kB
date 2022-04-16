@@ -36,7 +36,7 @@ ost_mblock_move_flag:	equ $36					; 1 = move platform back to its original posit
 MBlock_Main:	; Routine 0
 		addq.b	#2,ost_routine(a0)			; goto MBlock_Platform next
 		move.l	#Map_MBlock,ost_mappings(a0)
-		move.w	#($5700/32)+tile_pal3,ost_tile(a0)
+		move.w	#$297+tile_pal3,ost_tile(a0)
 		cmpi.b	#id_LZ,(v_zone).w			; check if level is LZ
 		bne.s	@not_lz
 

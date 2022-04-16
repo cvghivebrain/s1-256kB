@@ -40,10 +40,10 @@ FBall_Main:	; Routine 0
 		move.b	#8,ost_height(a0)
 		move.b	#8,ost_width(a0)
 		move.l	#Map_Fire,ost_mappings(a0)
-		move.w	#tile_Nem_Fireball,ost_tile(a0)
+		move.w	#$3E6,ost_tile(a0)
 		cmpi.b	#id_SLZ,(v_zone).w			; check if level is SLZ
 		bne.s	@notSLZ					; if not, branch
-		move.w	#tile_Nem_Fireball_SLZ,ost_tile(a0)	; SLZ specific code
+		move.w	#0,ost_tile(a0)				; SLZ specific code
 
 	@notSLZ:
 		move.b	#render_rel,ost_render(a0)

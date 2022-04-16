@@ -36,11 +36,11 @@ frame_crab_firing:
 		
 frame_crab_ball1:
 		spritemap					; projectile
-		piece	-8, -8, 2x2, $2A
+		piece	-8, -8, 2x2, $56
 		endsprite
 		
 frame_crab_ball2:
 		spritemap					; projectile
-		piece	-8, -8, 2x2, $2E
+		piece	-8, -8, 2x2, $5D
 		endsprite
 		even

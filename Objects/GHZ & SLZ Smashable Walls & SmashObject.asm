@@ -24,7 +24,7 @@ ost_smash_x_vel:	equ $30					; Sonic's horizontal speed (2 bytes)
 Smash_Main:	; Routine 0
 		addq.b	#2,ost_routine(a0)			; goto Smash_Solid next
 		move.l	#Map_Smash,ost_mappings(a0)
-		move.w	#($A1E0/32)+tile_pal3,ost_tile(a0)
+		move.w	#$348+tile_pal3,ost_tile(a0)
 		cmpi.b	#id_SLZ,(v_zone).w
 		bne.s	@not_slz
 		move.w	#$411+tile_pal3,ost_tile(a0)

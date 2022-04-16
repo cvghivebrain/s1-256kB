@@ -22,7 +22,7 @@ ost_newtron_fire_flag:	equ $32					; set to 1 after newtron fires a missile
 Newt_Main:	; Routine 0
 		addq.b	#2,ost_routine(a0)			; goto Newt_Action next
 		move.l	#Map_Newt,ost_mappings(a0)
-		move.w	#$9360/32,ost_tile(a0)
+		move.w	#$3EC,ost_tile(a0)
 		move.b	#render_rel,ost_render(a0)
 		move.b	#4,ost_priority(a0)
 		move.b	#$14,ost_actwidth(a0)

@@ -17,7 +17,7 @@ frame_bball_ball:
 		
 frame_bball_chain:
 		spritemap					; chain link (SBZ)
-		piece	-8, -8, 2x2, $20
+		piece	-8, -8, 2x2, ($6B0-$45E)
 		endsprite
 		
 frame_bball_anchor:

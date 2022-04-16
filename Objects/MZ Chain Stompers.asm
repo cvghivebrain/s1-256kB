@@ -72,7 +72,7 @@ CStom_MakeStomper:
 		add.w	ost_y_pos(a0),d0			; add to initial y position
 		move.w	d0,ost_y_pos(a1)
 		move.l	#Map_CStom,ost_mappings(a1)
-		move.w	#$6000/32,ost_tile(a1)
+		move.w	#$2F0,ost_tile(a1)
 		move.b	#render_rel,ost_render(a1)
 		move.w	ost_y_pos(a1),ost_cstomp_y_start(a1)
 		move.b	ost_subtype(a0),ost_subtype(a1)

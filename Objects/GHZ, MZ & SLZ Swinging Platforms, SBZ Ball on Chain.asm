@@ -59,7 +59,7 @@ ost_swing_radius:	equ $3C					; distance of chainlink from anchor
 Swing_Main:	; Routine 0
 		addq.b	#2,ost_routine(a0)			; goto Swing_SetSolid next
 		move.l	#Map_Swing_GHZ,ost_mappings(a0)		; GHZ and MZ specific code
-		move.w	#($7000/32)+tile_pal3,ost_tile(a0)
+		move.w	#$6B0+tile_pal3,ost_tile(a0)
 		move.b	#render_rel,ost_render(a0)
 		move.b	#3,ost_priority(a0)
 		move.b	#$18,ost_actwidth(a0)

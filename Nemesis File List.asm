@@ -17,26 +17,6 @@
 		nemesis Nem_SSGlass,"Special Stage Glass" ; special stage destroyable glass block
 		nemesis Nem_ResultEm,"Special Stage Result Emeralds" ; chaos emeralds on special stage results screen
 		
-		; GHZ
-		nemesis Nem_Stalk,"GHZ Flower Stalk"
-		nemesis Nem_Bridge,"GHZ Bridge"
-		nemesis Nem_Ball,"GHZ Giant Ball"
-		nemesis Nem_SpikePole,"GHZ Spiked Helix Pole"
-		nemesis Nem_PplRock,"GHZ Purple Rock"
-		nemesis Nem_GhzWall2,"GHZ Walls"
-		
-		; MZ
-		nemesis Nem_Fireball,"Fireballs"
-		nemesis Nem_Lava,"MZ Lava"
-		
-		; SYZ
-		nemesis Nem_Bumper,"SYZ Bumper"
-		nemesis Nem_SmallSpike,"SYZ Small Spikeball"
-		
-		; Enemies
-		nemesis Nem_Roller,"Roller"
-		nemesis Nem_Batbrain,"Batbrain"
-		
 		; Items
 		nemesis Nem_TitleCard,"Title Cards"
 		nemesis Nem_Explode,"Explosion"

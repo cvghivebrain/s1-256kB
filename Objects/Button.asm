@@ -22,7 +22,7 @@ But_Index:	index *,,2
 But_Main:	; Routine 0
 		addq.b	#2,ost_routine(a0)			; goto But_Action next
 		move.l	#Map_But,ost_mappings(a0)
-		move.w	#($A260/32)+tile_pal3,ost_tile(a0) ; MZ specific code
+		move.w	#$2C9+tile_pal3,ost_tile(a0) ; MZ specific code
 		cmpi.b	#id_MZ,(v_zone).w			; is level Marble Zone?
 		beq.s	@is_marble				; if yes, branch
 

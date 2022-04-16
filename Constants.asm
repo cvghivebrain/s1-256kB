@@ -32,9 +32,9 @@ vram_bomb:	equ $8900	; bomb enemy graphics
 vram_giantring:	equ $8000	; giant ring graphics
 vram_orbinaut:	equ $8520	; orbinaut graphics
 vram_buzz:	equ $8880	; buzz bomber graphics
-vram_yadrin:	equ $8F60	; yadrin graphics
-vram_cater:	equ $9FE0	; caterkiller graphics
-vram_button:	equ $A200	; button graphics
+vram_yadrin:	equ $6AC0	; yadrin graphics
+vram_cater:	equ $8240	; caterkiller graphics
+vram_button:	equ $F700	; button graphics
 vram_spikes:	equ $A360	; spikes graphics
 vram_hspring:	equ $A460	; horizontal spring graphics
 vram_vspring:	equ $A660	; vertical spring graphics

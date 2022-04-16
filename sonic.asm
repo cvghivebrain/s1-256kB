@@ -799,7 +799,7 @@ SS_ItemIndex:
 		ss_sprite Map_SSWalls,tile_Nem_SSWalls+tile_pal4,0
 		ss_sprite Map_SSWalls,tile_Nem_SSWalls+tile_pal4,0
 	SS_ItemIndex_wall_end:
-SS_Item_Bumper:	ss_sprite Map_Bump,tile_Nem_Bumper_SS,0		; $25 - bumper
+SS_Item_Bumper:	ss_sprite Map_Bump,$4760/32,0		; $25 - bumper
 SS_Item_Glass8:	ss_sprite Map_SS_Glass,tile_Nem_SSGlass+tile_pal3,0 ; $4E
 SS_Item_GOAL:	ss_sprite Map_SS_R,tile_Nem_SSGOAL,0		; $27 - GOAL
 SS_Item_Glass7:	ss_sprite Map_SS_Glass,tile_Nem_SSGlass+tile_pal2,0 ; $4D
@@ -812,11 +812,11 @@ SS_Item_Glass2:	ss_sprite Map_SS_Glass,tile_Nem_SSGlass+tile_pal4,0
 SS_Item_Glass3:	ss_sprite Map_SS_Glass,tile_Nem_SSGlass+tile_pal2,0
 SS_Item_Glass4:	ss_sprite Map_SS_Glass,tile_Nem_SSGlass+tile_pal3,0
 SS_Item_R2:	ss_sprite Map_SS_R,tile_Nem_SSRBlock,0		; $31 - R
-SS_Item_Bump1:	ss_sprite Map_Bump,tile_Nem_Bumper_SS,id_frame_bump_bumped1
-SS_Item_Bump2:	ss_sprite Map_Bump,tile_Nem_Bumper_SS,id_frame_bump_bumped2
+SS_Item_Bump1:	ss_sprite Map_Bump,$4760/32,id_frame_bump_bumped1
+SS_Item_Bump2:	ss_sprite Map_Bump,$4760/32,id_frame_bump_bumped2
 SS_Item_Glass5:	ss_sprite Map_SS_Glass,tile_Nem_SSGlass,0	; $4B
 SS_Item_Glass6:	ss_sprite Map_SS_Glass,tile_Nem_SSGlass+tile_pal4,0 ; $4C
-SS_Item_Ring:	ss_sprite Map_Ring,($F640/sizeof_cell)+tile_pal2,0	; $3A - ring
+SS_Item_Ring:	ss_sprite Map_Ring,$7AA+tile_pal2,0	; $3A - ring
 SS_Item_Em1:	ss_sprite Map_SS_Chaos3,tile_Nem_SSEmerald,0	; $3B - emerald
 SS_Item_Em2:	ss_sprite Map_SS_Chaos3,tile_Nem_SSEmerald+tile_pal2,0 ; $3C - emerald
 SS_Item_Em3:	ss_sprite Map_SS_Chaos3,tile_Nem_SSEmerald+tile_pal3,0 ; $3D - emerald
@@ -824,10 +824,10 @@ SS_Item_Em4:	ss_sprite Map_SS_Chaos3,tile_Nem_SSEmerald+tile_pal4,0 ; $3E - emer
 SS_Item_Em5:	ss_sprite Map_SS_Chaos1,tile_Nem_SSEmerald,0	; $3F - emerald
 SS_Item_Em6:	ss_sprite Map_SS_Chaos2,tile_Nem_SSEmerald,0	; $40 - emerald
 SS_Item_Ghost:	ss_sprite Map_SS_R,tile_Nem_SSGhost,0		; $41 - ghost block
-SS_Item_Spark1:	ss_sprite Map_Ring,($F640/sizeof_cell)+tile_pal2,id_frame_ring_sparkle1 ; $42 - sparkle
-SS_Item_Spark2:	ss_sprite Map_Ring,($F640/sizeof_cell)+tile_pal2,id_frame_ring_sparkle2 ; $43 - sparkle
-SS_Item_Spark3:	ss_sprite Map_Ring,($F640/sizeof_cell)+tile_pal2,id_frame_ring_sparkle3 ; $44 - sparkle
-SS_Item_Spark4:	ss_sprite Map_Ring,($F640/sizeof_cell)+tile_pal2,id_frame_ring_sparkle4 ; $45 - sparkle
+SS_Item_Spark1:	ss_sprite Map_Ring,$7AA+tile_pal2,id_frame_ring_sparkle1 ; $42 - sparkle
+SS_Item_Spark2:	ss_sprite Map_Ring,$7AA+tile_pal2,id_frame_ring_sparkle2 ; $43 - sparkle
+SS_Item_Spark3:	ss_sprite Map_Ring,$7AA+tile_pal2,id_frame_ring_sparkle3 ; $44 - sparkle
+SS_Item_Spark4:	ss_sprite Map_Ring,$7AA+tile_pal2,id_frame_ring_sparkle4 ; $45 - sparkle
 SS_Item_EmSp1:	ss_sprite Map_SS_Glass,tile_Nem_SSEmStars+tile_pal2,0 ; $46 - emerald sparkle
 SS_Item_EmSp2:	ss_sprite Map_SS_Glass,tile_Nem_SSEmStars+tile_pal2,1 ; $47 - emerald sparkle
 SS_Item_EmSp3:	ss_sprite Map_SS_Glass,tile_Nem_SSEmStars+tile_pal2,2 ; $48 - emerald sparkle
@@ -908,35 +908,19 @@ Eni_SSBg2:	incbin	"Tilemaps\SS Background 2.eni"		; special stage background (ma
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - GHZ stuff
 ; ---------------------------------------------------------------------------
-		nemfile	Nem_Stalk
-KosArt_Swing:	incbin	"kosdata\GHZ Swinging Platform.kos"
+KosArt_GHZOther:	incbin	"kosdata\GHZ Other.kos"
 		even
-		nemfile	Nem_Bridge
-		nemfile	Nem_Ball
-		nemfile	Nem_SpikePole
-		nemfile	Nem_PplRock
-KosArt_GHZWall1:	incbin	"kosdata\GHZ Smashable Wall.kos"
-		even
-		nemfile	Nem_GhzWall2
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - MZ stuff
 ; ---------------------------------------------------------------------------
 KosArt_MZMetal:	incbin	"kosdata\MZ Metal Blocks.kos"
 		even
-KosArt_MZButton:	incbin	"kosdata\MZ Button.kos"
-		even
-KosArt_MZGlass:	incbin	"kosdata\MZ Green Glass Block.kos"
-		even
-		nemfile	Nem_Fireball
-		nemfile	Nem_Lava
-KosArt_MZBlock:	incbin	"kosdata\MZ Green Pushable Block.kos"
+KosArt_Fireball:	incbin	"kosdata\Fireballs.kos"
 		even
 ; ---------------------------------------------------------------------------
 ; Compressed graphics - SYZ stuff
 ; ---------------------------------------------------------------------------
-		nemfile	Nem_Bumper
-		nemfile	Nem_SmallSpike
-KosArt_Button:	incbin	"kosdata\Button.kos"
+KosArt_Bumper:	incbin	"kosdata\Bumper.kos"
 		even
 KosArt_BigSpike:	incbin	"kosdata\SYZ Big Spikeball.kos"
 		even
@@ -945,14 +929,6 @@ KosArt_BigSpike:	incbin	"kosdata\SYZ Big Spikeball.kos"
 ; ---------------------------------------------------------------------------
 KosArt_Crabmeat:	incbin	"kosdata\Crabmeat.kos"
 		even
-KosArt_Buzz:	incbin	"kosdata\Buzz Bomber.kos"
-		even
-KosArt_ChopNewtMoto:	incbin	"kosdata\ChopNewtMoto.kos"
-		even
-		nemfile	Nem_Roller
-KosArt_Yadrin:	incbin	"kosdata\Yadrin.kos"
-		even
-		nemfile	Nem_Batbrain
 KosArt_Bomb:	incbin	"kosdata\Bomb Enemy.kos"
 		even
 KosArt_Orbinaut:	incbin	"kosdata\Orbinaut.kos"
@@ -967,8 +943,6 @@ KosArt_HudMain:	incbin	"kosdata\HUD text.kos"
 		even
 KosArt_Lives:	incbin	"kosdata\Lives Counter.kos"
 		even
-KosArt_Ring:	incbin	"kosdata\Rings.kos"
-		even
 KosArt_Monitors:	incbin	"kosdata\Monitors.kos"
 		even
 		nemfile	Nem_Explode
@@ -976,8 +950,6 @@ KosArt_Points:	incbin	"kosdata\Points.kos"
 		even
 		nemfile	Nem_GameOver
 		nemfile	Nem_SignPost
-KosArt_Lamp:	incbin	"kosdata\Lamppost.kos"
-		even
 KosArt_SpikeSpring:	incbin	"kosdata\SpikeSpring.kos"
 		even
 		nemfile	Nem_BigRing

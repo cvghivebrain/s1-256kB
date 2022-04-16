@@ -126,7 +126,7 @@ AniArt_MZ_Script:
 		dc.w 6*sizeof_cell				; cells per frame
 		dc.b 4, 7					; frame count, time
 		dc.l Art_GhzWater_Seq				; sequence pointer
-		dc.l $40000000+(($5E40&$3FFF)<<16)+(($5E40&$C000)>>14) ; VRAM address
+		dc.l $40000000+(($5D40&$3FFF)<<16)+(($5D40&$C000)>>14) ; VRAM address
 
 AniArt_MZ:
 		lea	(AniArt_MZ_Script).l,a3

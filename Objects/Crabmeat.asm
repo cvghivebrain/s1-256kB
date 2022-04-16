@@ -28,7 +28,12 @@ Crab_Main:	; Routine 0
 		move.b	#$10,ost_height(a0)
 		move.b	#8,ost_width(a0)
 		move.l	#Map_Crab,ost_mappings(a0)
-		move.w	#vram_crabmeat/32,ost_tile(a0)
+		move.w	#$45E,ost_tile(a0)			; GHZ
+		cmpi.b	#id_GHZ,(v_zone).w
+		beq.s	@is_ghz
+		move.w	#$411,ost_tile(a0)			; SYZ
+		
+	@is_ghz:
 		move.b	#render_rel,ost_render(a0)
 		move.b	#3,ost_priority(a0)
 		move.b	#id_col_16x16,ost_col_type(a0)
@@ -86,13 +91,8 @@ Crab_WaitFire:
 @fire:
 		move.w	#59,ost_crab_wait_time(a0)
 		move.b	#id_ani_crab_firing,ost_anim(a0)	; use firing animation
-		bsr.w	FindFreeObj
-		bne.s	@failleft
-		move.b	#id_Crabmeat,ost_id(a1)			; load left fireball
-		move.b	#id_Crab_BallMain,ost_routine(a1)
-		move.w	ost_x_pos(a0),ost_x_pos(a1)
-		subi.w	#$10,ost_x_pos(a1)
-		move.w	ost_y_pos(a0),ost_y_pos(a1)
+		bsr.s	@failleft
+		subi.w	#$20,ost_x_pos(a1)
 		move.w	#-$100,ost_x_vel(a1)
 
 	@failleft:
@@ -104,6 +104,7 @@ Crab_WaitFire:
 		addi.w	#$10,ost_x_pos(a1)
 		move.w	ost_y_pos(a0),ost_y_pos(a1)
 		move.w	#$100,ost_x_vel(a1)
+		move.w	ost_tile(a0),ost_tile(a1)
 
 	@failright:
 		rts	
@@ -156,7 +157,6 @@ Crab_Delete:	; Routine 4
 Crab_BallMain:	; Routine 6
 		addq.b	#2,ost_routine(a0)			; goto Crab_BallMove next
 		move.l	#Map_Crab,ost_mappings(a0)
-		move.w	#vram_crabmeat/32,ost_tile(a0)
 		move.b	#render_rel,ost_render(a0)
 		move.b	#3,ost_priority(a0)
 		move.b	#id_col_6x6+id_col_hurt,ost_col_type(a0)
