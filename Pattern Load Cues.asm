@@ -3,24 +3,9 @@
 ; ---------------------------------------------------------------------------
 PatternLoadCues:
 		index *
-PLC_Levels:
-		ptr PLC_GHZ
-		ptr PLC_GHZ2
-		ptr PLC_LZ
-		ptr PLC_LZ2
-		ptr PLC_MZ
-		ptr PLC_MZ2
-		ptr PLC_SLZ
-		ptr PLC_SLZ2
-		ptr PLC_SYZ
-		ptr PLC_SYZ2
-		ptr PLC_SBZ
-		ptr PLC_SBZ2
-		zonewarning PLC_Levels,4
 		ptr PLC_TitleCard
 		ptr PLC_Boss
 		ptr PLC_Signpost
-		ptr PLC_SpecialStage
 		ptr PLC_Explode
 		ptr PLC_GameOver
 PLC_Animals:
@@ -76,54 +61,6 @@ PLC_GameOver:	plcheader
 		plcm	Nem_GameOver, $ABC0			; game/time over
 	PLC_GameOver_end:
 ; ---------------------------------------------------------------------------
-; Pattern load cues - Green Hill
-; ---------------------------------------------------------------------------
-PLC_GHZ:	plcheader
-	PLC_GHZ_end:
-
-PLC_GHZ2:	plcheader
-	PLC_GHZ2_end:
-; ---------------------------------------------------------------------------
-; Pattern load cues - Labyrinth
-; ---------------------------------------------------------------------------
-PLC_LZ:		plcheader
-	PLC_LZ_end:
-
-PLC_LZ2:	plcheader
-	PLC_LZ2_end:
-; ---------------------------------------------------------------------------
-; Pattern load cues - Marble
-; ---------------------------------------------------------------------------
-PLC_MZ:		plcheader
-	PLC_MZ_end:
-
-PLC_MZ2:	plcheader
-	PLC_MZ2_end:
-; ---------------------------------------------------------------------------
-; Pattern load cues - Star Light
-; ---------------------------------------------------------------------------
-PLC_SLZ:	plcheader
-	PLC_SLZ_end:
-
-PLC_SLZ2:	plcheader
-	PLC_SLZ2_end:
-; ---------------------------------------------------------------------------
-; Pattern load cues - Spring Yard
-; ---------------------------------------------------------------------------
-PLC_SYZ:	plcheader
-	PLC_SYZ_end:
-
-PLC_SYZ2:	plcheader
-	PLC_SYZ2_end:
-; ---------------------------------------------------------------------------
-; Pattern load cues - Scrap Brain
-; ---------------------------------------------------------------------------
-PLC_SBZ:	plcheader
-	PLC_SBZ_end:
-
-PLC_SBZ2:	plcheader
-	PLC_SBZ2_end:
-; ---------------------------------------------------------------------------
 ; Pattern load cues - title card
 ; ---------------------------------------------------------------------------
 PLC_TitleCard:	plcheader
@@ -147,23 +84,6 @@ PLC_Signpost:	plcheader
 		plcm	Nem_Bonus, $96C0			; hidden bonus points
 		plcm	Nem_BigFlash, $8C40			; giant	ring flash effect
 	PLC_Signpost_end:
-; ---------------------------------------------------------------------------
-; Pattern load cues - special stage
-; ---------------------------------------------------------------------------
-PLC_SpecialStage:	plcheader
-		plcm	Nem_SSBgCloud, 0			; bubble and cloud background
-		plcm	Nem_SSBgFish				; bird and fish	background ($A20)
-		plcm	Nem_SSWalls				; walls ($2840)
-		;plcm	Nem_Bumper,,SS				; bumper ($4760)
-		plcm	Nem_SSGOAL				; GOAL block ($4A20)
-		plcm	Nem_SSUpDown				; UP and DOWN blocks ($4C60)
-		plcm	Nem_SSRBlock, $5E00			; R block
-		plcm	Nem_SSEmStars, $7E00			; emerald collection stars
-		plcm	Nem_SSRedWhite, $8E00			; red and white	block
-		plcm	Nem_SSGhost, $9E00			; ghost	block
-		plcm	Nem_SSGlass, $BE00			; glass	block
-		plcm	Nem_SSEmerald, $EE00			; emeralds
-	PLC_SpecialStage_end:
 ; ---------------------------------------------------------------------------
 ; Pattern load cues - GHZ animals
 ; ---------------------------------------------------------------------------

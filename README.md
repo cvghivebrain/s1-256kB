@@ -38,7 +38,7 @@ Can I get Sonic the Hedgehog to fit into 256kB?
   * Replacing stock compression with mdcomp.
   * Kosinski compression replaces Nemesis compression where possible.
   * Graphics that only appear in one zone are consolidated into the main level graphics.
-  * Compressed animated graphics by storing it in RAM (much like the flowers from the ending sequence).
+  * Compressed animated graphics by storing them in RAM (much like the flowers from the ending sequence).
 
 ## Progress
 
@@ -81,6 +81,7 @@ Better compression for DAC driver. Moved Sega PCM to start of ROM so it's always
 Compressed LZ/SLZ graphics. | 451908 | -2002
 Compressed SBZ graphics. Removed unused MZ palette. | 450426 | -1482
 Tidied GHZ/MZ/SYZ graphics. | 450230 | -196
+Compressed Special Stage graphics. | 449592 | -638
 Target | 262144 | 
 
 ## Credits

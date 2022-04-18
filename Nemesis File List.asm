@@ -4,17 +4,6 @@
 		nemesis	Nem_SegaLogo,"Sega Logo (JP1)"; large Sega logo
 		
 		; Special Stage
-		nemesis Nem_SSWalls,"Special Stage Walls" ; special stage walls
-		nemesis Nem_SSBgFish,"Special Stage Birds & Fish" ; special stage birds and fish background
-		nemesis Nem_SSBgCloud,"Special Stage Clouds" ; special stage clouds background
-		nemesis Nem_SSGOAL,"Special Stage GOAL" ; special stage GOAL block
-		nemesis Nem_SSRBlock,"Special Stage R" ; special stage R block
-		nemesis Nem_SSEmStars,"Special Stage Emerald Twinkle" ; special stage stars from a collected emerald
-		nemesis Nem_SSRedWhite,"Special Stage Red-White" ; special stage red/white block
-		nemesis Nem_SSUpDown,"Special Stage UP-DOWN" ; special stage UP/DOWN block
-		nemesis Nem_SSEmerald,"Special Stage Emeralds" ; special stage chaos emeralds
-		nemesis Nem_SSGhost,"Special Stage Ghost" ; special stage ghost block
-		nemesis Nem_SSGlass,"Special Stage Glass" ; special stage destroyable glass block
 		nemesis Nem_ResultEm,"Special Stage Result Emeralds" ; chaos emeralds on special stage results screen
 		
 		; Items

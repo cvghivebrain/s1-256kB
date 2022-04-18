@@ -208,10 +208,14 @@ QuickPLC:
 
 ; input:
 ;	d0 = index of PLC list
+;	a3 = RAM address to use as buffer (KosPLC2 only)
 ; ---------------------------------------------------------------------------
 
 KosPLC:
+		lea	($FF0000).l,a3
+KosPLC2:
 		disable_ints
+		move.l	d7,-(sp)
 		lea	(KosLoadCues).l,a2			; load the PLC index
 		add.w	d0,d0
 		move.w	(a2,d0.w),d0
@@ -221,7 +225,7 @@ KosPLC:
 
 	@loop:
 		movea.l	(a2)+,a0				; get graphics pointer
-		lea	($FF0000).l,a1				; decompress to start of RAM
+		movea.l	a3,a1					; decompress to start of RAM (unless otherwise specified)
 		bsr.w	KosDec
 		
 		moveq	#0,d0
@@ -236,10 +240,11 @@ KosPLC:
 		and.l	#$FFFF,d1				; read only low word
 		lsr.w	#5,d1					; divide by $20
 		sub.w	#1,d1					; d1 = number of tiles minus 1
-		lea	($FF0000).l,a1				; read graphics from here
+		movea.l	a3,a1					; read graphics from here
 		jsr	LoadTiles				; copy to VRAM
 		
 		dbf	d7,@loop				; repeat for length of PLC
+		move.l	(sp)+,d7
 		enable_ints
 		rts
 
@@ -254,6 +259,7 @@ KosLoadCues:
 		ptr KPLC_Title
 		ptr KPLC_Main
 		ptr KPLC_Main2
+		ptr KPLC_Special
 
 KPLC_GHZ:	dc.w ((@end-KPLC_GHZ)/6)-1
 		dc.l KosArt_GHZMain
@@ -342,4 +348,11 @@ KPLC_Main2:	dc.w ((@end-KPLC_Main2)/6)-1
 		dc.w $A820
 		dc.l KosArt_SpikeSpring
 		dc.w vram_spikes
+	@end:
+
+KPLC_Special:	dc.w ((@end-KPLC_Special)/6)-1
+		dc.l KosArt_Special
+		dc.w 0
+		dc.l KosArt_Bumper
+		dc.w $4D00
 	@end:

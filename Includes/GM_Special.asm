@@ -2,6 +2,11 @@
 ; Special Stage
 ; ---------------------------------------------------------------------------
 
+jmp_LoadTiles:	
+		moveq	#9-1,d1
+jmp_LoadTiles2:
+		jmp	LoadTiles
+
 GM_Special:
 		play.w	1, bsr.w, sfx_EnterSS			; play special stage entry sound
 		bsr.w	PaletteWhiteOut				; fade to white from previous gamemode
@@ -21,8 +26,23 @@ GM_Special:
 		
 		move.w	#$8F02,(a5)				; set VDP increment to 2 bytes
 		bsr.w	SS_BGLoad
-		moveq	#id_PLC_SpecialStage,d0
-		bsr.w	QuickPLC				; load special stage gfx
+		moveq	#id_KPLC_Special,d0
+		bsr.w	KosPLC
+		
+		locVRAM	$5E00,(a5)
+		lea	($FF4D00).l,a1
+		bsr.w	jmp_LoadTiles
+		locVRAM	$7E00,(a5)
+		bsr.w	jmp_LoadTiles
+		locVRAM	$8E00,(a5)
+		bsr.w	jmp_LoadTiles
+		locVRAM	$9E00,(a5)
+		bsr.w	jmp_LoadTiles
+		locVRAM	$BE00,(a5)
+		bsr.w	jmp_LoadTiles
+		locVRAM	$EE00,(a5)
+		moveq	#16-1,d1
+		bsr.w	jmp_LoadTiles2
 
 		lea	(v_ost_all).w,a1
 		moveq	#0,d0
@@ -202,7 +222,7 @@ sizeof_fish:	equ fish_width*fish_height*2
 SS_BGLoad:
 		lea	(v_ss_enidec_buffer).l,a1		; buffer
 		lea	(Eni_SSBg1).l,a0			; load mappings for the birds and fish
-		move.w	#tile_Nem_SSBgFish+tile_pal3,d0		; add this to each tile
+		move.w	#$51+tile_pal3,d0			; add this to each tile
 		bsr.w	EniDec					; decompress fish/bird mappings to RAM
 
 		locVRAM	$5000,d3				; d3 = VDP address for $5000 in VRAM
@@ -765,70 +785,70 @@ SS_AniWallsRings:
 
 ; ===========================================================================
 SS_Wall_Vram_Settings:
-		dc.w tile_Nem_SSWalls
-		dc.w tile_Nem_SSWalls+tile_pal4
-		dc.w tile_Nem_SSWalls
-		dc.w tile_Nem_SSWalls
-		dc.w tile_Nem_SSWalls
-		dc.w tile_Nem_SSWalls
-		dc.w tile_Nem_SSWalls
-		dc.w tile_Nem_SSWalls+tile_pal4
-		dc.w tile_Nem_SSWalls
-		dc.w tile_Nem_SSWalls+tile_pal4
-		dc.w tile_Nem_SSWalls
-		dc.w tile_Nem_SSWalls
-		dc.w tile_Nem_SSWalls
-		dc.w tile_Nem_SSWalls
-		dc.w tile_Nem_SSWalls
-		dc.w tile_Nem_SSWalls+tile_pal4
-		dc.w tile_Nem_SSWalls+tile_pal2
-		dc.w tile_Nem_SSWalls
-		dc.w tile_Nem_SSWalls+tile_pal2
-		dc.w tile_Nem_SSWalls+tile_pal2
-		dc.w tile_Nem_SSWalls+tile_pal2
-		dc.w tile_Nem_SSWalls+tile_pal2
-		dc.w tile_Nem_SSWalls+tile_pal2
-		dc.w tile_Nem_SSWalls
-		dc.w tile_Nem_SSWalls+tile_pal2
-		dc.w tile_Nem_SSWalls
-		dc.w tile_Nem_SSWalls+tile_pal2
-		dc.w tile_Nem_SSWalls+tile_pal2
-		dc.w tile_Nem_SSWalls+tile_pal2
-		dc.w tile_Nem_SSWalls+tile_pal2
-		dc.w tile_Nem_SSWalls+tile_pal2
-		dc.w tile_Nem_SSWalls
-		dc.w tile_Nem_SSWalls+tile_pal3
-		dc.w tile_Nem_SSWalls+tile_pal2
-		dc.w tile_Nem_SSWalls+tile_pal3
-		dc.w tile_Nem_SSWalls+tile_pal3
-		dc.w tile_Nem_SSWalls+tile_pal3
-		dc.w tile_Nem_SSWalls+tile_pal3
-		dc.w tile_Nem_SSWalls+tile_pal3
-		dc.w tile_Nem_SSWalls+tile_pal2
-		dc.w tile_Nem_SSWalls+tile_pal3
-		dc.w tile_Nem_SSWalls+tile_pal2
-		dc.w tile_Nem_SSWalls+tile_pal3
-		dc.w tile_Nem_SSWalls+tile_pal3
-		dc.w tile_Nem_SSWalls+tile_pal3
-		dc.w tile_Nem_SSWalls+tile_pal3
-		dc.w tile_Nem_SSWalls+tile_pal3
-		dc.w tile_Nem_SSWalls+tile_pal2
-		dc.w tile_Nem_SSWalls+tile_pal4
-		dc.w tile_Nem_SSWalls+tile_pal3
-		dc.w tile_Nem_SSWalls+tile_pal4
-		dc.w tile_Nem_SSWalls+tile_pal4
-		dc.w tile_Nem_SSWalls+tile_pal4
-		dc.w tile_Nem_SSWalls+tile_pal4
-		dc.w tile_Nem_SSWalls+tile_pal4
-		dc.w tile_Nem_SSWalls+tile_pal3
-		dc.w tile_Nem_SSWalls+tile_pal4
-		dc.w tile_Nem_SSWalls+tile_pal3
-		dc.w tile_Nem_SSWalls+tile_pal4
-		dc.w tile_Nem_SSWalls+tile_pal4
-		dc.w tile_Nem_SSWalls+tile_pal4
-		dc.w tile_Nem_SSWalls+tile_pal4
-		dc.w tile_Nem_SSWalls+tile_pal4
-		dc.w tile_Nem_SSWalls+tile_pal3
+		dc.w $142
+		dc.w $142+tile_pal4
+		dc.w $142
+		dc.w $142
+		dc.w $142
+		dc.w $142
+		dc.w $142
+		dc.w $142+tile_pal4
+		dc.w $142
+		dc.w $142+tile_pal4
+		dc.w $142
+		dc.w $142
+		dc.w $142
+		dc.w $142
+		dc.w $142
+		dc.w $142+tile_pal4
+		dc.w $142+tile_pal2
+		dc.w $142
+		dc.w $142+tile_pal2
+		dc.w $142+tile_pal2
+		dc.w $142+tile_pal2
+		dc.w $142+tile_pal2
+		dc.w $142+tile_pal2
+		dc.w $142
+		dc.w $142+tile_pal2
+		dc.w $142
+		dc.w $142+tile_pal2
+		dc.w $142+tile_pal2
+		dc.w $142+tile_pal2
+		dc.w $142+tile_pal2
+		dc.w $142+tile_pal2
+		dc.w $142
+		dc.w $142+tile_pal3
+		dc.w $142+tile_pal2
+		dc.w $142+tile_pal3
+		dc.w $142+tile_pal3
+		dc.w $142+tile_pal3
+		dc.w $142+tile_pal3
+		dc.w $142+tile_pal3
+		dc.w $142+tile_pal2
+		dc.w $142+tile_pal3
+		dc.w $142+tile_pal2
+		dc.w $142+tile_pal3
+		dc.w $142+tile_pal3
+		dc.w $142+tile_pal3
+		dc.w $142+tile_pal3
+		dc.w $142+tile_pal3
+		dc.w $142+tile_pal2
+		dc.w $142+tile_pal4
+		dc.w $142+tile_pal3
+		dc.w $142+tile_pal4
+		dc.w $142+tile_pal4
+		dc.w $142+tile_pal4
+		dc.w $142+tile_pal4
+		dc.w $142+tile_pal4
+		dc.w $142+tile_pal3
+		dc.w $142+tile_pal4
+		dc.w $142+tile_pal3
+		dc.w $142+tile_pal4
+		dc.w $142+tile_pal4
+		dc.w $142+tile_pal4
+		dc.w $142+tile_pal4
+		dc.w $142+tile_pal4
+		dc.w $142+tile_pal3
 
 ; ---------------------------------------------------------------------------
 ; Subroutine to	find a free slot in sprite update list

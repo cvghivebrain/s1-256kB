@@ -28,13 +28,6 @@ LoadHUDArt:
 
 LoadLevelPLC:
 		moveq	#0,d0
-		move.b	(v_zone).w,d0				; get zone number
-		lsl.w	#1,d0
-		cmp.b	#id_PLC_TitleCard,d0
-		beq.s	@no_plc
-		bsr.w	AddPLC					; load level graphics over next few frames
-	@no_plc:
-		moveq	#0,d0
 		move.b	(v_zone).w,d0
 		cmp.b	#5,d0
 		bhi.s	@no_plc2
