@@ -2,45 +2,32 @@
 ; Ending sequence in Green Hill	Zone
 ; ---------------------------------------------------------------------------
 
-GM_Ending:
-		play.b	1, bsr.w, cmd_Stop			; stop music
-		bsr.w	PaletteFadeOut				; fade out from previous gamemode
-
-		lea	(v_ost_all).w,a1
-		moveq	#0,d0
-		move.w	#((sizeof_ost*countof_ost)/4)-1,d1
-	@clear_ost:
-		move.l	d0,(a1)+
-		dbf	d1,@clear_ost				; clear object RAM
-
-		lea	(v_vblank_0e_counter).w,a1
-		moveq	#0,d0
-		move.w	#((v_plc_buffer-v_vblank_0e_counter)/4)-1,d1
-	@clear_ram1:
-		move.l	d0,(a1)+
-		dbf	d1,@clear_ram1				; clear	variables ($F628-$F67F)
-
-		lea	(v_camera_x_pos).w,a1
-		moveq	#0,d0
-		move.w	#((v_sprite_buffer-v_camera_x_pos)/4)-1,d1
-	@clear_ram2:
-		move.l	d0,(a1)+
-		dbf	d1,@clear_ram2				; clear	variables ($F700-$F7FF)
-
-		lea	(v_oscillating_table).w,a1
-		moveq	#0,d0
-		move.w	#((v_levelselect_hold_delay-v_oscillating_table)/4)-1,d1
-	@clear_ram3:
-		move.l	d0,(a1)+
-		dbf	d1,@clear_ram3				; clear	variables ($FE60-$FF7F)
-
+ClearRAM_Level:
+		move.l	#(v_ost_all&$FFFF)+((((sizeof_ost*countof_ost)/4)-1)<<16),d0
+		bsr.w	ClearRAM
+		move.l	#(v_vblank_0e_counter&$FFFF)+((((v_plc_buffer-v_vblank_0e_counter)/4)-1)<<16),d0
+		bsr.w	ClearRAM
+		move.l	#(v_camera_x_pos&$FFFF)+((((v_sprite_buffer-v_camera_x_pos)/4)-1)<<16),d0
+		bsr.w	ClearRAM
+		move.l	#(v_oscillating_table&$FFFF)+((((v_levelselect_hold_delay-v_oscillating_table)/4)-1)<<16),d0
+		bsr.w	ClearRAM
 		disable_ints
+		cmpi.b	#id_Ending,(v_gamemode).w
+		bne.s	@not_ending
 		disable_display
+	@not_ending:
 		bsr.w	ClearScreen
 		bsr.w	LoadVDPSettings
 		move.w	#$8720,(a6)				; set background colour (line 3; colour 0)
 		move.w	#$8A00+223,(v_vdp_hint_counter).w	; set palette change position (for water)
 		move.w	(v_vdp_hint_counter).w,(a6)
+		rts
+
+GM_Ending:
+		play.b	1, bsr.w, cmd_Stop			; stop music
+		bsr.w	PaletteFadeOut				; fade out from previous gamemode
+		bsr.s	ClearRAM_Level
+
 		move.w	#30,(v_air).w
 		move.w	#id_EndZ<<8,(v_zone).w			; set level number to 0600 (extra flowers)
 		cmpi.b	#6,(v_emeralds).w			; do you have all 6 emeralds?
@@ -59,7 +46,7 @@ GM_Ending:
 		move.l	#Col_GHZ,(v_collision_index_ptr).w	; set pointer to GHZ collision index
 		enable_ints
 		lea	(KosArt_GHZ).l,a0
-		lea	(v_ghz_art).w,a1
+		lea	(v_ghz_art).l,a1
 		bsr.w	KosDec
 		lea	(Kos_EndFlowers).l,a0			; load extra flower patterns
 		lea	(v_ghz_flower_buffer).w,a1		; RAM address to buffer the patterns ($FFFF9400)
@@ -79,11 +66,6 @@ GM_Ending:
 		moveq	#0,d0
 		move.w	d0,(v_rings).w
 		move.l	d0,(v_time).w
-		move.b	d0,(v_ring_reward).w
-		move.b	d0,(v_shield).w
-		move.b	d0,(v_invincibility).w
-		move.b	d0,(v_shoes).w
-		move.b	d0,(v_unused_powerup).w
 		move.w	d0,(f_restart).w
 		move.w	d0,(v_frame_counter).w
 		bsr.w	OscillateNumInit
@@ -94,7 +76,6 @@ GM_Ending:
 		move.b	#id_VBlank_Ending,(v_vblank_routine).w
 		bsr.w	WaitForVBlank
 		enable_display
-		move.w	#palfade_all,(v_palfade_start).w	; unused - this is already in PaletteFadeIn
 		bsr.w	PaletteFadeIn				; fade in from black
 
 ; ---------------------------------------------------------------------------

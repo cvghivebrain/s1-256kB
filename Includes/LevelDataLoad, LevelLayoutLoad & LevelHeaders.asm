@@ -42,13 +42,8 @@ LevelDataLoad:
 ; ---------------------------------------------------------------------------
 
 LevelLayoutLoad:
-		lea	(v_level_layout).w,a3
-		move.w	#((v_sprite_queue-v_level_layout)/4)-1,d1
-		moveq	#0,d0
-
-	@clear_ram:
-		move.l	d0,(a3)+
-		dbf	d1,@clear_ram				; clear the RAM ($A400-ABFF)
+		move.l	#(v_level_layout&$FFFF)+((((v_sprite_queue-v_level_layout)/4)-1)<<16),d0
+		bsr.w	ClearRAM
 
 		lea	(v_level_layout).w,a3			; RAM address for level layout
 		moveq	#0,d1

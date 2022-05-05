@@ -1,6 +1,17 @@
 ; ---------------------------------------------------------------------------
 ; Level
 ; ---------------------------------------------------------------------------
+ClearRAM:
+		moveq	#-1,d1					; d1 = $ffffffff
+		move.w	d0,d1					; d1 = target address
+		movea.l	d1,a1
+		swap	d0
+		andi.l	#$FFFF,d0				; d0 = size of RAM to clear
+	@loop:
+		clr.l	(a1)+
+		dbf	d0,@loop
+		rts
+
 LevelArtPtrs:	dc.l KosArt_GHZ, v_ghz_art
 		dc.l 0, 0
 		dc.l KosArt_MZ, v_mz_art
@@ -12,7 +23,7 @@ LoadAnimArt:
 		moveq	#0,d0
 		move.b	(v_zone).w,d0				; get zone number
 		lsl.w	#3,d0					; multiply by 8
-		lea	(LevelArtPtrs).l,a2			; address of animated art pointers
+		lea	LevelArtPtrs(pc),a2			; address of animated art pointers
 		lea	(a2,d0.w),a2				; jump to relevant pointer
 		tst.l	(a2)
 		beq.s	@no_art					; branch if 0
@@ -68,46 +79,7 @@ GM_Level:
 		bsr.w	LoadAnimArt
 
 	@skip_gfx:
-		lea	(v_ost_all).w,a1
-		moveq	#0,d0
-		move.w	#((sizeof_ost*countof_ost)/4)-1,d1
-
-	@clear_ost:
-		move.l	d0,(a1)+
-		dbf	d1,@clear_ost				; clear object RAM
-
-		lea	(v_vblank_0e_counter).w,a1
-		moveq	#0,d0
-		move.w	#((v_plc_buffer-v_vblank_0e_counter)/4)-1,d1
-
-	@clear_ram1:
-		move.l	d0,(a1)+
-		dbf	d1,@clear_ram1				; clear variables ($F628-$F67F)
-		; $F680-$F6FF is preserved (PLC buffer and related variables)
-
-		lea	(v_camera_x_pos).w,a1
-		moveq	#0,d0
-		move.w	#((v_sprite_buffer-v_camera_x_pos)/4)-1,d1
-
-	@clear_ram2:
-		move.l	d0,(a1)+
-		dbf	d1,@clear_ram2				; clear variables ($F700-$F7FF)
-		; $F800-$FE5F is preserved (sprite buffer, palettes, stack, some game variables)
-
-		lea	(v_oscillating_table).w,a1
-		moveq	#0,d0
-		move.w	#((v_levelselect_hold_delay-v_oscillating_table)/4)-1,d1
-
-	@clear_ram3:
-		move.l	d0,(a1)+
-		dbf	d1,@clear_ram3				; clear variables ($FE60-$FF7F)
-
-		disable_ints
-		bsr.w	ClearScreen
-		bsr.w	LoadVDPSettings
-		move.w	#$8720,(a6)				; set background colour (line 3; colour 0)
-		move.w	#$8A00+223,(v_vdp_hint_counter).w	; set palette change position (for water)
-		move.w	(v_vdp_hint_counter).w,(a6)
+		bsr.w	ClearRAM_Level
 		cmpi.b	#id_LZ,(v_zone).w			; is level LZ?
 		bne.s	@skip_water				; if not, branch
 

@@ -28,19 +28,10 @@ ClearScreen:
 		clr.l	(v_fg_y_pos_vsram).w
 		clr.l	(v_fg_x_pos_hscroll).w
 
-		lea	(v_sprite_buffer).w,a1
-		moveq	#0,d0
-		move.w	#(sizeof_vram_sprites/4),d1		; this should be ($280/4)-1, leading to a slight bug (first 2 colours of v_pal_water are cleared)
+		move.l	#(v_sprite_buffer&$FFFF)+(((($280)/4)-1)<<16),d0
+		bsr.w	ClearRAM
 
-	@clearsprites:
-		move.l	d0,(a1)+
-		dbf	d1,@clearsprites			; clear sprite table (in RAM)
-
-		lea	(v_hscroll_buffer).w,a1
-		moveq	#0,d0
-		move.w	#(sizeof_vram_hscroll_padded/4),d1	; this should be ($400/4)-1, leading to a slight bug (first 4 bytes of Sonic's object RAM are cleared)
-
-	@clearhscroll:
-		move.l	d0,(a1)+
-		dbf	d1,@clearhscroll			; clear hscroll table (in RAM)
+ClearScreen_hscroll:
+		move.l	#(v_hscroll_buffer&$FFFF)+(((($400)/4)-1)<<16),d0
+		bsr.w	ClearRAM
 		rts

@@ -32,15 +32,11 @@ OPL_Init:
 		adda.w	2(a1,d0.w),a1				; jump to secondary objpos list (this is always blank)
 		move.l	a1,(v_opl_ptr_alt_right).w		; copy objpos list address
 		move.l	a1,(v_opl_ptr_alt_left).w
-		lea	(v_respawn_list).w,a2
-		move.w	#$101,(a2)+				; start respawn counter at 1
-		move.w	#($17C/4)-1,d0				; deletes half the stack as well; should be $100
-
-	@clear_respawn_list:
-		clr.l	(a2)+
-		dbf	d0,@clear_respawn_list			; clear object respawn list
+		move.l	#(v_respawn_list&$FFFF)+(((($100)/4)-1)<<16),d0
+		jsr	ClearRAM
 
 		lea	(v_respawn_list).w,a2
+		move.w	#$101,(a2)				; start respawn counter at 1
 		moveq	#0,d2
 		move.w	(v_camera_x_pos).w,d6
 		subi.w	#128,d6					; d6 = 128px to left of screen

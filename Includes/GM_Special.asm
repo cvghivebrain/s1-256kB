@@ -44,33 +44,14 @@ GM_Special:
 		moveq	#16-1,d1
 		bsr.w	jmp_LoadTiles2
 
-		lea	(v_ost_all).w,a1
-		moveq	#0,d0
-		move.w	#((sizeof_ost*countof_ost)/4)-1,d1
-	@clear_ost:
-		move.l	d0,(a1)+
-		dbf	d1,@clear_ost				; clear	the object RAM
-
-		lea	(v_camera_x_pos).w,a1
-		moveq	#0,d0
-		move.w	#($100/4)-1,d1
-	@clear_ram1:
-		move.l	d0,(a1)+
-		dbf	d1,@clear_ram1				; clear	variables $FFFFF700-$FFFFF800
-
-		lea	(v_oscillating_table).w,a1
-		moveq	#0,d0
-		move.w	#($A0/4)-1,d1
-	@clear_ram2:
-		move.l	d0,(a1)+
-		dbf	d1,@clear_ram2				; clear	variables $FFFFFE60-$FFFFFF00
-
-		lea	(v_ss_bubble_x_pos).w,a1
-		moveq	#0,d0
-		move.w	#($200/4)-1,d1
-	@clear_bubblecloud_bg:
-		move.l	d0,(a1)+
-		dbf	d1,@clear_bubblecloud_bg		; clear	bg x position data
+		move.l	#(v_ost_all&$FFFF)+((((sizeof_ost*countof_ost)/4)-1)<<16),d0
+		bsr.w	ClearRAM
+		move.l	#(v_camera_x_pos&$FFFF)+(((($100)/4)-1)<<16),d0
+		bsr.w	ClearRAM
+		move.l	#(v_oscillating_table&$FFFF)+(((($A0)/4)-1)<<16),d0
+		bsr.w	ClearRAM
+		move.l	#(v_ss_bubble_x_pos&$FFFF)+(((($200)/4)-1)<<16),d0
+		bsr.w	ClearRAM
 
 		clr.b	(f_water_pal_full).w
 		clr.w	(f_restart).w
@@ -175,12 +156,8 @@ SS_FinishLoop:
 		move.w	d0,(v_ring_bonus).w			; set rings bonus
 		play.w	1, jsr, mus_HasPassed			; play end-of-level music
 
-		lea	(v_ost_all).w,a1
-		moveq	#0,d0
-		move.w	#((sizeof_ost*countof_ost)/4)-1,d1
-	@clear_ost:
-		move.l	d0,(a1)+
-		dbf	d1,@clear_ost				; clear object RAM
+		move.l	#(v_ost_all&$FFFF)+((((sizeof_ost*countof_ost)/4)-1)<<16),d0
+		bsr.w	ClearRAM
 
 		move.b	#id_SSResult,(v_ost_ssresult1).w	; load results screen object
 
@@ -1090,12 +1067,8 @@ SS_LoadData:
 		movea.l	SS_LayoutIndex(pc,d0.w),a0
 		lea	(v_ss_layout_buffer).l,a1		; load level layout ($FF4000)
 		jsr	(KosDec).l
-		lea	(v_ss_layout).l,a1
-		move.w	#($4000/4)-1,d0
-
-	@clear_layout:
-		clr.l	(a1)+
-		dbf	d0,@clear_layout			; clear RAM (0-$3FFF)
+		move.l	#(v_ss_layout&$FFFF)+(((($4000)/4)-1)<<16),d0
+		jsr	ClearRAM
 
 		lea	(v_ss_layout+$1020).l,a1
 		lea	(v_ss_layout_buffer).l,a0

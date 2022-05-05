@@ -11,12 +11,8 @@ GM_Continue:
 		move.w	#$8700,(a6)				; background colour
 		bsr.w	ClearScreen
 
-		lea	(v_ost_all).w,a1
-		moveq	#0,d0
-		move.w	#((sizeof_ost*countof_ost)/4)-1,d1
-	@clear_ost:
-		move.l	d0,(a1)+
-		dbf	d1,@clear_ost				; clear object RAM
+		move.l	#(v_ost_all&$FFFF)+((((sizeof_ost*countof_ost)/4)-1)<<16),d0
+		bsr.w	ClearRAM
 
 		locVRAM	vram_Nem_TitleCard			; $B000
 		lea	(Nem_TitleCard).l,a0			; load title card patterns

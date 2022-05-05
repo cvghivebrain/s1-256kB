@@ -237,6 +237,8 @@ KosPLC2:
 		move.l	d0,4(a6)				; convert VRAM address to VDP format
 		
 		move.l	a1,d1					; get address of end of decompressed data
+		move.l	a3,d2					; get start address
+		sub.l	d2,d1					; find difference
 		and.l	#$FFFF,d1				; read only low word
 		lsr.w	#5,d1					; divide by $20
 		sub.w	#1,d1					; d1 = number of tiles minus 1

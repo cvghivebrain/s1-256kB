@@ -10,23 +10,15 @@ GM_Credits:
 		clr.b	(f_water_pal_full).w
 		bsr.w	ClearScreen
 
-		lea	(v_ost_all).w,a1
-		moveq	#0,d0
-		move.w	#((sizeof_ost*countof_ost)/4)-1,d1
-	@clear_ost:
-		move.l	d0,(a1)+
-		dbf	d1,@clear_ost				; clear object RAM
+		move.l	#(v_ost_all&$FFFF)+((((sizeof_ost*countof_ost)/4)-1)<<16),d0
+		bsr.w	ClearRAM
 
 		locVRAM	vram_credits
 		lea	(Nem_CreditText).l,a0			; load credits alphabet graphics
 		bsr.w	NemDec
 
-		lea	(v_pal_dry_next).w,a1
-		moveq	#0,d0
-		move.w	#(sizeof_pal_all/4)-1,d1
-	@clear_pal:
-		move.l	d0,(a1)+
-		dbf	d1,@clear_pal				; fill palette with black
+		move.l	#(v_pal_dry_next&$FFFF)+((((sizeof_pal_all)/4)-1)<<16),d0
+		bsr.w	ClearRAM
 
 		moveq	#id_Pal_Sonic,d0
 		bsr.w	PalLoad_Next				; load Sonic's palette
@@ -151,22 +143,14 @@ TryAgainEnd:
 		clr.b	(f_water_pal_full).w
 		bsr.w	ClearScreen
 
-		lea	(v_ost_all).w,a1
-		moveq	#0,d0
-		move.w	#((sizeof_ost*countof_ost)/4)-1,d1
-	@clear_ost:
-		move.l	d0,(a1)+
-		dbf	d1,@clear_ost				; clear object RAM
+		move.l	#(v_ost_all&$FFFF)+((((sizeof_ost*countof_ost)/4)-1)<<16),d0
+		bsr.w	ClearRAM
 
 		moveq	#id_PLC_TryAgain,d0
 		bsr.w	QuickPLC				; load "TRY AGAIN" or "END" patterns
 
-		lea	(v_pal_dry_next).w,a1
-		moveq	#0,d0
-		move.w	#(sizeof_pal_all/4)-1,d1
-	@clear_pal:
-		move.l	d0,(a1)+
-		dbf	d1,@clear_pal				; fill palette with black
+		move.l	#(v_pal_dry_next&$FFFF)+((((sizeof_pal_all)/4)-1)<<16),d0
+		bsr.w	ClearRAM
 
 		moveq	#id_Pal_Ending,d0
 		bsr.w	PalLoad_Next				; load ending palette

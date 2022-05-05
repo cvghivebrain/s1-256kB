@@ -13,25 +13,15 @@ GM_Title:
 		clr.b	(f_water_pal_full).w
 		bsr.w	ClearScreen
 
-		lea	(v_ost_all).w,a1
-		moveq	#0,d0
-		move.w	#((sizeof_ost*countof_ost)/4)-1,d1
-
-	@clear_ost:
-		move.l	d0,(a1)+
-		dbf	d1,@clear_ost				; fill OST ($D000-$EFFF) with 0
+		move.l	#(v_ost_all&$FFFF)+((((sizeof_ost*countof_ost)/4)-1)<<16),d0
+		bsr.w	ClearRAM
 
 		locVRAM	vram_title_credits			; $14C0
 		lea	(Nem_CreditText).l,a0			; load alphabet
 		bsr.w	NemDec
 
-		lea	(v_pal_dry_next).w,a1
-		moveq	#cBlack,d0
-		move.w	#(sizeof_pal_all/4)-1,d1
-
-	@clear_pal:
-		move.l	d0,(a1)+
-		dbf	d1,@clear_pal				; fill palette with 0 (black)
+		move.l	#(v_pal_dry_next&$FFFF)+((((sizeof_pal_all)/4)-1)<<16),d0
+		bsr.w	ClearRAM
 
 		moveq	#id_Pal_Sonic,d0			; load Sonic's palette
 		bsr.w	PalLoad_Next				; palette will be shown after fading in
@@ -123,14 +113,7 @@ Title_PressedStart:
 		jsr	(BuildSprites).l
 		moveq	#id_Pal_LevelSel,d0
 		bsr.w	PalLoad_Now				; load level select palette
-		lea	(v_hscroll_buffer).w,a1
-		moveq	#0,d0
-		move.w	#(sizeof_vram_hscroll/4)-1,d1
-
-	@clear_hscroll:
-		move.l	d0,(a1)+
-		dbf	d1,@clear_hscroll			; clear hscroll buffer (in RAM)
-
+		bsr.w	ClearScreen_hscroll
 		move.l	d0,(v_fg_y_pos_vsram).w
 		disable_ints
 		lea	(vdp_data_port).l,a6
