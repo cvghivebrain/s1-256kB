@@ -16,17 +16,24 @@ Cbal_Index:	index *,,2
 		ptr Cbal_Bounce
 
 ost_ball_time:	equ $30						; time until the cannonball explodes (2 bytes)
+
+Cbal_Settings:	dc.b ost_height,7
+		dc.b ost_render,render_rel
+		dc.b ost_priority,3
+		dc.b ost_col_type,id_col_6x6+id_col_hurt
+		dc.b ost_actwidth,8
+		dc.b ost_routine,2
+		dc.b -2,ost_tile
+		dc.w $2EB+tile_pal2
+		dc.b -3,ost_mappings
+		dc.l Map_Hog
+		dc.b -1
+		even
 ; ===========================================================================
 
 Cbal_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Cbal_Bounce next
-		move.b	#7,ost_height(a0)
-		move.l	#Map_Hog,ost_mappings(a0)
-		move.w	#$2EB+tile_pal2,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#3,ost_priority(a0)
-		move.b	#id_col_6x6+id_col_hurt,ost_col_type(a0)
-		move.b	#8,ost_actwidth(a0)
+		lea	Cbal_Settings(pc),a2
+		bsr.w	SetupObject
 		moveq	#0,d0
 		move.b	ost_subtype(a0),d0			; move subtype to d0
 		mulu.w	#60,d0					; multiply by 60 frames	(1 second)

@@ -16,17 +16,24 @@ Bat_Index:	index *,,2
 		ptr Bat_Action
 
 ost_bat_sonic_y_pos:	equ $36					; Sonic's y position (2 bytes)
+
+Bat_Settings:	dc.b ost_routine,2
+		dc.b ost_render,render_rel
+		dc.b ost_height,12
+		dc.b ost_priority,2
+		dc.b ost_col_type,id_col_8x8
+		dc.b ost_actwidth,16
+		dc.b -2,ost_tile
+		dc.w $321+tile_hi
+		dc.b -3,ost_mappings
+		dc.l Map_Bat
+		dc.b -1
+		even
 ; ===========================================================================
 
 Bat_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Bat_Action next
-		move.l	#Map_Bat,ost_mappings(a0)
-		move.w	#$321+tile_hi,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#$C,ost_height(a0)
-		move.b	#2,ost_priority(a0)
-		move.b	#id_col_8x8,ost_col_type(a0)
-		move.b	#$10,ost_actwidth(a0)
+		lea	Bat_Settings(pc),a2
+		bsr.w	SetupObject
 
 Bat_Action:	; Routine 2
 		moveq	#0,d0

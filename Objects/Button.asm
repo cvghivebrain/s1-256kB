@@ -17,21 +17,28 @@ Button:
 But_Index:	index *,,2
 		ptr But_Main
 		ptr But_Action
+
+But_Settings:	dc.b ost_routine,2
+		dc.b ost_render,render_rel
+		dc.b ost_actwidth,16
+		dc.b ost_priority,4
+		dc.b -2,ost_tile
+		dc.w $2C9+tile_pal3
+		dc.b -3,ost_mappings
+		dc.l Map_But
+		dc.b -1
+		even
 ; ===========================================================================
 
 But_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto But_Action next
-		move.l	#Map_But,ost_mappings(a0)
-		move.w	#$2C9+tile_pal3,ost_tile(a0) ; MZ specific code
+		lea	But_Settings(pc),a2
+		bsr.w	SetupObject
 		cmpi.b	#id_MZ,(v_zone).w			; is level Marble Zone?
 		beq.s	@is_marble				; if yes, branch
 
 		move.w	#vram_button/32,ost_tile(a0)		; SYZ, LZ and SBZ specific code
 
 	@is_marble:
-		move.b	#render_rel,ost_render(a0)
-		move.b	#$10,ost_actwidth(a0)
-		move.b	#4,ost_priority(a0)
 		addq.w	#3,ost_y_pos(a0)
 
 But_Action:	; Routine 2

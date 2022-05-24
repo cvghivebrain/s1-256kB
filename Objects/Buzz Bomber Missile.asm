@@ -21,17 +21,23 @@ Msl_Index:	index *,,2
 
 ost_missile_wait_time:	equ $32					; time delay (2 bytes)
 ost_missile_parent:	equ $3C					; address of OST of parent object (4 bytes)
+
+Msl_Settings:	dc.b ost_routine,2
+		dc.b ost_render,render_rel
+		dc.b ost_priority,3
+		dc.b ost_actwidth,8
+		dc.b -3,ost_mappings
+		dc.l Map_Missile
+		dc.b -1
+		even
 ; ===========================================================================
 
 Msl_Main:	; Routine 0
 		subq.w	#1,ost_missile_wait_time(a0)		; decrement timer
 		bpl.s	Msl_ChkCancel				; branch if time remains
-		addq.b	#2,ost_routine(a0)			; goto Msl_Animate next
-		move.l	#Map_Missile,ost_mappings(a0)
+		lea	Msl_Settings(pc),a2
+		bsr.w	SetupObject
 		bset	#tile_pal12_bit,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#3,ost_priority(a0)
-		move.b	#8,ost_actwidth(a0)
 		andi.b	#status_xflip+status_yflip,ost_status(a0)
 		tst.b	ost_subtype(a0)				; was object created by	a Newtron?
 		beq.s	Msl_Animate				; if not, branch

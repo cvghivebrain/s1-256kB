@@ -14,18 +14,24 @@ CreditsText:
 Cred_Index:	index *,,2
 		ptr Cred_Main
 		ptr Cred_Display
+
+Cred_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_x_pos
+		dc.l $12000F0
+		dc.b -2,ost_tile
+		dc.w tile_Nem_CreditText
+		dc.b -3,ost_mappings
+		dc.l Map_Cred
+		dc.b ost_render,render_abs
+		dc.b -1
+		even
 ; ===========================================================================
 
 Cred_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Cred_Display next
-		move.w	#$120,ost_x_pos(a0)
-		move.w	#$F0,ost_y_screen(a0)
-		move.l	#Map_Cred,ost_mappings(a0)
-		move.w	#tile_Nem_CreditText,ost_tile(a0)
+		lea	Cred_Settings(pc),a2
+		bsr.w	SetupObject
 		move.w	(v_credits_num).w,d0			; load credits index number
 		move.b	d0,ost_frame(a0)			; display appropriate sprite
-		move.b	#render_abs,ost_render(a0)
-		move.b	#0,ost_priority(a0)
 
 		cmpi.b	#id_Title,(v_gamemode).w		; is the mode #4 (title screen)?
 		bne.s	Cred_Display				; if not, branch

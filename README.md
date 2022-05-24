@@ -83,6 +83,7 @@ Compressed SBZ graphics. Removed unused MZ palette. | 450426 | -1482
 Tidied GHZ/MZ/SYZ graphics. | 450230 | -196
 Compressed Special Stage graphics. | 449592 | -638
 Added ClearRAM subroutine instead of manually clearing sections of RAM. | 449386 | -206
+Added SetupObject subroutine to initialise OST values with a script. | 449170 | -216
 Target | 262144 | 
 
 ## Credits

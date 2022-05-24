@@ -27,6 +27,18 @@ ost_cat_mode:		equ $2B					; bit 4 (+$10) = mouth is open/segment moving up; bit
 ost_cat_floormap:	equ $2C					; height map of floor beneath caterkiller (16 bytes)
 ost_cat_parent:		equ $3C					; address of OST of parent object (4 bytes - high byte is ost_cat_segment_pos)
 ost_cat_segment_pos:	equ $3C					; segment position - starts as 0/4/8/$A, increments as it moves
+
+Cat_Settings:	dc.b ost_height,7
+		dc.b ost_width,8
+		dc.b -2,ost_tile
+		dc.w ($9040/32)+tile_pal2
+		dc.b -3,ost_mappings
+		dc.l Map_Cat
+		dc.b ost_priority,4
+		dc.b ost_actwidth,8
+		dc.b ost_col_type,id_col_8x8
+		dc.b -1
+		even
 ; ===========================================================================
 
 Cat_Fall:
@@ -34,8 +46,8 @@ Cat_Fall:
 ; ===========================================================================
 
 Cat_Main:	; Routine 0
-		move.b	#7,ost_height(a0)
-		move.b	#8,ost_width(a0)
+		lea	Cat_Settings(pc),a2
+		bsr.w	SetupObject
 		jsr	(ObjectFall).l				; apply gravity and update position
 		jsr	(FindFloorObj).l
 		tst.w	d1					; has caterkiller hit floor?
@@ -43,8 +55,6 @@ Cat_Main:	; Routine 0
 		add.w	d1,ost_y_pos(a0)			; align to floor
 		clr.w	ost_y_vel(a0)
 		addq.b	#2,ost_routine(a0)			; goto Cat_Head next
-		move.l	#Map_Cat,ost_mappings(a0)
-		move.w	#($9040/32)+tile_pal2,ost_tile(a0)
 		cmpi.b	#id_SBZ,(v_zone).w
 		beq.s	@isscrapbrain				; if zone is SBZ, branch
 		move.w	#(vram_cater/32)+tile_pal2,ost_tile(a0)	; MZ specific code
@@ -53,9 +63,6 @@ Cat_Main:	; Routine 0
 		andi.b	#render_xflip+render_yflip,ost_render(a0)
 		ori.b	#render_rel,ost_render(a0)
 		move.b	ost_render(a0),ost_status(a0)
-		move.b	#4,ost_priority(a0)
-		move.b	#8,ost_actwidth(a0)
-		move.b	#id_col_8x8,ost_col_type(a0)
 		move.w	ost_x_pos(a0),d2			; head x position
 		moveq	#12,d5					; distance between segments (12px)
 		btst	#status_xflip_bit,ost_status(a0)

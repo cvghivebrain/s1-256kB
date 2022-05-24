@@ -17,17 +17,25 @@ Chop_Index:	index *,,2
 		ptr Chop_ChgSpeed
 
 ost_chopper_y_start:	equ $30					; original y position (2 bytes)
+
+Chop_Settings:	dc.b ost_routine,2
+		dc.b ost_render,render_rel
+		dc.b ost_priority,4
+		dc.b ost_col_type,id_col_12x16
+		dc.b ost_actwidth,16
+		dc.b -2,ost_tile
+		dc.w $3CC
+		dc.b -3,ost_mappings
+		dc.l Map_Chop
+		dc.b -2,ost_y_vel
+		dc.w -$700
+		dc.b -1
+		even
 ; ===========================================================================
 
 Chop_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)
-		move.l	#Map_Chop,ost_mappings(a0)
-		move.w	#$3CC,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#4,ost_priority(a0)
-		move.b	#id_col_12x16,ost_col_type(a0)
-		move.b	#$10,ost_actwidth(a0)
-		move.w	#-$700,ost_y_vel(a0)			; set vertical speed
+		lea	Chop_Settings(pc),a2
+		bsr.w	SetupObject
 		move.w	ost_y_pos(a0),ost_chopper_y_start(a0)	; save original position
 
 Chop_ChgSpeed:	; Routine 2

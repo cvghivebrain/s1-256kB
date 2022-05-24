@@ -16,17 +16,24 @@ Hog_Index:	index *,,2
 		ptr Hog_Action
 
 ost_hog_flag:	equ $32						; 0 to launch a cannonball
+
+Hog_Settings:	dc.b ost_height,$13
+		dc.b ost_width,8
+		dc.b ost_render,render_rel
+		dc.b ost_priority,4
+		dc.b ost_col_type,id_col_12x18
+		dc.b ost_actwidth,12
+		dc.b -2,ost_tile
+		dc.w $2EB+tile_pal2
+		dc.b -3,ost_mappings
+		dc.l Map_Hog
+		dc.b -1
+		even
 ; ===========================================================================
 
 Hog_Main:	; Routine 0
-		move.b	#$13,ost_height(a0)
-		move.b	#8,ost_width(a0)
-		move.l	#Map_Hog,ost_mappings(a0)
-		move.w	#$2EB+tile_pal2,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#4,ost_priority(a0)
-		move.b	#id_col_12x18,ost_col_type(a0)
-		move.b	#$C,ost_actwidth(a0)
+		lea	Hog_Settings(pc),a2
+		bsr.w	SetupObject
 		bsr.w	ObjectFall
 		jsr	(FindFloorObj).l			; find floor
 		tst.w	d1
@@ -64,7 +71,6 @@ Hog_Action:	; Routine 2
 		move.w	ost_x_pos(a0),ost_x_pos(a1)
 		move.w	ost_y_pos(a0),ost_y_pos(a1)
 		move.w	#-$100,ost_x_vel(a1)			; cannonball bounces to the left
-		move.w	#0,ost_y_vel(a1)
 		moveq	#-4,d0
 		btst	#status_xflip_bit,ost_status(a0)	; is Ball Hog facing right?
 		beq.s	@noflip					; if not, branch

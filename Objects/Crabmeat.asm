@@ -22,22 +22,29 @@ Crab_Index:	index *,,2
 
 ost_crab_wait_time:	equ $30					; time until crabmeat fires (2 bytes)
 ost_crab_mode:		equ $32					; current action - 0/1 = not firing; 2/3 = firing
+
+Crab_Settings:	dc.b ost_height,16
+		dc.b ost_width,8
+		dc.b -2,ost_tile
+		dc.w $45E
+		dc.b -3,ost_mappings
+		dc.l Map_Crab
+		dc.b ost_render,render_rel
+		dc.b ost_priority,3
+		dc.b ost_col_type,id_col_16x16
+		dc.b ost_actwidth,$15
+		dc.b -1
+		even
 ; ===========================================================================
 
 Crab_Main:	; Routine 0
-		move.b	#$10,ost_height(a0)
-		move.b	#8,ost_width(a0)
-		move.l	#Map_Crab,ost_mappings(a0)
-		move.w	#$45E,ost_tile(a0)			; GHZ
+		lea	Crab_Settings(pc),a2
+		bsr.w	SetupObject
 		cmpi.b	#id_GHZ,(v_zone).w
 		beq.s	@is_ghz
 		move.w	#$411,ost_tile(a0)			; SYZ
 		
 	@is_ghz:
-		move.b	#render_rel,ost_render(a0)
-		move.b	#3,ost_priority(a0)
-		move.b	#id_col_16x16,ost_col_type(a0)
-		move.b	#$15,ost_actwidth(a0)
 		bsr.w	ObjectFall				; make crabmeat fall
 		jsr	(FindFloorObj).l			; find floor
 		tst.w	d1					; has crabmeat hit floor?

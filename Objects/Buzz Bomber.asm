@@ -20,12 +20,23 @@ Buzz_Index:	index *,,2
 
 ost_buzz_wait_time:	equ $32					; time delay for each action (2 bytes)
 ost_buzz_mode:		equ $34					; current action - 0 = flying; 1 = recently fired; 2 = near Sonic
+
+Buzz_Settings:	dc.b ost_routine,2
+		dc.b ost_render,render_rel
+		dc.b ost_priority,3
+		dc.b ost_col_type,id_col_24x12
+		dc.b ost_actwidth,$18
+		dc.b -2,ost_tile
+		dc.w $488
+		dc.b -3,ost_mappings
+		dc.l Map_Buzz
+		dc.b -1
+		even
 ; ===========================================================================
 
 Buzz_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)
-		move.l	#Map_Buzz,ost_mappings(a0)
-		move.w	#$488,ost_tile(a0)			; GHZ
+		lea	Buzz_Settings(pc),a2
+		bsr.w	SetupObject
 		cmpi.b	#id_GHZ,(v_zone).w
 		beq.s	@is_ghz
 		move.w	#$44C,ost_tile(a0)			; MZ
@@ -34,10 +45,6 @@ Buzz_Main:	; Routine 0
 		move.w	#$43B,ost_tile(a0)			; SYZ
 		
 	@is_ghz:
-		move.b	#render_rel,ost_render(a0)
-		move.b	#3,ost_priority(a0)
-		move.b	#id_col_24x12,ost_col_type(a0)
-		move.b	#$18,ost_actwidth(a0)
 
 Buzz_Action:	; Routine 2
 		moveq	#0,d0

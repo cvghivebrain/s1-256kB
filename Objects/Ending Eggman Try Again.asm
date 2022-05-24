@@ -19,17 +19,24 @@ EEgg_Index:	index *,,2
 		ptr EEgg_Wait
 
 ost_eeggman_wait_time:	equ $30					; time between juggle motions (2 bytes)
+
+EEgg_Settings:	dc.b ost_routine,2
+		dc.b ost_render,render_abs
+		dc.b -3,ost_x_pos
+		dc.l $12000F4
+		dc.b -3,ost_mappings
+		dc.l Map_EEgg
+		dc.b -2,ost_tile
+		dc.w tile_Nem_TryAgain
+		dc.b ost_priority,2
+		dc.b ost_anim,id_ani_eegg_end
+		dc.b -1
+		even
 ; ===========================================================================
 
 EEgg_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto EEgg_Animate next
-		move.w	#$120,ost_x_pos(a0)
-		move.w	#$F4,ost_y_screen(a0)
-		move.l	#Map_EEgg,ost_mappings(a0)
-		move.w	#tile_Nem_TryAgain,ost_tile(a0)
-		move.b	#render_abs,ost_render(a0)
-		move.b	#2,ost_priority(a0)
-		move.b	#id_ani_eegg_end,ost_anim(a0)		; use "END" animation
+		lea	EEgg_Settings(pc),a2
+		jsr	SetupObject
 		cmpi.b	#6,(v_emeralds).w			; do you have all 6 emeralds?
 		beq.s	EEgg_Animate				; if yes, branch
 

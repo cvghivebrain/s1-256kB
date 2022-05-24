@@ -17,20 +17,27 @@ Burro_Index:	index *,,2
 
 ost_burro_turn_time:		equ $30				; time between direction changes (2 bytes)
 ost_burro_findfloor_flag:	equ $32				; flag set every other frame to detect edge of floor
+
+Burro_Settings:	dc.b ost_routine,2
+		dc.b ost_height,$13
+		dc.b ost_width,8
+		dc.b ost_priority,4
+		dc.b ost_col_type,id_col_12x18
+		dc.b ost_actwidth,12
+		dc.b ost_routine2,id_Burro_ChkSonic
+		dc.b ost_render,render_rel
+		dc.b ost_anim,id_ani_burro_digging
+		dc.b -2,ost_tile
+		dc.w $465
+		dc.b -3,ost_mappings
+		dc.l Map_Burro
+		dc.b -1
+		even
 ; ===========================================================================
 
 Burro_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)
-		move.b	#$13,ost_height(a0)
-		move.b	#8,ost_width(a0)
-		move.l	#Map_Burro,ost_mappings(a0)
-		move.w	#$465,ost_tile(a0)
-		ori.b	#render_rel,ost_render(a0)
-		move.b	#4,ost_priority(a0)
-		move.b	#id_col_12x18,ost_col_type(a0)
-		move.b	#$C,ost_actwidth(a0)
-		addq.b	#id_Burro_ChkSonic,ost_routine2(a0)	; goto Burro_ChkSonic after Burro_Action
-		move.b	#id_ani_burro_digging,ost_anim(a0)
+		lea	Burro_Settings(pc),a2
+		bsr.w	SetupObject
 
 Burro_Action:	; Routine 2
 		moveq	#0,d0

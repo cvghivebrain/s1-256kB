@@ -17,18 +17,26 @@ CSon_Index:	index *,,2
 		ptr CSon_ChkLand
 		ptr CSon_Animate
 		ptr CSon_Run
+
+CSon_Settings:	dc.b ost_routine,2
+		dc.b ost_x_pos,$A0
+		dc.b ost_y_pos,$C0
+		dc.b ost_render,render_rel
+		dc.b ost_priority,2
+		dc.b ost_anim,id_Float3
+		dc.b -3,ost_mappings
+		dc.l Map_Sonic
+		dc.b -2,ost_tile
+		dc.w vram_sonic/sizeof_cell
+		dc.b -2,ost_y_vel
+		dc.w $400
+		dc.b -1
+		even
 ; ===========================================================================
 
 CSon_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)
-		move.w	#$A0,ost_x_pos(a0)
-		move.w	#$C0,ost_y_pos(a0)
-		move.l	#Map_Sonic,ost_mappings(a0)
-		move.w	#vram_sonic/sizeof_cell,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#2,ost_priority(a0)
-		move.b	#id_Float3,ost_anim(a0)			; use "floating" animation
-		move.w	#$400,ost_y_vel(a0)			; make Sonic fall from above
+		lea	CSon_Settings(pc),a2
+		jsr	SetupObject
 
 CSon_ChkLand:	; Routine 2
 		cmpi.w	#$1A0,ost_y_pos(a0)			; has Sonic landed yet?

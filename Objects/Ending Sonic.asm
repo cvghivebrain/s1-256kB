@@ -25,25 +25,32 @@ ESon_Index:	index *,,2
 		ptr ESon_Animate
 
 ost_esonic_wait_time:	equ $30					; time to wait between events (2 bytes)
+
+ESon_Settings:	dc.b ost_routine2,2
+		dc.b ost_render,render_rel
+		dc.b ost_priority,2
+		dc.b -3,ost_mappings
+		dc.l Map_ESon
+		dc.b -2,ost_tile
+		dc.w tile_Nem_EndSonic
+		dc.b -2,ost_esonic_wait_time
+		dc.w 80
+		dc.b -1
+		even
 ; ===========================================================================
 
 ESon_Main:	; Routine 0
+		lea	ESon_Settings(pc),a2
+		jsr	SetupObject
 		cmpi.b	#6,(v_emeralds).w			; do you have all 6 emeralds?
 		beq.s	ESon_Main2				; if yes, branch
-		addi.b	#id_ESon_Leap,ost_routine2(a0)		; else, skip emerald sequence
+		move.b	#id_ESon_Leap,ost_routine2(a0)		; else, skip emerald sequence
 		move.w	#216,ost_esonic_wait_time(a0)		; set delay to 3.6 seconds
 		rts	
 ; ===========================================================================
 
 ESon_Main2:
-		addq.b	#2,ost_routine2(a0)			; goto ESon_MakeEmeralds next
-		move.l	#Map_ESon,ost_mappings(a0)
-		move.w	#tile_Nem_EndSonic,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		clr.b	ost_status(a0)
-		move.b	#2,ost_priority(a0)
 		move.b	#id_frame_esonic_hold1,ost_frame(a0)
-		move.w	#80,ost_esonic_wait_time(a0)		; set delay to 1.3 seconds
 
 ESon_MakeEmeralds:
 		; Routine 2
@@ -109,11 +116,6 @@ ESon_Leap:	; Routine $10
 		subq.w	#1,ost_esonic_wait_time(a0)		; decrement timer
 		bne.s	@wait
 		addq.b	#2,ost_routine2(a0)			; goto ESon_Animate next
-		move.l	#Map_ESon,ost_mappings(a0)
-		move.w	#tile_Nem_EndSonic,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		clr.b	ost_status(a0)
-		move.b	#2,ost_priority(a0)
 		move.b	#id_frame_esonic_leap1,ost_frame(a0)
 		move.b	#id_ani_esonic_leap,ost_anim(a0)	; use "leaping" animation
 		move.b	#id_EndSTH,(v_ost_end_emeralds).w	; load "SONIC THE HEDGEHOG" object

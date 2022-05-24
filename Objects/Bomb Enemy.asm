@@ -21,19 +21,26 @@ Bom_Index:	index *,,2
 ost_bomb_fuse_time:	equ $30					; time left on fuse - also used for change direction timer (2 bytes)
 ost_bomb_y_start:	equ $34					; original y-axis position (2 bytes)
 ost_bomb_parent:	equ $3C					; address of OST of parent object (4 bytes)
+
+Bom_Settings:	dc.b ost_priority,3
+		dc.b ost_actwidth,12
+		dc.b ost_routine,2
+		dc.b -2,ost_tile
+		dc.w vram_bomb/32
+		dc.b -3,ost_mappings
+		dc.l Map_Bomb
+		dc.b -1
+		even
 ; ===========================================================================
 
 Bom_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Bom_Action next
-		move.l	#Map_Bomb,ost_mappings(a0)
-		move.w	#vram_bomb/32,ost_tile(a0)
+		lea	Bom_Settings(pc),a2
+		bsr.w	SetupObject
 		cmpi.b	#id_SBZ,(v_zone).w
 		bne.s	@not_sbz
 		move.w	#$492,ost_tile(a0)
 	@not_sbz:
 		ori.b	#render_rel,ost_render(a0)
-		move.b	#3,ost_priority(a0)
-		move.b	#$C,ost_actwidth(a0)
 		move.b	ost_subtype(a0),d0
 		beq.s	@type0					; branch if subtype = 0
 		move.b	d0,ost_routine(a0)			; copy subtype to routine (4 = Bom_Fuse; 6 = Bom_Shrapnel)

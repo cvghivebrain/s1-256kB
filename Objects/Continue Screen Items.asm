@@ -16,16 +16,23 @@ CSI_Index:	index *,,2
 		ptr CSI_Display
 		ptr CSI_MakeMiniSonic
 		ptr CSI_ChkDel
+
+CSI_Settings:	dc.b ost_routine,2
+		dc.b ost_render,render_abs
+		dc.b ost_actwidth,$3C
+		dc.b -2,ost_tile
+		dc.w (vram_cont_sonic/sizeof_cell)+tile_hi
+		dc.b -3,ost_x_pos
+		dc.l $12000C0
+		dc.b -3,ost_mappings
+		dc.l Map_ContScr
+		dc.b -1
+		even
 ; ===========================================================================
 
 CSI_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto CSI_Display next
-		move.l	#Map_ContScr,ost_mappings(a0)
-		move.w	#(vram_cont_sonic/sizeof_cell)+tile_hi,ost_tile(a0)
-		move.b	#render_abs,ost_render(a0)
-		move.b	#$3C,ost_actwidth(a0)
-		move.w	#$120,ost_x_pos(a0)
-		move.w	#$C0,ost_y_screen(a0)
+		lea	CSI_Settings(pc),a2
+		jsr	SetupObject
 		move.w	#0,(v_rings).w				; clear rings
 
 CSI_Display:	; Routine 2

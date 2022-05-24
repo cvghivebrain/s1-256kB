@@ -557,6 +557,8 @@ NullObject:
 		include "Objects\_DespawnObject.asm"
 		include_MotoBug_1
 		include "Objects\Moto Bug [Mappings].asm"	; Map_Moto
+		
+		include	"Objects\_SetupObject.asm"
 
 		include "Objects\Yadrin.asm"			; Yadrin
 		include "Objects\Yadrin [Mappings].asm"		; Map_Yad
