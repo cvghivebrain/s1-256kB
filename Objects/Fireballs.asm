@@ -33,22 +33,30 @@ FBall_Speeds:	; Vertical - goes up and falls down
 
 ost_fireball_mz_boss:	equ $29					; set to $FF if spawned by MZ boss
 ost_fireball_y_start:	equ $30					; original y position (2 bytes)
+
+FBall_Settings:	dc.b ost_routine,2
+		dc.b ost_height,8
+		dc.b ost_width,8
+		dc.b -3,ost_mappings
+		dc.l Map_Fire
+		dc.b -2,ost_tile
+		dc.w $3E6
+		dc.b ost_render,render_rel
+		dc.b ost_priority,3
+		dc.b ost_col_type,id_col_8x8+id_col_hurt
+		dc.b ost_actwidth,8
+		dc.b -1
+		even
 ; ===========================================================================
 
 FBall_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto FBall_Action next
-		move.b	#8,ost_height(a0)
-		move.b	#8,ost_width(a0)
-		move.l	#Map_Fire,ost_mappings(a0)
-		move.w	#$3E6,ost_tile(a0)
+		lea	FBall_Settings(pc),a2
+		bsr.w	SetupObject
 		cmpi.b	#id_SLZ,(v_zone).w			; check if level is SLZ
 		bne.s	@notSLZ					; if not, branch
 		move.w	#0,ost_tile(a0)				; SLZ specific code
 
 	@notSLZ:
-		move.b	#render_rel,ost_render(a0)
-		move.b	#3,ost_priority(a0)
-		move.b	#id_col_8x8+id_col_hurt,ost_col_type(a0)
 		move.w	ost_y_pos(a0),ost_fireball_y_start(a0)
 		tst.b	ost_fireball_mz_boss(a0)		; was fireball spawned by MZ boss?
 		beq.s	@speed					; if not, branch
@@ -59,7 +67,6 @@ FBall_Main:	; Routine 0
 		move.b	ost_subtype(a0),d0
 		add.w	d0,d0
 		move.w	FBall_Speeds(pc,d0.w),ost_y_vel(a0)	; load object speed (vertical)
-		move.b	#8,ost_actwidth(a0)
 		cmpi.b	#4,ost_subtype(a0)			; is object type 0-5?
 		bcs.s	@sound					; if yes, branch
 

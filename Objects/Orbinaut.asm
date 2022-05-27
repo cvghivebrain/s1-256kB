@@ -25,20 +25,27 @@ ost_orb_direction:	equ $36					; direction orbs rotate: 1 = clockwise; -1 = anti
 ost_orb_child_count:	equ $37					; number of child objects
 ost_orb_child_list:	equ $38					; OST indices of child objects (4 bytes - 1 byte per ball)
 ost_orb_parent:		equ $3C					; address of OST of parent object (4 bytes)
+
+Orb_Settings:	dc.b -3,ost_mappings
+		dc.l Map_Orb
+		dc.b -2,ost_tile
+		dc.w (vram_orbinaut/32)+tile_pal2
+		dc.b ost_priority,4
+		dc.b ost_col_type,id_col_8x8
+		dc.b ost_actwidth,12
+		dc.b -1
+		even
 ; ===========================================================================
 
 Orb_Main:	; Routine 0
-		move.l	#Map_Orb,ost_mappings(a0)
-		move.w	#(vram_orbinaut/32)+tile_pal2,ost_tile(a0) ; SLZ specific code
+		lea	Orb_Settings(pc),a2
+		bsr.w	SetupObject
 		cmpi.b	#id_LZ,(v_zone).w			; check if level is LZ
 		bne.s	@notlabyrinth
 		move.w	#$9600/32,ost_tile(a0)	; LZ specific code
 
 	@notlabyrinth:
 		ori.b	#render_rel,ost_render(a0)
-		move.b	#4,ost_priority(a0)
-		move.b	#id_col_8x8,ost_col_type(a0)
-		move.b	#$C,ost_actwidth(a0)
 		moveq	#0,d2
 		lea	ost_orb_child_count(a0),a2
 		movea.l	a2,a3					; (a3) = number of orbs

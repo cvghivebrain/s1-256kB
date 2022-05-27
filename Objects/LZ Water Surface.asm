@@ -17,14 +17,21 @@ Surf_Index:	index *,,2
 
 ost_surf_x_start:	equ $30					; original x-axis position (2 bytes)
 ost_surf_freeze:	equ $32					; flag to freeze animation
+
+Surf_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Surf
+		dc.b ost_actwidth,128
+		dc.b -2,ost_tile
+		dc.w $2DF+tile_pal3+tile_hi
+		dc.b ost_render,render_rel
+		dc.b -1
+		even
 ; ===========================================================================
 
 Surf_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Surf_Action next
-		move.l	#Map_Surf,ost_mappings(a0)
-		move.w	#$2DF+tile_pal3+tile_hi,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#$80,ost_actwidth(a0)
+		lea	Surf_Settings(pc),a2
+		bsr.w	SetupObject
 		move.w	ost_x_pos(a0),ost_surf_x_start(a0)	; save initial x position ($60 or $120)
 
 Surf_Action:	; Routine 2

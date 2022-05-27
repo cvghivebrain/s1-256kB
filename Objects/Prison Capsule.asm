@@ -25,23 +25,29 @@ Pri_Index:	index *,,2
 		ptr Pri_EndAct
 
 		; routine, width, priority, frame
-Pri_Var:	dc.b id_Pri_Body, $20, 4, id_frame_prison_capsule ; 0 - body
-		dc.b id_Pri_Switch, $C, 5, id_frame_prison_switch1 ; 1 - switch
+Pri_Var:	dc.b id_Pri_Body, 4, id_frame_prison_capsule ; 0 - body
+		dc.b id_Pri_Switch, 5, id_frame_prison_switch1 ; 1 - switch
 
 ost_prison_y_start:	equ $30					; original y position (2 bytes)
+
+Pri_Settings:	dc.b -3,ost_mappings
+		dc.l Map_Pri
+		dc.b -2,ost_tile
+		dc.w tile_Nem_Prison
+		dc.b ost_render,render_rel
+		dc.b ost_actwidth,32
+		dc.b -1
+		even
 ; ===========================================================================
 
 Pri_Main:	; Routine 0
-		move.l	#Map_Pri,ost_mappings(a0)
-		move.w	#tile_Nem_Prison,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
+		lea	Pri_Settings(pc),a2
+		jsr	SetupObject
 		move.w	ost_y_pos(a0),ost_prison_y_start(a0)
 		moveq	#0,d0
 		move.b	ost_subtype(a0),d0			; get subtype (0 or 1)
-		lsl.w	#2,d0					; multiply by 4
 		lea	Pri_Var(pc,d0.w),a1
 		move.b	(a1)+,ost_routine(a0)			; goto Pri_Body/Pri_Switch next
-		move.b	(a1)+,ost_actwidth(a0)
 		move.b	(a1)+,ost_priority(a0)
 		move.b	(a1)+,ost_frame(a0)
 		rts	

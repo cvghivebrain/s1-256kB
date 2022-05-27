@@ -31,12 +31,21 @@ ost_mblock_x_start:	equ $30					; original x position (2 bytes)
 ost_mblock_y_start:	equ $32					; original y position (2 bytes)
 ost_mblock_wait_time:	equ $34					; time delay before moving platform back - subtype x9/xA only (2 bytes)
 ost_mblock_move_flag:	equ $36					; 1 = move platform back to its original position - subtype x9/xA only
+
+MBlock_Settings:
+		dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_MBlock
+		dc.b -2,ost_tile
+		dc.w $297+tile_pal3
+		dc.b ost_render,render_rel
+		dc.b -1
+		even
 ; ===========================================================================
 
 MBlock_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto MBlock_Platform next
-		move.l	#Map_MBlock,ost_mappings(a0)
-		move.w	#$297+tile_pal3,ost_tile(a0)
+		lea	MBlock_Settings(pc),a2
+		bsr.w	SetupObject
 		cmpi.b	#id_LZ,(v_zone).w			; check if level is LZ
 		bne.s	@not_lz
 
@@ -55,7 +64,6 @@ MBlock_Main:	; Routine 0
 
 	@not_sbz:
 	@not_sbz_28:
-		move.b	#render_rel,ost_render(a0)
 		moveq	#0,d0
 		move.b	ost_subtype(a0),d0			; get subtype
 		lsr.w	#3,d0

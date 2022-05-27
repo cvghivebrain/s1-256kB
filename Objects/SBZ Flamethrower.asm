@@ -19,16 +19,22 @@ ost_flame_time:		equ $30					; time until current action is complete (2 bytes)
 ost_flame_on_master:	equ $32					; time flame is on (2 bytes)
 ost_flame_off_master:	equ $34					; time flame is off (2 bytes)
 ost_flame_last_frame:	equ $36					; last frame of animation
+
+Flame_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Flame
+		dc.b -2,ost_tile
+		dc.w $38B+tile_hi
+		dc.b ost_priority,1
+		dc.b ost_actwidth,12
+		dc.b -1
+		even
 ; ===========================================================================
 
 Flame_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Flame_Action next
-		move.l	#Map_Flame,ost_mappings(a0)
-		move.w	#$38B+tile_hi,ost_tile(a0)
+		lea	Flame_Settings(pc),a2
+		bsr.w	SetupObject
 		ori.b	#render_rel,ost_render(a0)
-		move.b	#1,ost_priority(a0)
-		move.w	ost_y_pos(a0),ost_flame_time(a0)	; store ost_y_pos (gets overwritten later though)
-		move.b	#$C,ost_actwidth(a0)
 		move.b	ost_subtype(a0),d0
 		andi.w	#$F0,d0					; read 1st digit of object type
 		add.w	d0,d0					; multiply by 2

@@ -16,17 +16,24 @@ Brick_Index:	index *,,2
 		ptr Brick_Action
 
 ost_brick_y_start:	equ $30					; original y position (2 bytes)
+
+Brick_Settings:	dc.b ost_routine,2
+		dc.b ost_height,15
+		dc.b ost_width,15
+		dc.b -3,ost_mappings
+		dc.l Map_Brick
+		dc.b -2,ost_tile
+		dc.w 0+tile_pal3
+		dc.b ost_render,render_rel
+		dc.b ost_priority,3
+		dc.b ost_actwidth,16
+		dc.b -1
+		even
 ; ===========================================================================
 
 Brick_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Brick_Action next
-		move.b	#$F,ost_height(a0)
-		move.b	#$F,ost_width(a0)
-		move.l	#Map_Brick,ost_mappings(a0)
-		move.w	#0+tile_pal3,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#3,ost_priority(a0)
-		move.b	#$10,ost_actwidth(a0)
+		lea	Brick_Settings(pc),a2
+		bsr.w	SetupObject
 		move.w	ost_y_pos(a0),ost_brick_y_start(a0)
 
 Brick_Action:	; Routine 2

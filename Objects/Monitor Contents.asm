@@ -16,15 +16,24 @@ Pow_Index:	index *,,2
 		ptr Pow_Main
 		ptr Pow_Move
 		ptr Pow_Delete
+
+Pow_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Monitor
+		dc.b -2,ost_tile
+		dc.w $D000/sizeof_cell
+		dc.b ost_render,render_rel+render_rawmap
+		dc.b ost_priority,3
+		dc.b ost_actwidth,8
+		dc.b -2,ost_y_vel
+		dc.w -$300
+		dc.b -1
+		even
 ; ===========================================================================
 
 Pow_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Pow_Move next
-		move.w	#$D000/sizeof_cell,ost_tile(a0)
-		move.b	#render_rel+render_rawmap,ost_render(a0) ; use raw mappings
-		move.b	#3,ost_priority(a0)
-		move.b	#8,ost_actwidth(a0)
-		move.w	#-$300,ost_y_vel(a0)
+		lea	Pow_Settings(pc),a2
+		bsr.w	SetupObject
 		moveq	#0,d0
 		move.b	ost_anim(a0),d0				; get subtype
 		addq.b	#3,d0

@@ -15,15 +15,22 @@ Edge_Index:	index *,,2
 		ptr Edge_Main
 		ptr Edge_Solid
 		ptr Edge_Display
+
+Edge_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Edge
+		dc.b -2,ost_tile
+		dc.w $332+tile_pal3
+		dc.b ost_actwidth,8
+		dc.b ost_priority,6
+		dc.b -1
+		even
 ; ===========================================================================
 
 Edge_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Edge_Solid next
-		move.l	#Map_Edge,ost_mappings(a0)
-		move.w	#$332+tile_pal3,ost_tile(a0)
+		lea	Edge_Settings(pc),a2
+		bsr.w	SetupObject
 		ori.b	#render_rel,ost_render(a0)
-		move.b	#8,ost_actwidth(a0)
-		move.b	#6,ost_priority(a0)
 		move.b	ost_subtype(a0),ost_frame(a0)		; copy object type number to frame number
 		bclr	#4,ost_frame(a0)			; clear 4th bit (deduct $10)
 		beq.s	Edge_Solid				; branch if already clear (subtype 0/1/2 is solid)

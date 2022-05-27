@@ -32,15 +32,22 @@ ost_drown_extra_bub:	equ $34					; number of extra bubbles to create
 ost_drown_extra_flag:	equ $36					; flags for extra bubbles (2 bytes)
 ost_drown_num_time:	equ $38					; time between each number changes (2 bytes)
 ost_drown_delay_time	equ $3A					; delay between bubbles (2 bytes)
+
+Drown_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Bub
+		dc.b -2,ost_tile
+		dc.w $327+tile_hi
+		dc.b ost_render,render_onscreen+render_rel
+		dc.b ost_actwidth,16
+		dc.b ost_priority,1
+		dc.b -1
+		even
 ; ===========================================================================
 
 Drown_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Drown_Animate next
-		move.l	#Map_Bub,ost_mappings(a0)
-		move.w	#$327+tile_hi,ost_tile(a0)
-		move.b	#render_onscreen+render_rel,ost_render(a0)
-		move.b	#$10,ost_actwidth(a0)
-		move.b	#1,ost_priority(a0)
+		lea	Drown_Settings(pc),a2
+		bsr.w	SetupObject
 		move.b	ost_subtype(a0),d0			; get bubble type (first bubble is $81)
 		bpl.s	@bubble_or_num				; branch if $00-$7F
 

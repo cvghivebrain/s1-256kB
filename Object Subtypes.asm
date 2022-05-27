@@ -121,9 +121,9 @@ type_mblock_updown:	equ id_MBlock_UpDown					; $x8 - moves up and down
 type_mblock_slide:	equ id_MBlock_Slide					; $x9 - quickly slides right when stood on
 
 ; PushBlock
-type_pblock_single:	equ (PushB_Var_0-PushB_Var)/sizeof_PushB_Var		; 0 - single block
-type_pblock_four:	equ (PushB_Var_1-PushB_Var)/sizeof_PushB_Var		; 1 - four blocks in a row
-type_pblock_nograv:	equ $80							; +$80 - no gravity
+type_pblock_single:	equ 0		; 0 - single block
+type_pblock_four:	equ 1		; 1 - four blocks in a row
+type_pblock_nograv:	equ $80		; +$80 - no gravity
 
 ; FloatingBlock
 type_fblock_syz1x1:	equ id_frame_fblock_syz1x1<<4		; $0x - single 32x32 square

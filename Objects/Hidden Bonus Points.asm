@@ -18,6 +18,17 @@ Bonus_Index:	index *,,2
 		ptr Bonus_Display
 
 ost_bonus_wait_time:	equ $30					; length of time to display bonus sprites (2 bytes)
+
+Bonus_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Bonus
+		dc.b -2,ost_tile
+		dc.w tile_Nem_Bonus+tile_hi
+		dc.b ost_actwidth,16
+		dc.b -2,ost_bonus_wait_time
+		dc.w 119
+		dc.b -1
+		even
 ; ===========================================================================
 
 Bonus_Main:	; Routine 0
@@ -39,14 +50,10 @@ Bonus_Main:	; Routine 0
 		tst.b	(f_giantring_collected).w		; has giant ring been collected?
 		bne.s	@chkdel					; if yes, branch
 
-		addq.b	#2,ost_routine(a0)			; goto Bonus_Display next
-		move.l	#Map_Bonus,ost_mappings(a0)
-		move.w	#tile_Nem_Bonus+tile_hi,ost_tile(a0)
+		lea	Bonus_Settings(pc),a2
+		bsr.w	SetupObject
 		ori.b	#render_rel,ost_render(a0)
-		move.b	#0,ost_priority(a0)
-		move.b	#$10,ost_actwidth(a0)
 		move.b	ost_subtype(a0),ost_frame(a0)
-		move.w	#119,ost_bonus_wait_time(a0)		; set display time to 2 seconds
 		play.w	1, jsr, sfx_Bonus			; play bonus sound
 		moveq	#0,d0
 		move.b	ost_subtype(a0),d0

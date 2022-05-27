@@ -31,19 +31,27 @@ ost_fblock_x_start:	equ $34					; original x position (2 bytes)
 ost_fblock_move_flag:	equ $38					; 1 = block/door is moving
 ost_fblock_move_dist:	equ $3A					; distance to move (2 bytes)
 ost_fblock_btn_num:	equ $3C					; which button the block is linked to
+
+FBlock_Settings:
+		dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_FBlock
+		dc.b -2,ost_tile
+		dc.w 0+tile_pal3
+		dc.b ost_render,render_rel
+		dc.b ost_priority,3
+		dc.b -1
+		even
 ; ===========================================================================
 
 FBlock_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto FBlock_Action next
-		move.l	#Map_FBlock,ost_mappings(a0)
-		move.w	#0+tile_pal3,ost_tile(a0)
+		lea	FBlock_Settings(pc),a2
+		bsr.w	SetupObject
 		cmpi.b	#id_LZ,(v_zone).w			; check if level is LZ
 		bne.s	@not_lz					; if not, branch
 		move.w	#$3A3+tile_pal3,ost_tile(a0) ; LZ specific code
 
 	@not_lz:
-		move.b	#render_rel,ost_render(a0)
-		move.b	#3,ost_priority(a0)
 		moveq	#0,d0
 		move.b	ost_subtype(a0),d0			; get subtype
 		lsr.w	#3,d0

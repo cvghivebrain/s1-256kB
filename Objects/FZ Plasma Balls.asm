@@ -24,20 +24,28 @@ ost_plasma_x_target:	equ $30					; x position where plasma ball stops (2 bytes)
 ost_plasma_count_top:	equ $32					; number of plasma balls moving across top (2 bytes)
 ost_plasma_parent:	equ $34					; address of OST of parent object (4 bytes)
 ost_plasma_count_any:	equ $38					; number of plasma balls on-screen (2 bytes)
+
+Plasma_Settings:
+		dc.b ost_routine,2
+		dc.b -2,ost_x_pos
+		dc.w $2588
+		dc.b -2,ost_y_pos
+		dc.w $53C
+		dc.b -2,ost_tile
+		dc.w tile_Nem_FzBoss
+		dc.b -3,ost_mappings
+		dc.l Map_PLaunch
+		dc.b ost_priority,3
+		dc.b ost_width,8
+		dc.b ost_height,8
+		dc.b ost_render,render_rel+render_onscreen
+		dc.b -1
+		even
 ; ===========================================================================
 
 Plasma_Main:	; Routine 0
-		move.w	#$2588,ost_x_pos(a0)
-		move.w	#$53C,ost_y_pos(a0)
-		move.w	#tile_Nem_FzBoss,ost_tile(a0)
-		move.l	#Map_PLaunch,ost_mappings(a0)
-		move.b	#id_ani_plaunch_red,ost_anim(a0)
-		move.b	#3,ost_priority(a0)
-		move.b	#8,ost_width(a0)
-		move.b	#8,ost_height(a0)
-		move.b	#render_rel,ost_render(a0)
-		bset	#render_onscreen_bit,ost_render(a0)
-		addq.b	#2,ost_routine(a0)			; goto Plasma_Generator next
+		lea	Plasma_Settings(pc),a2
+		jsr	SetupObject
 
 Plasma_Generator:
 		; Routine 2

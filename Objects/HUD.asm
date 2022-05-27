@@ -14,16 +14,22 @@ HUD:
 HUD_Index:	index *
 		ptr HUD_Main
 		ptr HUD_Flash
+
+HUD_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_x_pos
+		dc.l $900108
+		dc.b -3,ost_mappings
+		dc.l Map_HUD
+		dc.b -2,ost_tile
+		dc.w $D940/sizeof_cell
+		dc.b ost_render,render_abs
+		dc.b -1
+		even
 ; ===========================================================================
 
 HUD_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto HUD_Flash next
-		move.w	#$90,ost_x_pos(a0)
-		move.w	#$108,ost_y_screen(a0)
-		move.l	#Map_HUD,ost_mappings(a0)
-		move.w	#$D940/sizeof_cell,ost_tile(a0)
-		move.b	#render_abs,ost_render(a0)
-		move.b	#0,ost_priority(a0)
+		lea	HUD_Settings(pc),a2
+		jsr	SetupObject
 
 HUD_Flash:	; Routine 2
 		tst.w	(v_rings).w				; do you have any rings?

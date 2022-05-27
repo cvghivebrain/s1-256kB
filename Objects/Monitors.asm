@@ -22,17 +22,24 @@ Mon_Index:	index *,,2
 		ptr Mon_BreakOpen
 		ptr Mon_Animate
 		ptr Mon_Display
+
+Mon_Settings:	dc.b ost_routine,2
+		dc.b ost_height,14
+		dc.b ost_width,14
+		dc.b -3,ost_mappings
+		dc.l Map_Monitor
+		dc.b -2,ost_tile
+		dc.w $D000/sizeof_cell
+		dc.b ost_render,render_rel
+		dc.b ost_priority,3
+		dc.b ost_actwidth,15
+		dc.b -1
+		even
 ; ===========================================================================
 
 Mon_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Mon_Solid next
-		move.b	#$E,ost_height(a0)
-		move.b	#$E,ost_width(a0)
-		move.l	#Map_Monitor,ost_mappings(a0)
-		move.w	#$D000/sizeof_cell,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#3,ost_priority(a0)
-		move.b	#$F,ost_actwidth(a0)
+		lea	Mon_Settings(pc),a2
+		bsr.w	SetupObject
 		lea	(v_respawn_list).w,a2
 		moveq	#0,d0
 		move.b	ost_respawn(a0),d0

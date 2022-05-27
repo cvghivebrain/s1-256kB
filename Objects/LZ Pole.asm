@@ -18,17 +18,25 @@ Pole_Index:	index *,,2
 
 ost_pole_time:		equ $30					; time between grabbing the pole & breaking (2 bytes)
 ost_pole_grabbed:	equ $32					; flag set when Sonic grabs the pole
+
+Pole_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Pole
+		dc.b -2,ost_tile
+		dc.w $3BD+tile_pal3
+		dc.b ost_render,render_rel
+		dc.b ost_actwidth,8
+		dc.b ost_priority,4
+		dc.b ost_col_type,id_col_4x32+id_col_custom
+		dc.b -2,ost_pole_time
+		dc.w 240
+		dc.b -1
+		even
 ; ===========================================================================
 
 Pole_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Pole_Action next
-		move.l	#Map_Pole,ost_mappings(a0)
-		move.w	#$3BD+tile_pal3,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#8,ost_actwidth(a0)
-		move.b	#4,ost_priority(a0)
-		move.b	#id_col_4x32+id_col_custom,ost_col_type(a0)
-		move.w	#240,ost_pole_time(a0)			; set breakage time
+		lea	Pole_Settings(pc),a2
+		bsr.w	SetupObject
 
 Pole_Action:	; Routine 2
 		tst.b	ost_pole_grabbed(a0)			; has pole already been grabbed?

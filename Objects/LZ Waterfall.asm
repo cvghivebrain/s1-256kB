@@ -17,15 +17,22 @@ WFall_Index:	index *,,2
 		ptr WFall_ChkDel
 		ptr WFall_OnWater
 		ptr WFall_Priority
+
+WFall_Settings:	dc.b ost_routine,4
+		dc.b -3,ost_mappings
+		dc.l Map_WFall
+		dc.b -2,ost_tile
+		dc.w $23E+tile_pal3
+		dc.b ost_actwidth,$18
+		dc.b ost_priority,1
+		dc.b -1
+		even
 ; ===========================================================================
 
 WFall_Main:	; Routine 0
-		addq.b	#4,ost_routine(a0)			; goto WFall_ChkDel next
-		move.l	#Map_WFall,ost_mappings(a0)
-		move.w	#$23E+tile_pal3,ost_tile(a0)
+		lea	WFall_Settings(pc),a2
+		bsr.w	SetupObject
 		ori.b	#render_rel,ost_render(a0)
-		move.b	#$18,ost_actwidth(a0)
-		move.b	#1,ost_priority(a0)
 		move.b	ost_subtype(a0),d0			; get object type
 		bpl.s	@under80				; branch if $00-$7F
 		bset	#tile_hi_bit,ost_tile(a0)

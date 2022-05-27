@@ -26,15 +26,22 @@ Lamp_Index:	index *,,2
 ost_lamp_x_start:	equ $30					; original x-axis position (2 bytes)
 ost_lamp_y_start:	equ $32					; original y-axis position (2 bytes)
 ost_lamp_twirl_time:	equ $36					; length of time to twirl the lamp (2 bytes)
+
+Lamp_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Lamp
+		dc.b -2,ost_tile
+		dc.w $F400/sizeof_cell
+		dc.b ost_render,render_rel
+		dc.b ost_actwidth,8
+		dc.b ost_priority,5
+		dc.b -1
+		even
 ; ===========================================================================
 
 Lamp_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Lamp_Blue next
-		move.l	#Map_Lamp,ost_mappings(a0)
-		move.w	#$F400/sizeof_cell,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#8,ost_actwidth(a0)
-		move.b	#5,ost_priority(a0)
+		lea	Lamp_Settings(pc),a2
+		bsr.w	SetupObject
 		lea	(v_respawn_list).w,a2
 		moveq	#0,d0
 		move.b	ost_respawn(a0),d0

@@ -21,15 +21,22 @@ ost_disc_inner_radius:	equ $34					; distance of small circle from centre
 ost_disc_rotation:	equ $36					; rate/direction of small circle rotation (2 bytes)
 ost_disc_outer_radius:	equ $38					; distance of Sonic from centre
 ost_disc_init_flag:	equ $3A					; set when Sonic lands on the disc
+
+Disc_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Disc
+		dc.b -2,ost_tile
+		dc.w $31A+tile_pal3+tile_hi
+		dc.b ost_render,render_rel
+		dc.b ost_priority,4
+		dc.b ost_actwidth,8
+		dc.b -1
+		even
 ; ===========================================================================
 
 Disc_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Disc_Action next
-		move.l	#Map_Disc,ost_mappings(a0)
-		move.w	#$31A+tile_pal3+tile_hi,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#4,ost_priority(a0)
-		move.b	#8,ost_actwidth(a0)
+		lea	Disc_Settings(pc),a2
+		bsr.w	SetupObject
 		move.w	ost_x_pos(a0),ost_disc_x_start(a0)
 		move.w	ost_y_pos(a0),ost_disc_y_start(a0)
 		move.b	ost_status(a0),d0			; get object status

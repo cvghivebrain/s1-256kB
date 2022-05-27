@@ -23,12 +23,22 @@ CFlo_Index:	index *,,2
 
 ost_cfloor_wait_time:	equ $38					; time delay for collapsing floor
 ost_cfloor_flag:	equ $3A					; 1 = Sonic has touched the floor
+
+CFlo_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_CFlo
+		dc.b -2,ost_tile
+		dc.w $297+tile_pal3
+		dc.b ost_priority,4
+		dc.b ost_cfloor_wait_time,7
+		dc.b ost_actwidth,$44
+		dc.b -1
+		even
 ; ===========================================================================
 
 CFlo_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto CFlo_Touch next
-		move.l	#Map_CFlo,ost_mappings(a0)
-		move.w	#$297+tile_pal3,ost_tile(a0)
+		lea	CFlo_Settings(pc),a2
+		bsr.w	SetupObject
 		cmpi.b	#id_SLZ,(v_zone).w			; check if level is SLZ
 		bne.s	@notSLZ
 
@@ -42,9 +52,6 @@ CFlo_Main:	; Routine 0
 
 	@notSBZ:
 		ori.b	#render_rel,ost_render(a0)
-		move.b	#4,ost_priority(a0)
-		move.b	#7,ost_cfloor_wait_time(a0)
-		move.b	#$44,ost_actwidth(a0)
 
 CFlo_Touch:	; Routine 2
 		tst.b	ost_cfloor_flag(a0)			; has Sonic touched the object?

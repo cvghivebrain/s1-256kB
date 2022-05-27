@@ -14,15 +14,22 @@ PurpleRock:
 Rock_Index:	index *,,2
 		ptr Rock_Main
 		ptr Rock_Solid
+
+Rock_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_PRock
+		dc.b -2,ost_tile
+		dc.w $3B4+tile_pal4
+		dc.b ost_render,render_rel
+		dc.b ost_actwidth,$13
+		dc.b ost_priority,4
+		dc.b -1
+		even
 ; ===========================================================================
 
 Rock_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Rock_Solid next
-		move.l	#Map_PRock,ost_mappings(a0)
-		move.w	#$3B4+tile_pal4,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#$13,ost_actwidth(a0)
-		move.b	#4,ost_priority(a0)
+		lea	Rock_Settings(pc),a2
+		bsr.w	SetupObject
 
 Rock_Solid:	; Routine 2
 		move.w	#$1B,d1					; width

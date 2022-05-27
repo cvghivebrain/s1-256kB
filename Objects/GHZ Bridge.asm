@@ -23,15 +23,22 @@ ost_bridge_child_list:	equ $29					; OST indices of child objects (up to 15 byte
 ost_bridge_y_start:	equ $3C					; original y position (2 bytes)
 ost_bridge_bend:	equ $3E					; number of pixels a log has been deflected
 ost_bridge_current_log:	equ $3F					; log Sonic is currently standing on (left to right, starts at 0)
+
+Bri_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Bri
+		dc.b -2,ost_tile
+		dc.w $33E+tile_pal3
+		dc.b ost_render,render_rel
+		dc.b ost_priority,3
+		dc.b ost_actwidth,128
+		dc.b -1
+		even
 ; ===========================================================================
 
 Bri_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Bri_Action next
-		move.l	#Map_Bri,ost_mappings(a0)
-		move.w	#$33E+tile_pal3,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#3,ost_priority(a0)
-		move.b	#$80,ost_actwidth(a0)
+		lea	Bri_Settings(pc),a2
+		bsr.w	SetupObject
 		move.w	ost_y_pos(a0),d2
 		move.w	ost_x_pos(a0),d3
 		move.b	ost_id(a0),d4				; copy object id ($11) to d4

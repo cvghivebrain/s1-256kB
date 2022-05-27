@@ -18,13 +18,21 @@ GRing_Index:	index *,,2
 		ptr GRing_Animate
 		ptr GRing_Collect
 		ptr GRing_Delete
+
+GRing_Settings:	dc.b -3,ost_mappings
+		dc.l Map_GRing
+		dc.b -2,ost_tile
+		dc.w (vram_giantring/sizeof_cell)+tile_pal2
+		dc.b ost_actwidth,$40
+		dc.b ost_priority,2
+		dc.b -1
+		even
 ; ===========================================================================
 
 GRing_Main:	; Routine 0
-		move.l	#Map_GRing,ost_mappings(a0)
-		move.w	#(vram_giantring/sizeof_cell)+tile_pal2,ost_tile(a0)
+		lea	GRing_Settings(pc),a2
+		bsr.w	SetupObject
 		ori.b	#render_rel,ost_render(a0)
-		move.b	#$40,ost_actwidth(a0)
 		tst.b	ost_render(a0)
 		bpl.s	GRing_Animate
 		cmpi.b	#6,(v_emeralds).w			; do you have 6 emeralds?
@@ -36,7 +44,6 @@ GRing_Main:	; Routine 0
 
 GRing_Okay:
 		addq.b	#2,ost_routine(a0)			; goto GRing_Animate next
-		move.b	#2,ost_priority(a0)
 		move.b	#id_col_8x16+id_col_item,ost_col_type(a0) ; when Sonic hits the item, goto GRing_Collect next (see ReactToItem)
 
 GRing_Animate:	; Routine 2

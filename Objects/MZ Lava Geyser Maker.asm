@@ -24,16 +24,23 @@ GMake_Index:	index *,,2
 ost_gmake_wait_time:	equ $32					; current time remaining (2 bytes)
 ost_gmake_wait_total:	equ $34					; time delay (2 bytes)
 ost_gmake_parent:	equ $3C					; address of OST of parent object (4 bytes)
+
+GMake_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Geyser
+		dc.b -2,ost_tile
+		dc.w $34A+tile_pal4+tile_hi
+		dc.b ost_render,render_rel
+		dc.b ost_priority,1
+		dc.b ost_actwidth,$38
+		dc.b ost_gmake_wait_total+1,120
+		dc.b -1
+		even
 ; ===========================================================================
 
 GMake_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto GMake_Wait next
-		move.l	#Map_Geyser,ost_mappings(a0)
-		move.w	#$34A+tile_pal4+tile_hi,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#1,ost_priority(a0)
-		move.b	#$38,ost_actwidth(a0)
-		move.w	#120,ost_gmake_wait_total(a0)		; set time delay to 2 seconds
+		lea	GMake_Settings(pc),a2
+		bsr.w	SetupObject
 
 GMake_Wait:	; Routine 2
 		subq.w	#1,ost_gmake_wait_time(a0)		; decrement timer

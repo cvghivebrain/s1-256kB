@@ -28,15 +28,22 @@ ost_bubble_mini_count:	equ $34					; number of smaller bubbles to spawn
 ost_bubble_flag:	equ $36					; 1 = bubbles currently spawning; +$4000 = large bubble spawned; +$8000 = allow large bubble (2 bytes)
 ost_bubble_random_time:	equ $38					; randomised time between mini bubble spawns (2 bytes)
 ost_bubble_type_list:	equ $3C					; address of bubble type list (4 bytes)
+
+Bub_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Bub
+		dc.b -2,ost_tile
+		dc.w $327+tile_hi
+		dc.b ost_render,render_onscreen+render_rel
+		dc.b ost_actwidth,16
+		dc.b ost_priority,1
+		dc.b -1
+		even
 ; ===========================================================================
 
 Bub_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Bub_Animate next
-		move.l	#Map_Bub,ost_mappings(a0)
-		move.w	#$327+tile_hi,ost_tile(a0)
-		move.b	#render_onscreen+render_rel,ost_render(a0)
-		move.b	#$10,ost_actwidth(a0)
-		move.b	#1,ost_priority(a0)
+		lea	Bub_Settings(pc),a2
+		bsr.w	SetupObject
 		move.b	ost_subtype(a0),d0			; get bubble type
 		bpl.s	@bubble					; if type is 0/1/2, branch
 

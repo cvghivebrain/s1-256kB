@@ -18,15 +18,22 @@ Gar_Index:	index *,,2
 		ptr Gar_MakeFire
 		ptr Gar_FireBall
 		ptr Gar_AniFire
+
+Gar_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Gar
+		dc.b -2,ost_tile
+		dc.w $2CE+tile_pal3
+		dc.b ost_priority,3
+		dc.b ost_actwidth,16
+		dc.b -1
+		even
 ; ===========================================================================
 
 Gar_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Gar_MakeFire next
-		move.l	#Map_Gar,ost_mappings(a0)
-		move.w	#$2CE+tile_pal3,ost_tile(a0)
+		lea	Gar_Settings(pc),a2
+		bsr.w	SetupObject
 		ori.b	#render_rel,ost_render(a0)
-		move.b	#3,ost_priority(a0)
-		move.b	#$10,ost_actwidth(a0)
 		move.b	ost_subtype(a0),d0			; get object type
 		mulu.w	#30,d0
 		move.b	d0,ost_anim_delay(a0)			; set fireball spit rate
@@ -52,16 +59,24 @@ Gar_MakeFire:	; Routine 2
 		rts	
 ; ===========================================================================
 
+GarF_Settings:	dc.b ost_routine,id_Gar_AniFire
+		dc.b -3,ost_mappings
+		dc.l Map_GarFire
+		dc.b -2,ost_tile
+		dc.w $2CE
+		dc.b ost_priority,4
+		dc.b ost_actwidth,8
+		dc.b ost_col_type,id_col_4x4+id_col_hurt
+		dc.b -2,ost_x_vel
+		dc.w $200
+		dc.b -1
+		even
+
 Gar_FireBall:	; Routine 4
-		addq.b	#2,ost_routine(a0)			; goto Gar_AniFire next
-		move.l	#Map_GarFire,ost_mappings(a0)
-		move.w	#$2CE,ost_tile(a0)
+		lea	GarF_Settings(pc),a2
+		bsr.w	SetupObject
 		ori.b	#render_rel,ost_render(a0)
-		move.b	#4,ost_priority(a0)
-		move.b	#id_col_4x4+id_col_hurt,ost_col_type(a0)
-		move.b	#8,ost_actwidth(a0)
 		addq.w	#8,ost_y_pos(a0)
-		move.w	#$200,ost_x_vel(a0)			; move fireball right
 		btst	#status_xflip_bit,ost_status(a0)	; is gargoyle facing left?
 		bne.s	@noflip					; if not, branch
 		neg.w	ost_x_vel(a0)				; move fireball left

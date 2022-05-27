@@ -18,17 +18,24 @@ Sonic_Index:	index *,,2
 		ptr Sonic_Hurt
 		ptr Sonic_Death
 		ptr Sonic_ResetLevel
+
+Sonic_Settings:	dc.b ost_routine,2
+		dc.b ost_height,sonic_height
+		dc.b ost_width,sonic_width
+		dc.b -3,ost_mappings
+		dc.l Map_Sonic
+		dc.b -2,ost_tile
+		dc.w vram_sonic/sizeof_cell
+		dc.b ost_priority,2
+		dc.b ost_actwidth,$18
+		dc.b ost_render,render_rel
+		dc.b -1
+		even
 ; ===========================================================================
 
 Sonic_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Sonic_Control next
-		move.b	#sonic_height,ost_height(a0)
-		move.b	#sonic_width,ost_width(a0)
-		move.l	#Map_Sonic,ost_mappings(a0)
-		move.w	#vram_sonic/sizeof_cell,ost_tile(a0)
-		move.b	#2,ost_priority(a0)
-		move.b	#$18,ost_actwidth(a0)
-		move.b	#render_rel,ost_render(a0)
+		lea	Sonic_Settings(pc),a2
+		bsr.w	SetupObject
 		bsr.w	Sonic_SetSpeed
 
 Sonic_Control:	; Routine 2

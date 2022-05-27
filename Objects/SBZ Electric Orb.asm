@@ -16,14 +16,21 @@ Elec_Index:	index *,,2
 		ptr Elec_Shock
 
 ost_electric_rate:	equ $34					; zap rate - applies bitmask to frame counter (2 bytes)
+
+Elec_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Elec
+		dc.b -2,ost_tile
+		dc.w $3CD
+		dc.b ost_actwidth,$28
+		dc.b -1
+		even
 ; ===========================================================================
 
 Elec_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Elec_Shock next
-		move.l	#Map_Elec,ost_mappings(a0)
-		move.w	#$3CD,ost_tile(a0)
+		lea	Elec_Settings(pc),a2
+		bsr.w	SetupObject
 		ori.b	#render_rel,ost_render(a0)
-		move.b	#$28,ost_actwidth(a0)
 		moveq	#0,d0
 		move.b	ost_subtype(a0),d0			; read object type (2/4/8)
 		lsl.w	#4,d0					; multiply by $10

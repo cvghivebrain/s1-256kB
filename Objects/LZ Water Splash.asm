@@ -15,15 +15,22 @@ Spla_Index:	index *,,2
 		ptr Spla_Main
 		ptr Spla_Display
 		ptr Spla_Delete
+
+Spla_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Splash
+		dc.b ost_priority,1
+		dc.b ost_actwidth,16
+		dc.b -2,ost_tile
+		dc.w $23E+tile_pal3
+		dc.b -1
+		even
 ; ===========================================================================
 
 Spla_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Spla_Display next
-		move.l	#Map_Splash,ost_mappings(a0)
+		lea	Spla_Settings(pc),a2
+		bsr.w	SetupObject
 		ori.b	#render_rel,ost_render(a0)
-		move.b	#1,ost_priority(a0)
-		move.b	#$10,ost_actwidth(a0)
-		move.w	#$23E+tile_pal3,ost_tile(a0)
 		move.w	(v_ost_player+ost_x_pos).w,ost_x_pos(a0) ; copy x position from Sonic
 
 Spla_Display:	; Routine 2

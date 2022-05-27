@@ -20,15 +20,22 @@ Circ_Index:	index *,,2
 
 ost_circ_y_start:	equ $30					; original y-axis position (2 bytes)
 ost_circ_x_start:	equ $32					; original x-axis position (2 bytes)
+
+Circ_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Circ
+		dc.b -2,ost_tile
+		dc.w 0+tile_pal3
+		dc.b ost_render,render_rel
+		dc.b ost_priority,4
+		dc.b ost_actwidth,$18
+		dc.b -1
+		even
 ; ===========================================================================
 
 Circ_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Circ_Platform next
-		move.l	#Map_Circ,ost_mappings(a0)
-		move.w	#0+tile_pal3,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#4,ost_priority(a0)
-		move.b	#$18,ost_actwidth(a0)
+		lea	Circ_Settings(pc),a2
+		bsr.w	SetupObject
 		move.w	ost_x_pos(a0),ost_circ_x_start(a0)
 		move.w	ost_y_pos(a0),ost_circ_y_start(a0)
 

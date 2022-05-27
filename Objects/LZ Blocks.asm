@@ -27,14 +27,21 @@ ost_lblock_wait_time:	equ $36					; time delay for block movement (2 bytes)
 ost_lblock_flag:	equ $38					; 1 = untouched; 0 = touched
 ost_lblock_sink:	equ $3E					; amount the block sinks after Sonic stands on it
 ost_lblock_coll_flag:	equ $3F					; 0 = none; 1 = side collision; -1 = top/bottom collision
+
+LBlk_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_LBlock
+		dc.b -2,ost_tile
+		dc.w $3C5+tile_pal3
+		dc.b ost_render,render_rel
+		dc.b ost_priority,3
+		dc.b -1
+		even
 ; ===========================================================================
 
 LBlk_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto LBlk_Action next
-		move.l	#Map_LBlock,ost_mappings(a0)
-		move.w	#$3C5+tile_pal3,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#3,ost_priority(a0)
+		lea	LBlk_Settings(pc),a2
+		bsr.w	SetupObject
 		moveq	#0,d0
 		move.b	ost_subtype(a0),d0			; get block type
 		lsr.w	#3,d0					; read only the high nybble

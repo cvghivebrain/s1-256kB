@@ -18,20 +18,25 @@ Saw_Index:	index *,,2
 ost_saw_x_start:	equ $3A					; original x-axis position (2 bytes)
 ost_saw_y_start:	equ $38					; original y-axis position (2 bytes)
 ost_saw_flag:		equ $3D					; flag set when the ground saw appears
+
+Saw_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Saw
+		dc.b -2,ost_tile
+		dc.w $367+tile_pal3
+		dc.b ost_render,render_rel
+		dc.b ost_priority,4
+		dc.b ost_actwidth,32
+		dc.b ost_col_type,id_col_24x24+id_col_hurt
+		dc.b -1
+		even
 ; ===========================================================================
 
 Saw_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Saw_Action next
-		move.l	#Map_Saw,ost_mappings(a0)
-		move.w	#$367+tile_pal3,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#4,ost_priority(a0)
-		move.b	#$20,ost_actwidth(a0)
+		lea	Saw_Settings(pc),a2
+		bsr.w	SetupObject
 		move.w	ost_x_pos(a0),ost_saw_x_start(a0)
 		move.w	ost_y_pos(a0),ost_saw_y_start(a0)
-		cmpi.b	#id_Saw_Ground_Right,ost_subtype(a0)	; is object a ground saw?
-		bcc.s	Saw_Action				; if yes, branch
-		move.b	#id_col_24x24+id_col_hurt,ost_col_type(a0)
 
 Saw_Action:	; Routine 2
 		moveq	#0,d0
@@ -136,7 +141,6 @@ Saw_Ground_Right:
 
 		move.b	#1,ost_saw_flag(a0)			; flag object as already loaded
 		move.w	#$600,ost_x_vel(a0)			; move object to the right
-		move.b	#id_col_24x24+id_col_hurt,ost_col_type(a0)
 		move.b	#id_frame_saw_groundsaw1,ost_frame(a0)
 		play.w	1, jsr, sfx_Saw				; play saw sound
 

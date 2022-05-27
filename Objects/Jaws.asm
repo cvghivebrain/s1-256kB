@@ -17,23 +17,31 @@ Jaws_Index:	index *,,2
 
 ost_jaws_turn_time:	equ $30					; time until jaws turns (2 bytes)
 ost_jaws_turn_master:	equ $32					; time between turns, copied to ost_jaws_turn_time every turn (2 bytes)
+
+Jaws_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Jaws
+		dc.b -2,ost_tile
+		dc.w $445+tile_pal2
+		dc.b ost_col_type,id_col_16x12
+		dc.b ost_priority,4
+		dc.b ost_actwidth,16
+		dc.b -2,ost_x_vel
+		dc.w -$40
+		dc.b -1
+		even
 ; ===========================================================================
 
 Jaws_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Jaws_Turn next
-		move.l	#Map_Jaws,ost_mappings(a0)
-		move.w	#$445+tile_pal2,ost_tile(a0)
+		lea	Jaws_Settings(pc),a2
+		bsr.w	SetupObject
 		ori.b	#render_rel,ost_render(a0)
-		move.b	#id_col_16x12,ost_col_type(a0)
-		move.b	#4,ost_priority(a0)
-		move.b	#$10,ost_actwidth(a0)
 		moveq	#0,d0
 		move.b	ost_subtype(a0),d0			; load object subtype number
 		lsl.w	#6,d0					; multiply d0 by 64
 		subq.w	#1,d0
 		move.w	d0,ost_jaws_turn_time(a0)		; set turn delay time
 		move.w	d0,ost_jaws_turn_master(a0)
-		move.w	#-$40,ost_x_vel(a0)			; move Jaws to the left
 		btst	#status_xflip_bit,ost_status(a0)	; is Jaws facing left?
 		beq.s	Jaws_Turn				; if yes, branch
 		neg.w	ost_x_vel(a0)				; move Jaws to the right

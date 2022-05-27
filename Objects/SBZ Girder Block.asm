@@ -20,18 +20,24 @@ ost_girder_x_start:	equ $32					; original x-axis position (2 bytes)
 ost_girder_move_time:	equ $34					; duration for movement in a direction (2 bytes)
 ost_girder_setting:	equ $38					; which movement settings to use, increments by 8
 ost_girder_wait_time:	equ $3A					; delay for movement (2 bytes)
+
+Gird_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Gird
+		dc.b -2,ost_tile
+		dc.w $2D9+tile_pal3
+		dc.b ost_priority,4
+		dc.b ost_actwidth,$60
+		dc.b ost_height,$18
+		dc.b -1
+		even
 ; ===========================================================================
 
 Gird_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Gird_Action next
-		move.l	#Map_Gird,ost_mappings(a0)
-		move.w	#$2D9+tile_pal3,ost_tile(a0)
+		lea	Gird_Settings(pc),a2
+		bsr.w	SetupObject
 		ori.b	#render_rel,ost_render(a0)
-		move.b	#4,ost_priority(a0)
-		move.b	#$60,ost_actwidth(a0)
-		move.b	#$18,ost_height(a0)
 		move.w	ost_x_pos(a0),ost_girder_x_start(a0)
-		move.w	ost_y_pos(a0),ost_girder_y_start(a0)
 		bsr.w	Gird_ChgDir				; set initial speed & direction
 
 Gird_Action:	; Routine 2

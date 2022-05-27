@@ -55,17 +55,24 @@ Yad_Index:	index *,,2
 		ptr Yad_Action
 
 ost_yadrin_wait_time:	equ $30					; time to wait before changing direction (2 bytes)
+
+Yad_Settings:	dc.b -3,ost_mappings
+		dc.l Map_Yad
+		dc.b -2,ost_tile
+		dc.w (vram_yadrin/32)+tile_pal2
+		dc.b ost_render,render_rel
+		dc.b ost_priority,4
+		dc.b ost_actwidth,20
+		dc.b ost_height,17
+		dc.b ost_width,8
+		dc.b ost_col_type,id_col_20x16+id_col_custom
+		dc.b -1
+		even
 ; ===========================================================================
 
 Yad_Main:	; Routine 0
-		move.l	#Map_Yad,ost_mappings(a0)
-		move.w	#(vram_yadrin/32)+tile_pal2,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#4,ost_priority(a0)
-		move.b	#$14,ost_actwidth(a0)
-		move.b	#$11,ost_height(a0)
-		move.b	#8,ost_width(a0)
-		move.b	#id_col_20x16+id_col_custom,ost_col_type(a0)
+		lea	Yad_Settings(pc),a2
+		bsr.w	SetupObject
 		bsr.w	ObjectFall				; apply gravity & update position
 		bsr.w	FindFloorObj
 		tst.w	d1					; has yadrin hit the floor?

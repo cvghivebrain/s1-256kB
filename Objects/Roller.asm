@@ -17,11 +17,23 @@ Roll_Index:	index *,,2
 
 ost_roller_open_time:	equ $30					; time roller stays open for (2 bytes)
 ost_roller_mode:	equ $32					; +1 = roller has jumped; +$80 = roller has stopped
+
+Roll_Settings:	dc.b ost_height,14
+		dc.b ost_width,8
+		dc.b -3,ost_mappings
+		dc.l Map_Roll
+		dc.b -2,ost_tile
+		dc.w $393
+		dc.b ost_render,render_rel
+		dc.b ost_priority,4
+		dc.b ost_actwidth,16
+		dc.b -1
+		even
 ; ===========================================================================
 
 Roll_Main:	; Routine 0
-		move.b	#$E,ost_height(a0)
-		move.b	#8,ost_width(a0)
+		lea	Roll_Settings(pc),a2
+		bsr.w	SetupObject
 		bsr.w	ObjectFall				; apply gravity and update position
 		bsr.w	FindFloorObj
 		tst.w	d1					; has roller hit the floor?
@@ -29,11 +41,6 @@ Roll_Main:	; Routine 0
 		add.w	d1,ost_y_pos(a0)			; align to floor
 		move.w	#0,ost_y_vel(a0)			; stop falling
 		addq.b	#2,ost_routine(a0)			; goto Roll_Action next
-		move.l	#Map_Roll,ost_mappings(a0)
-		move.w	#$393,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#4,ost_priority(a0)
-		move.b	#$10,ost_actwidth(a0)
 
 	@no_floor:
 		rts	

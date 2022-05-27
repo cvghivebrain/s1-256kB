@@ -17,17 +17,25 @@ Harp_Index:	index *,,2
 		ptr Harp_Wait
 
 ost_harp_time:	equ $30						; time between stabbing/retracting (2 bytes)
+
+Harp_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Harp
+		dc.b -2,ost_tile
+		dc.w $3AB
+		dc.b ost_priority,4
+		dc.b ost_actwidth,20
+		dc.b -2,ost_harp_time
+		dc.w 60
+		dc.b -1
+		even
 ; ===========================================================================
 
 Harp_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Harp_Move next
-		move.l	#Map_Harp,ost_mappings(a0)
-		move.w	#$3AB,ost_tile(a0)
+		lea	Harp_Settings(pc),a2
+		bsr.w	SetupObject
 		ori.b	#render_rel,ost_render(a0)
-		move.b	#4,ost_priority(a0)
 		move.b	ost_subtype(a0),ost_anim(a0)		; get type (vert/horiz)
-		move.b	#$14,ost_actwidth(a0)
-		move.w	#60,ost_harp_time(a0)			; set time to 1 second
 
 Harp_Move:	; Routine 2
 		lea	(Ani_Harp).l,a1

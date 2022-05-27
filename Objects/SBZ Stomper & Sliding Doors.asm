@@ -32,10 +32,20 @@ ost_stomp_flag:		equ $38					; flag set when associated button is pressed
 ost_stomp_moved:	equ $3A					; distance moved (2 bytes)
 ost_stomp_distance:	equ $3C					; distance to move (2 bytes)
 ost_stomp_button_num:	equ $3E					; button number associated with door
+
+Sto_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Stomp
+		dc.b -2,ost_tile
+		dc.w $2A9+tile_pal2
+		dc.b ost_priority,4
+		dc.b -1
+		even
 ; ===========================================================================
 
 Sto_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Sto_Action next
+		lea	Sto_Settings(pc),a2
+		bsr.w	SetupObject
 		moveq	#0,d0
 		move.b	ost_subtype(a0),d0			; get subtype
 		lsr.w	#2,d0
@@ -45,8 +55,6 @@ Sto_Main:	; Routine 0
 		move.b	(a3)+,ost_height(a0)
 		lsr.w	#2,d0
 		move.b	d0,ost_frame(a0)			; high nybble without bit 7 = frame
-		move.l	#Map_Stomp,ost_mappings(a0)
-		move.w	#$2A9+tile_pal2,ost_tile(a0)
 		cmpi.b	#id_LZ,(v_zone).w			; check if level is LZ/SBZ3
 		bne.s	@skip_sbz3_init				; if not, branch
 		bset	#0,(f_stomp_sbz3_init).w		; flag object as loaded
@@ -79,7 +87,6 @@ Sto_Main:	; Routine 0
 
 @skip_sbz3_init:
 		ori.b	#render_rel,ost_render(a0)
-		move.b	#4,ost_priority(a0)
 		move.w	ost_x_pos(a0),ost_stomp_x_start(a0)
 		move.w	ost_y_pos(a0),ost_stomp_y_start(a0)
 		moveq	#0,d0

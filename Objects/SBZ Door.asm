@@ -14,15 +14,22 @@ AutoDoor:
 ADoor_Index:	index *,,2
 		ptr ADoor_Main
 		ptr ADoor_OpenShut
+
+ADoor_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_ADoor
+		dc.b -2,ost_tile
+		dc.w $2D1+tile_pal3
+		dc.b ost_actwidth,8
+		dc.b ost_priority,4
+		dc.b -1
+		even
 ; ===========================================================================
 
 ADoor_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto ADoor_OpenShut next
-		move.l	#Map_ADoor,ost_mappings(a0)
-		move.w	#$2D1+tile_pal3,ost_tile(a0)
+		lea	ADoor_Settings(pc),a2
+		bsr.w	SetupObject
 		ori.b	#render_rel,ost_render(a0)
-		move.b	#8,ost_actwidth(a0)
-		move.b	#4,ost_priority(a0)
 
 ADoor_OpenShut:	; Routine 2
 		move.w	#$40,d1					; set range for door detection

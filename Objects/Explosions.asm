@@ -16,6 +16,18 @@ ExItem_Index:	index *,,2
 		ptr ExItem_Animal
 		ptr ExItem_Main
 		ptr ExItem_Animate
+
+Ex_Settings:	dc.b -3,ost_mappings
+		dc.l Map_ExplodeItem
+		dc.b -2,ost_tile
+		dc.w tile_Nem_Explode
+		dc.b ost_render,render_rel
+		dc.b ost_priority,1
+		dc.b ost_col_type,0
+		dc.b ost_actwidth,12
+		dc.b ost_anim_time,7
+		dc.b -1
+		even
 ; ===========================================================================
 
 ExItem_Animal:	; Routine 0
@@ -29,13 +41,8 @@ ExItem_Animal:	; Routine 0
 
 ExItem_Main:	; Routine 2
 		addq.b	#2,ost_routine(a0)			; goto ExItem_Animate next
-		move.l	#Map_ExplodeItem,ost_mappings(a0)
-		move.w	#tile_Nem_Explode,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#1,ost_priority(a0)
-		move.b	#0,ost_col_type(a0)
-		move.b	#$C,ost_actwidth(a0)
-		move.b	#7,ost_anim_time(a0)			; set frame duration to 7 frames
+		lea	Ex_Settings(pc),a2
+		bsr.w	SetupObject
 		move.b	#id_frame_ex_0,ost_frame(a0)
 		play.w	1, jsr, sfx_Break			; play breaking enemy sound
 
@@ -71,12 +78,8 @@ ExBom_Index:	index *,,2
 
 ExBom_Main:	; Routine 0
 		addq.b	#2,ost_routine(a0)			; goto ExBom_Animate next
+		lea	Ex_Settings(pc),a2
+		bsr.w	SetupObject
 		move.l	#Map_ExplodeBomb,ost_mappings(a0)
-		move.w	#tile_Nem_Explode,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#1,ost_priority(a0)
-		move.b	#0,ost_col_type(a0)
-		move.b	#$C,ost_actwidth(a0)
-		move.b	#7,ost_anim_time(a0)
 		move.b	#id_frame_ex_0_0,ost_frame(a0)
 		play.w	1, jmp, sfx_Bomb			; play exploding bomb sound

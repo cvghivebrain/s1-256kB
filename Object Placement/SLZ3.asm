@@ -251,6 +251,6 @@ ObjPos_SLZ3:
 		objpos $203C,$02D4,Seesaw,$FF
 		objpos $20A0,$02D4,Seesaw,$FF
 		objpos $2104,$02D4,Seesaw,$FF
-		objpos $2200,$029A,Prison,$01
+		objpos $2200,$029A,Prison,$03
 		objpos $2200,$02BF,Prison,$00
 		endobj

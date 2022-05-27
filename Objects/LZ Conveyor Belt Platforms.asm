@@ -48,17 +48,24 @@ ost_lcon_corner_count:	equ $39					; total number of corners +1, times 4
 ost_lcon_corner_inc:	equ $3A					; amount to add to corner index (4 or -4)
 ost_lcon_reverse:	equ $3B					; 1 = conveyors run backwards
 ost_lcon_corner_ptr:	equ $3C					; address of corner position data (4 bytes)
+
+LCon_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_LConv
+		dc.b -2,ost_tile
+		dc.w $3D5+tile_pal3
+		dc.b ost_actwidth,16
+		dc.b ost_priority,4
+		dc.b -1
+		even
 ; ===========================================================================
 
 LCon_Main:	; Routine 0
 		move.b	ost_subtype(a0),d0
 		bmi.w	LCon_LoadPlatforms			; branch if subtype is $80+
-		addq.b	#2,ost_routine(a0)			; goto LCon_Platform next
-		move.l	#Map_LConv,ost_mappings(a0)
-		move.w	#$3D5+tile_pal3,ost_tile(a0)
+		lea	LCon_Settings(pc),a2
+		bsr.w	SetupObject
 		ori.b	#render_rel,ost_render(a0)
-		move.b	#$10,ost_actwidth(a0)
-		move.b	#4,ost_priority(a0)
 		cmpi.b	#type_lcon_wheel,ost_subtype(a0)	; is object a wheel? ($7F)
 		bne.s	LCon_Platform_Init			; if not, branch
 		

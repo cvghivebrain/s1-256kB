@@ -24,15 +24,22 @@ ost_sball_y_start:	equ $38					; centre y-axis position (2 bytes)
 ost_sball_x_start:	equ $3A					; centre x-axis position (2 bytes)
 ost_sball_radius:	equ $3C					; radius (1 byte)
 ost_sball_speed:	equ $3E					; rate of spin (2 bytes)
+
+SBall_Settings:	dc.b ost_routine,2
+		dc.b -2,ost_tile
+		dc.w $2EF
+		dc.b -3,ost_mappings
+		dc.l Map_SBall2
+		dc.b ost_render,render_rel
+		dc.b ost_priority,4
+		dc.b ost_actwidth,8
+		dc.b -1
+		even
 ; ===========================================================================
 
 SBall_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto SBall_Move next
-		move.w	#$2EF,ost_tile(a0)
-		move.l	#Map_SBall2,ost_mappings(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#4,ost_priority(a0)
-		move.b	#8,ost_actwidth(a0)
+		lea	SBall_Settings(pc),a2
+		bsr.w	SetupObject
 		move.w	ost_x_pos(a0),ost_sball_x_start(a0)
 		move.w	ost_y_pos(a0),ost_sball_y_start(a0)
 		cmpi.b	#id_SYZ,(v_zone).w			; check if level is LZ

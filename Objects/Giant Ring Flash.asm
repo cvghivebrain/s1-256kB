@@ -17,16 +17,22 @@ Flash_Index:	index *,,2
 		ptr Flash_Delete
 
 ost_flash_parent:	equ $3C					; address of OST of parent object (4 bytes)
+
+Flash_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Flash
+		dc.b -2,ost_tile
+		dc.w ((vram_giantring+sizeof_art_giantring)/sizeof_cell)+tile_pal2
+		dc.b ost_actwidth,$20
+		dc.b ost_frame,-1
+		dc.b -1
+		even
 ; ===========================================================================
 
 Flash_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Flash_ChkDel next
-		move.l	#Map_Flash,ost_mappings(a0)
-		move.w	#((vram_giantring+sizeof_art_giantring)/sizeof_cell)+tile_pal2,ost_tile(a0)
+		lea	Flash_Settings(pc),a2
+		bsr.w	SetupObject
 		ori.b	#render_rel,ost_render(a0)
-		move.b	#0,ost_priority(a0)
-		move.b	#$20,ost_actwidth(a0)
-		move.b	#-1,ost_frame(a0)			; start at -1 because 1 is added to get the first frame
 
 Flash_ChkDel:	; Routine 2
 		bsr.s	Flash_Collect

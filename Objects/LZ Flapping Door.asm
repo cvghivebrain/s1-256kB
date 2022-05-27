@@ -17,15 +17,23 @@ Flap_Index:	index *,,2
 
 ost_flap_wait:	equ $30						; time until change (2 bytes)
 ost_flap_time:	equ $32						; time between opening/closing (2 bytes)
+
+Flap_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Flap
+		dc.b -2,ost_tile
+		dc.w $307+tile_pal3
+		dc.b ost_actwidth,$28
+		dc.b -2,ost_flap_time
+		dc.w 120
+		dc.b -1
+		even
 ; ===========================================================================
 
 Flap_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Flap_OpenClose next
-		move.l	#Map_Flap,ost_mappings(a0)
-		move.w	#$307+tile_pal3,ost_tile(a0)
+		lea	Flap_Settings(pc),a2
+		bsr.w	SetupObject
 		ori.b	#render_rel,ost_render(a0)
-		move.b	#$28,ost_actwidth(a0)
-		move.w	#120,ost_flap_time(a0)			; set flap delay time
 
 Flap_OpenClose:	; Routine 2
 		subq.w	#1,ost_flap_wait(a0)			; decrement time delay

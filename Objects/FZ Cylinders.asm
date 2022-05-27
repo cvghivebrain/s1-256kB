@@ -30,6 +30,19 @@ ost_cylinder_eggman:	equ $30					; -1 if cylinder contains Eggman (2 bytes)
 ost_cylinder_parent:	equ $34					; address of OST of parent object (4 bytes)
 ost_cylinder_y_start:	equ $38					; original y position (4 bytes; low word always 0)
 ost_cylinder_y_move:	equ $3C					; amount the cylinder has moved (4 bytes)
+
+Cyl_Settings:	dc.b ost_render,render_rel+render_onscreen+render_useheight
+		dc.b ost_height,$60
+		dc.b ost_width,$60
+		dc.b ost_actwidth,$20
+		dc.b ost_priority,3
+		dc.b ost_routine,2
+		dc.b -2,ost_tile
+		dc.w tile_Nem_FzBoss
+		dc.b -3,ost_mappings
+		dc.l Map_EggCyl
+		dc.b -1
+		even
 ; ===========================================================================
 
 Cyl_Main:	; Routine 0
@@ -38,20 +51,11 @@ Cyl_Main:	; Routine 0
 		move.b	ost_subtype(a0),d0			; get subtype (0/2/4/6)
 		add.w	d0,d0
 		adda.w	d0,a1					; jump to relevant address for x/y pos data
-		move.b	#render_rel,ost_render(a0)
-		bset	#render_onscreen_bit,ost_render(a0)
-		bset	#render_useheight_bit,ost_render(a0)
-		move.w	#tile_Nem_FzBoss,ost_tile(a0)
-		move.l	#Map_EggCyl,ost_mappings(a0)
+		lea	Cyl_Settings(pc),a2
+		jsr	SetupObject
 		move.w	(a1)+,ost_x_pos(a0)
 		move.w	(a1),ost_y_pos(a0)
 		move.w	(a1)+,ost_cylinder_y_start(a0)
-		move.b	#$20,ost_height(a0)
-		move.b	#$60,ost_width(a0)
-		move.b	#$20,ost_actwidth(a0)
-		move.b	#$60,ost_height(a0)
-		move.b	#3,ost_priority(a0)
-		addq.b	#2,ost_routine(a0)			; goto Cyl_Action next
 
 Cyl_Action:	; Routine 2
 		cmpi.b	#2,ost_subtype(a0)			; is cylinder on ceiling?

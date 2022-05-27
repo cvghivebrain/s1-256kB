@@ -20,16 +20,23 @@ Hel_Index:	index *,,2
 
 ost_helix_frame:	equ $3E					; start frame (different for each spike)
 ost_helix_child_list:	equ $29					; list of child OST indices (up to 15 bytes)
+
+Hel_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Hel
+		dc.b -2,ost_tile
+		dc.w $38E+tile_pal3
+		dc.b ost_status,status_xflip+status_yflip+status_jump
+		dc.b ost_render,render_rel
+		dc.b ost_priority,3
+		dc.b ost_actwidth,8
+		dc.b -1
+		even
 ; ===========================================================================
 
 Hel_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Hel_Action next
-		move.l	#Map_Hel,ost_mappings(a0)
-		move.w	#$38E+tile_pal3,ost_tile(a0)
-		move.b	#status_xflip+status_yflip+status_jump,ost_status(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#3,ost_priority(a0)
-		move.b	#8,ost_actwidth(a0)
+		lea	Hel_Settings(pc),a2
+		bsr.w	SetupObject
 		move.w	ost_y_pos(a0),d2
 		move.w	ost_x_pos(a0),d3
 		move.b	ost_id(a0),d4

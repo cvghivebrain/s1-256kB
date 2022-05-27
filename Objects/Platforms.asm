@@ -25,41 +25,44 @@ ost_plat_x_start:	equ $32					; original x position (2 bytes)
 ost_plat_y_start:	equ $34					; original y position (2 bytes)
 ost_plat_y_nudge:	equ $38					; amount of dip when Sonic is on the platform
 ost_plat_wait_time:	equ $3A					; time delay for platform moving when stood on (2 bytes)
+
+Plat_Settings:	dc.b ost_routine,2
+		dc.b -2,ost_tile
+		dc.w 0+tile_pal3
+		dc.b -3,ost_mappings
+		dc.l Map_Plat_GHZ
+		dc.b ost_actwidth,32
+		dc.b ost_render,render_rel
+		dc.b ost_priority,4
+		dc.b ost_angle+1,$80
+		dc.b -1
+		even
 ; ===========================================================================
 
 Plat_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Plat_Solid next
-		move.w	#0+tile_pal3,ost_tile(a0)
-		move.l	#Map_Plat_GHZ,ost_mappings(a0)
-		move.b	#$20,ost_actwidth(a0)
+		lea	Plat_Settings(pc),a2
+		bsr.w	SetupObject
 		cmpi.b	#id_SYZ,(v_zone).w			; check if level is SYZ
 		bne.s	@notSYZ
 
 		move.l	#Map_Plat_SYZ,ost_mappings(a0)		; SYZ specific code
-		move.b	#$20,ost_actwidth(a0)
 
 	@notSYZ:
 		cmpi.b	#id_SLZ,(v_zone).w			; check if level is SLZ
 		bne.s	@notSLZ
 
 		move.l	#Map_Plat_SLZ,ost_mappings(a0)		; SLZ specific code
-		move.b	#$20,ost_actwidth(a0)
-		move.w	#0+tile_pal3,ost_tile(a0)
 		move.b	#id_Plat_Type_Falls,ost_subtype(a0)	; force subtype 3
 
 	@notSLZ:
-		move.b	#render_rel,ost_render(a0)
-		move.b	#4,ost_priority(a0)
 		move.w	ost_y_pos(a0),ost_plat_y_pos(a0)
 		move.w	ost_y_pos(a0),ost_plat_y_start(a0)
 		move.w	ost_x_pos(a0),ost_plat_x_start(a0)
-		move.w	#$80,ost_angle(a0)
 		moveq	#0,d1
 		move.b	ost_subtype(a0),d0
 		cmpi.b	#id_Plat_Type_UpDown_Large,d0		; is object type $A (large platform)?
 		bne.s	@setframe				; if not, branch
 		addq.b	#id_frame_plat_large,d1			; use frame #1
-		move.b	#$20,ost_actwidth(a0)			; set width
 
 	@setframe:
 		move.b	d1,ost_frame(a0)			; set frame to d1

@@ -26,15 +26,22 @@ FFloor_Index:	index *,,2
 		ptr FFloor_Frag
 
 ost_ffloor_children:	equ $30					; addresses of OSTs of child objects (2 bytes * 8)
+
+FFloor_Settings:
+		dc.b -2,ost_x_pos
+		dc.w $2080
+		dc.b -2,ost_y_pos
+		dc.w $5D0
+		dc.b ost_actwidth,128
+		dc.b ost_height,16
+		dc.b ost_render,render_rel+render_onscreen
+		dc.b -1
+		even
 ; ===========================================================================
 
 FFloor_Main:	; Routine 0
-		move.w	#$2080,ost_x_pos(a0)
-		move.w	#$5D0,ost_y_pos(a0)
-		move.b	#$80,ost_actwidth(a0)
-		move.b	#$10,ost_height(a0)
-		move.b	#render_rel,ost_render(a0)
-		bset	#render_onscreen_bit,ost_render(a0)
+		lea	FFloor_Settings(pc),a2
+		jsr	SetupObject
 		moveq	#0,d4
 		move.w	#$2010,d5				; initial x position
 		moveq	#8-1,d6					; 8 blocks

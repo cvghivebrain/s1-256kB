@@ -15,16 +15,24 @@ Points:
 Poi_Index:	index *,,2
 		ptr Poi_Main
 		ptr Poi_Slower
+
+Poi_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Points
+		dc.b -2,ost_tile
+		dc.w ($F2E0/sizeof_cell)+tile_pal2
+		dc.b ost_render,render_rel
+		dc.b ost_priority,1
+		dc.b ost_actwidth,8
+		dc.b -2,ost_y_vel
+		dc.w -$300
+		dc.b -1
+		even
 ; ===========================================================================
 
 Poi_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Poi_Slower next
-		move.l	#Map_Points,ost_mappings(a0)
-		move.w	#($F2E0/sizeof_cell)+tile_pal2,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#1,ost_priority(a0)
-		move.b	#8,ost_actwidth(a0)
-		move.w	#-$300,ost_y_vel(a0)			; move object upwards
+		lea	Poi_Settings(pc),a2
+		bsr.w	SetupObject
 
 Poi_Slower:	; Routine 2
 		tst.w	ost_y_vel(a0)				; is object moving?

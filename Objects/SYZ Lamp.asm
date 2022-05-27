@@ -14,15 +14,20 @@ SpinningLight:
 Light_Index:	index *,,2
 		ptr Light_Main
 		ptr Light_Animate
+
+Light_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Light
+		dc.b ost_render,render_rel
+		dc.b ost_actwidth,16
+		dc.b ost_priority,6
+		dc.b -1
+		even
 ; ===========================================================================
 
 Light_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Light_Animate next
-		move.l	#Map_Light,ost_mappings(a0)
-		move.w	#0,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#$10,ost_actwidth(a0)
-		move.b	#6,ost_priority(a0)
+		lea	Light_Settings(pc),a2
+		bsr.w	SetupObject
 
 Light_Animate:	; Routine 2
 		subq.b	#1,ost_anim_time(a0)			; decrement animation timer

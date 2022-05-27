@@ -17,15 +17,22 @@ Fan_Index:	index *,,2
 
 ost_fan_wait_time:	equ $30					; time between switching on/off (2 bytes)
 ost_fan_flag:		equ $32					; 0 = on; 1 = off
+
+Fan_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Fan
+		dc.b -2,ost_tile
+		dc.w $39D+tile_pal3
+		dc.b ost_actwidth,16
+		dc.b ost_priority,4
+		dc.b -1
+		even
 ; ===========================================================================
 
 Fan_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Fan_Delay next
-		move.l	#Map_Fan,ost_mappings(a0)
-		move.w	#$39D+tile_pal3,ost_tile(a0)
+		lea	Fan_Settings(pc),a2
+		bsr.w	SetupObject
 		ori.b	#render_rel,ost_render(a0)
-		move.b	#$10,ost_actwidth(a0)
-		move.b	#4,ost_priority(a0)
 
 Fan_Delay:	; Routine 2
 		btst	#1,ost_subtype(a0)			; is object type 2 or 3? (always on)

@@ -51,7 +51,7 @@ GBall_Main:	; Routine 0
 		move.b	#id_BossBall,ost_id(a1)			; load chain link object
 		move.b	#id_GBall_Link,ost_routine(a1)
 		move.l	#Map_Swing_GHZ,ost_mappings(a1)
-		move.w	#$7000/32,ost_tile(a1)
+		move.w	#$6B0,ost_tile(a1)
 		move.b	#id_frame_swing_chain,ost_frame(a1)
 		addq.b	#1,ost_subtype(a0)			; increment parent's subtype (ends up being 5)
 

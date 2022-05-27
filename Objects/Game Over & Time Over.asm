@@ -15,6 +15,17 @@ Over_Index:	index *,,2
 		ptr Over_ChkPLC
 		ptr Over_Move
 		ptr Over_Wait
+
+Over_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_x_pos
+		dc.l $5000F0
+		dc.b -3,ost_mappings
+		dc.l Map_Over
+		dc.b -2,ost_tile
+		dc.w tile_Nem_GameOver+tile_hi
+		dc.b ost_render,render_abs
+		dc.b -1
+		even
 ; ===========================================================================
 
 Over_ChkPLC:	; Routine 0
@@ -24,18 +35,13 @@ Over_ChkPLC:	; Routine 0
 ; ===========================================================================
 
 Over_Main:
-		addq.b	#2,ost_routine(a0)			; goto Over_Move next
-		move.w	#$50,ost_x_pos(a0)			; set x position
+		lea	Over_Settings(pc),a2
+		bsr.w	SetupObject
 		btst	#0,ost_frame(a0)			; is the object "OVER"?
 		beq.s	@not_over				; if not, branch
 		move.w	#$1F0,ost_x_pos(a0)			; set x position for "OVER"
 
 	@not_over:
-		move.w	#$F0,ost_y_screen(a0)
-		move.l	#Map_Over,ost_mappings(a0)
-		move.w	#tile_Nem_GameOver+tile_hi,ost_tile(a0)
-		move.b	#render_abs,ost_render(a0)
-		move.b	#0,ost_priority(a0)
 
 Over_Move:	; Routine 2
 		moveq	#$10,d1					; set horizontal speed

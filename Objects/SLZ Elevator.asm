@@ -36,15 +36,25 @@ ost_elev_acceleration:	equ $38					; acceleration - i.e. its movement is not lin
 ost_elev_dec_flag:	equ $3A					; 1 = decelerate
 ost_elev_distance:	equ $3C					; half distance to move (2 bytes)
 ost_elev_dist_master:	equ $3E					; master copy of ost_elev_distance (2 bytes)
+
+Elev_Settings:	dc.b ost_routine,2
+		dc.b ost_actwidth,$28
+		dc.b -3,ost_mappings
+		dc.l Map_Elev
+		dc.b -2,ost_tile
+		dc.w 0+tile_pal3
+		dc.b ost_render,render_rel
+		dc.b ost_priority,4
+		dc.b -1
+		even
 ; ===========================================================================
 
 Elev_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Elev_Platform next
 		moveq	#0,d0
 		move.b	ost_subtype(a0),d0			; get subtype
 		bpl.s	@normal					; branch for types 0-$7F
 
-		addq.b	#4,ost_routine(a0)			; goto Elev_MakeMulti next
+		addq.b	#6,ost_routine(a0)			; goto Elev_MakeMulti next
 		move.w	#60,ost_elev_distance(a0)		; set as time between platform spawns
 		move.w	#60,ost_elev_dist_master(a0)
 		addq.l	#4,sp
@@ -52,8 +62,8 @@ Elev_Main:	; Routine 0
 ; ===========================================================================
 
 	@normal:
-		move.b	#$28,ost_actwidth(a0)			; set width
-		move.b	#id_frame_elev_0,ost_frame(a0)			; set frame
+		lea	Elev_Settings(pc),a2
+		bsr.w	SetupObject
 		add.w	d0,d0
 		andi.w	#$1E,d0					; read only low nybble
 		lea	Elev_Var2(pc,d0.w),a2
@@ -61,10 +71,6 @@ Elev_Main:	; Routine 0
 		lsl.w	#2,d0					; multiply by 4
 		move.w	d0,ost_elev_distance(a0)		; set distance to move
 		move.b	(a2)+,ost_subtype(a0)			; set type
-		move.l	#Map_Elev,ost_mappings(a0)
-		move.w	#0+tile_pal3,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#4,ost_priority(a0)
 		move.w	ost_x_pos(a0),ost_elev_x_start(a0)
 		move.w	ost_y_pos(a0),ost_elev_y_start(a0)
 

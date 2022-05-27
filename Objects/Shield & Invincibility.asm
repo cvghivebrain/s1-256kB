@@ -17,21 +17,25 @@ Shi_Index:	index *,,2
 		ptr Shi_Stars
 
 ost_invincibility_last_pos:	equ $30				; previous position in tracking index, for invincibility trail
+
+Shi_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Shield
+		dc.b ost_render,render_rel
+		dc.b ost_priority,1
+		dc.b ost_actwidth,16
+		dc.b -2,ost_tile
+		dc.w $A820/sizeof_cell
+		dc.b -1
+		even
 ; ===========================================================================
 
 Shi_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Shi_Shield next
-		move.l	#Map_Shield,ost_mappings(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#1,ost_priority(a0)
-		move.b	#$10,ost_actwidth(a0)
+		lea	Shi_Settings(pc),a2
+		bsr.w	SetupObject
 		tst.b	ost_anim(a0)				; is object a shield?
-		bne.s	@stars					; if not, branch
-		move.w	#$A820/sizeof_cell,ost_tile(a0)		; shield specific code
-		rts	
-; ===========================================================================
-
-@stars:
+		beq.s	Shi_Shield_rts
+		
 		addq.b	#2,ost_routine(a0)			; goto Shi_Stars next
 		move.w	#$AB80/sizeof_cell,ost_tile(a0)
 Shi_Shield_rts:

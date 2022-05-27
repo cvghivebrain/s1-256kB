@@ -33,16 +33,24 @@ ost_bspike_x_start:	equ $30					; seesaw x position (2 bytes)
 ost_bspike_y_start:	equ $34					; seesaw y position (2 bytes)
 ost_bspike_state:	equ $3A					; seesaw state: 0 = left raised; 2 = right raised; 1/3 = flat
 ost_bspike_seesaw:	equ $3C					; address of OST of seesaw (4 bytes)
+
+BSpike_Settings:
+		dc.b -3,ost_mappings
+		dc.l Map_SSawBall
+		dc.b -2,ost_tile
+		dc.w $38B
+		dc.b ost_frame,id_frame_seesaw_silver
+		dc.b ost_priority,4
+		dc.b ost_col_type,id_col_8x8+id_col_hurt
+		dc.b ost_actwidth,12
+		dc.b -1
+		even
 ; ===========================================================================
 
 BSpike_Main:	; Routine 0
-		move.l	#Map_SSawBall,ost_mappings(a0)
-		move.w	#$38B,ost_tile(a0)
-		move.b	#id_frame_seesaw_silver,ost_frame(a0)
+		lea	BSpike_Settings(pc),a2
+		jsr	SetupObject
 		ori.b	#render_rel,ost_render(a0)
-		move.b	#4,ost_priority(a0)
-		move.b	#id_col_8x8+id_col_hurt,ost_col_type(a0)
-		move.b	#$C,ost_actwidth(a0)
 		movea.l	ost_bspike_seesaw(a0),a1		; get address of OST of seesaw below
 		move.w	ost_x_pos(a1),ost_bspike_x_start(a0)
 		move.w	ost_y_pos(a1),ost_bspike_y_start(a0)

@@ -16,16 +16,23 @@ TSon_Index:	index *,,2
 		ptr TSon_Delay
 		ptr TSon_Move
 		ptr TSon_Animate
+
+TSon_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_x_pos
+		dc.l $F00000+150+40
+		dc.b -3,ost_mappings
+		dc.l Map_TSon
+		dc.b -2,ost_tile
+		dc.w (vram_title_sonic/sizeof_cell)+tile_pal2
+		dc.b ost_priority,1
+		dc.b ost_anim_delay,29
+		dc.b -1
+		even
 ; ===========================================================================
 
 TSon_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto TSon_Delay next
-		move.w	#$F0,ost_x_pos(a0)
-		move.w	#150+40,ost_y_screen(a0)			; position is fixed to screen
-		move.l	#Map_TSon,ost_mappings(a0)
-		move.w	#(vram_title_sonic/sizeof_cell)+tile_pal2,ost_tile(a0)
-		move.b	#1,ost_priority(a0)
-		move.b	#29,ost_anim_delay(a0)			; set time delay to 0.5 seconds
+		lea	TSon_Settings(pc),a2
+		bsr.w	SetupObject
 		lea	(Ani_TSon).l,a1
 		bsr.w	AnimateSprite
 

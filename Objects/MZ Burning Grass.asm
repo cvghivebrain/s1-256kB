@@ -23,17 +23,24 @@ ost_burn_y_start:	equ $2C					; original y position (2 bytes)
 ost_burn_coll_ptr:	equ $30					; pointer to collision data (4 bytes)
 ost_burn_parent:	equ $38					; address of OST of parent object (4 bytes)
 ost_burn_sink:		equ $3C					; pixels the platform has sunk when stood on
+
+GFire_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Fire
+		dc.b -2,ost_tile
+		dc.w $3E6
+		dc.b ost_render,render_rel
+		dc.b ost_priority,1
+		dc.b ost_col_type,id_col_8x8+id_col_hurt
+		dc.b ost_actwidth,8
+		dc.b -1
+		even
 ; ===========================================================================
 
 GFire_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto GFire_Spread next
-		move.l	#Map_Fire,ost_mappings(a0)
-		move.w	#$3E6,ost_tile(a0)
+		lea	GFire_Settings(pc),a2
+		bsr.w	SetupObject
 		move.w	ost_x_pos(a0),ost_burn_x_start(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#1,ost_priority(a0)
-		move.b	#id_col_8x8+id_col_hurt,ost_col_type(a0)
-		move.b	#8,ost_actwidth(a0)
 		play.w	1, jsr, sfx_Burning			; play burning sound
 		tst.b	ost_subtype(a0)				; is this the first fireball?
 		beq.s	GFire_Spread				; if yes, branch

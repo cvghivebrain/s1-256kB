@@ -19,19 +19,26 @@ Smash_Index:	index *,,2
 		ptr Smash_FragMove
 
 ost_smash_x_vel:	equ $30					; Sonic's horizontal speed (2 bytes)
+
+Smash_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Smash
+		dc.b -2,ost_tile
+		dc.w $348+tile_pal3
+		dc.b ost_render,render_rel
+		dc.b ost_actwidth,16
+		dc.b ost_priority,4
+		dc.b -1
+		even
 ; ===========================================================================
 
 Smash_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Smash_Solid next
-		move.l	#Map_Smash,ost_mappings(a0)
-		move.w	#$348+tile_pal3,ost_tile(a0)
+		lea	Smash_Settings(pc),a2
+		bsr.w	SetupObject
 		cmpi.b	#id_SLZ,(v_zone).w
 		bne.s	@not_slz
 		move.w	#$411+tile_pal3,ost_tile(a0)
 	@not_slz:
-		move.b	#render_rel,ost_render(a0)
-		move.b	#$10,ost_actwidth(a0)
-		move.b	#4,ost_priority(a0)
 		move.b	ost_subtype(a0),ost_frame(a0)
 
 Smash_Solid:	; Routine 2

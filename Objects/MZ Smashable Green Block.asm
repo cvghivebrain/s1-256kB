@@ -19,15 +19,22 @@ Smab_Index:	index *,,2
 
 ost_smash_sonic_ani:	equ $32					; Sonic's current animation number
 ost_smash_count:	equ $34					; number of blocks hit + enemies previously hit in a single jump (2 bytes)
+
+Smab_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Smab
+		dc.b -2,ost_tile
+		dc.w $297+tile_pal3
+		dc.b ost_render,render_rel
+		dc.b ost_actwidth,16
+		dc.b ost_priority,4
+		dc.b -1
+		even
 ; ===========================================================================
 
 Smab_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Smab_Solid next
-		move.l	#Map_Smab,ost_mappings(a0)
-		move.w	#$297+tile_pal3,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#$10,ost_actwidth(a0)
-		move.b	#4,ost_priority(a0)
+		lea	Smab_Settings(pc),a2
+		bsr.w	SetupObject
 
 Smab_Solid:	; Routine 2
 

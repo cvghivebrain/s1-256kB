@@ -31,14 +31,23 @@ ost_grass_burn_flag:	equ $35					; 0 = not burning; 1 = burning
 ost_grass_children:	equ $36					; OST indices of child objects (8 bytes)
 
 sizeof_grass_data:	equ LGrass_Data_1-LGrass_Data
+
+LGrass_Settings:
+		dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_LGrass
+		dc.b -2,ost_tile
+		dc.w tile_pal3+tile_hi
+		dc.b ost_render,render_rel+render_useheight
+		dc.b ost_priority,5
+		dc.b ost_height,$40
+		dc.b -1
+		even
 ; ===========================================================================
 
 LGrass_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto LGrass_Action next
-		move.l	#Map_LGrass,ost_mappings(a0)
-		move.w	#tile_pal3+tile_hi,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#5,ost_priority(a0)
+		lea	LGrass_Settings(pc),a2
+		bsr.w	SetupObject
 		move.w	ost_y_pos(a0),ost_grass_y_start(a0)
 		move.w	ost_x_pos(a0),ost_grass_x_start(a0)
 		moveq	#0,d0
@@ -52,8 +61,6 @@ LGrass_Main:	; Routine 0
 		move.b	(a1)+,ost_frame(a0)
 		move.b	(a1),ost_actwidth(a0)
 		andi.b	#$F,ost_subtype(a0)			; clear high nybble of subtype
-		move.b	#$40,ost_height(a0)
-		bset	#render_useheight_bit,ost_render(a0)
 
 LGrass_Action:	; Routine 2
 		bsr.w	LGrass_Types

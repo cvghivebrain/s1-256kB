@@ -21,19 +21,25 @@ Ledge_Index:	index *,,2
 
 ost_ledge_wait_time:	equ $38					; time between touching the ledge and it collapsing
 ost_ledge_flag:		equ $3A					; flag set when ledge is stood on
+
+Ledge_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Ledge
+		dc.b -2,ost_tile
+		dc.w 0+tile_pal3
+		dc.b ost_priority,4
+		dc.b ost_ledge_wait_time,7
+		dc.b ost_actwidth,$64
+		dc.b ost_height,$38
+		dc.b -1
+		even
 ; ===========================================================================
 
 Ledge_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Ledge_Touch next
-		move.l	#Map_Ledge,ost_mappings(a0)
-		move.w	#0+tile_pal3,ost_tile(a0)
-		ori.b	#render_rel,ost_render(a0)
-		move.b	#4,ost_priority(a0)
-		move.b	#7,ost_ledge_wait_time(a0)		; set time delay for collapse
-		move.b	#$64,ost_actwidth(a0)
+		lea	Ledge_Settings(pc),a2
+		bsr.w	SetupObject
+		ori.b	#render_rel+render_useheight,ost_render(a0)
 		move.b	ost_subtype(a0),ost_frame(a0)
-		move.b	#$38,ost_height(a0)
-		bset	#render_useheight_bit,ost_render(a0)
 
 Ledge_Touch:	; Routine 2
 		tst.b	ost_ledge_flag(a0)			; has ledge been stood on?

@@ -14,16 +14,23 @@ Bumper:
 Bump_Index:	index *,,2
 		ptr Bump_Main
 		ptr Bump_Hit
+
+Bump_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Bump
+		dc.b -2,ost_tile
+		dc.w $3FB
+		dc.b ost_render,render_rel
+		dc.b ost_actwidth,16
+		dc.b ost_priority,1
+		dc.b ost_col_type,id_col_8x8_2+id_col_custom
+		dc.b -1
+		even
 ; ===========================================================================
 
 Bump_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Bump_Hit next
-		move.l	#Map_Bump,ost_mappings(a0)
-		move.w	#$3FB,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#$10,ost_actwidth(a0)
-		move.b	#1,ost_priority(a0)
-		move.b	#id_col_8x8_2+id_col_custom,ost_col_type(a0)
+		lea	Bump_Settings(pc),a2
+		bsr.w	SetupObject
 
 Bump_Hit:	; Routine 2
 		tst.b	ost_col_property(a0)			; has Sonic touched the bumper?

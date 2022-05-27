@@ -20,14 +20,30 @@ ost_spin_wait_time:	equ $30					; time until change (2 bytes)
 ost_spin_wait_master:	equ $32					; time between changes (2 bytes)
 ost_spin_flag:		equ $34					; 1 = switch between animations, spinning platforms only
 ost_spin_sync:		equ $36					; bitmask used to synchronise timing: subtype $8x = $3F; subtype $9x = $7F (2 bytes)
+
+Spin_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Trap
+		dc.b -2,ost_tile
+		dc.w $3E1+tile_pal3
+		dc.b ost_actwidth,128
+		dc.b -1
+		even
+SpinS_Settings:	dc.b ost_routine,4
+		dc.b -3,ost_mappings
+		dc.l Map_Spin
+		dc.b -2,ost_tile
+		dc.w $42E
+		dc.b ost_actwidth,16
+		dc.b ost_anim,id_ani_spin_1
+		dc.b -1
+		even
 ; ===========================================================================
 
 Spin_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Spin_Trapdoor next
-		move.l	#Map_Trap,ost_mappings(a0)
-		move.w	#$3E1+tile_pal3,ost_tile(a0)
+		lea	Spin_Settings(pc),a2
+		bsr.w	SetupObject
 		ori.b	#render_rel,ost_render(a0)
-		move.b	#$80,ost_actwidth(a0)
 		moveq	#0,d0
 		move.b	ost_subtype(a0),d0			; get subtype
 		andi.w	#$F,d0					; read only low nybble
@@ -36,11 +52,8 @@ Spin_Main:	; Routine 0
 		tst.b	ost_subtype(a0)				; is subtype $8x?
 		bpl.s	Spin_Trapdoor				; if not, branch
 
-		addq.b	#2,ost_routine(a0)			; goto Spin_Spinner next
-		move.l	#Map_Spin,ost_mappings(a0)
-		move.w	#$42E,ost_tile(a0)
-		move.b	#$10,ost_actwidth(a0)
-		move.b	#id_ani_spin_1,ost_anim(a0)
+		lea	SpinS_Settings(pc),a2
+		bsr.w	SetupObject
 		moveq	#0,d0
 		move.b	ost_subtype(a0),d0			; get object type
 		move.w	d0,d1

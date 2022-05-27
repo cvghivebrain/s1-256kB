@@ -52,7 +52,6 @@ Jun_Main:	; Routine 0
 
 		move.b	#$30,ost_actwidth(a0)
 		move.b	#4,ost_priority(a0)
-		move.w	#$3C,$30(a0)
 		move.b	#1,ost_junc_direction(a0)		; set default direction (anticlockwise)
 		move.b	ost_subtype(a0),ost_junc_button_num(a0)
 

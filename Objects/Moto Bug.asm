@@ -21,10 +21,10 @@ Moto_Index:	index *,,2
 ost_moto_wait_time:	equ $30					; time delay before changing direction (2 bytes)
 ost_moto_smoke_time:	equ $33					; time delay between smoke puffs
 
-		dc.b ost_height,14
+Moto_Settings:	dc.b ost_height,14
 		dc.b ost_width,8
 		dc.b ost_col_type,id_col_20x16
-Moto_Settings:	dc.b ost_render,render_rel
+		dc.b ost_render,render_rel
 		dc.b ost_priority,4
 		dc.b ost_actwidth,$14
 		dc.b -2,ost_tile
@@ -39,7 +39,6 @@ Moto_Main:	; Routine 0
 		lea	Moto_Settings(pc),a2
 		tst.b	ost_anim(a0)				; is object a smoke trail?
 		bne.s	@smoke					; if yes, branch
-		suba.w	#6,a2
 		bsr.w	SetupObject
 		bsr.w	ObjectFall				; apply gravity and update position
 		jsr	(FindFloorObj).l
@@ -55,6 +54,7 @@ Moto_Main:	; Routine 0
 ; ===========================================================================
 
 @smoke:
+		adda.w	#6,a2
 		bsr.w	SetupObject
 		addq.b	#4,ost_routine(a0)			; goto Moto_Animate next
 		bra.w	Moto_Animate

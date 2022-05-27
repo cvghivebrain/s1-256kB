@@ -21,15 +21,22 @@ ost_vanish_wait_time:	equ $30					; time until change (2 bytes)
 ost_vanish_wait_master:	equ $32					; time between changes (2 bytes)
 ost_vanish_sync_sub:	equ $36					; value to subtract from framecount for synchronising (2 bytes)
 ost_vanish_sync_mask:	equ $38					; bitmask for synchronising (2 bytes)
+
+VanP_Settings:	dc.b ost_routine,6
+		dc.b -3,ost_mappings
+		dc.l Map_VanP
+		dc.b -2,ost_tile
+		dc.w $412+tile_pal3
+		dc.b ost_actwidth,16
+		dc.b ost_priority,4
+		dc.b -1
+		even
 ; ===========================================================================
 
 VanP_Main:	; Routine 0
-		addq.b	#6,ost_routine(a0)			; goto VanP_Sync next
-		move.l	#Map_VanP,ost_mappings(a0)
-		move.w	#$412+tile_pal3,ost_tile(a0)
+		lea	VanP_Settings(pc),a2
+		bsr.w	SetupObject
 		ori.b	#render_rel,ost_render(a0)
-		move.b	#$10,ost_actwidth(a0)
-		move.b	#4,ost_priority(a0)
 		moveq	#0,d0
 		move.b	ost_subtype(a0),d0			; get object type
 		andi.w	#$F,d0					; read only low nybble

@@ -26,30 +26,36 @@ ost_pblock_lava_speed:	equ $30					; x axis speed when block is on lava (2 bytes
 ost_pblock_lava_flag:	equ $32					; 1 = block is on lava
 ost_pblock_x_start:	equ $34					; original x position (2 bytes)
 ost_pblock_y_start:	equ $36					; original y position (2 bytes)
+
+PushB_Settings:	dc.b ost_routine,2
+		dc.b ost_height,15
+		dc.b ost_width,15
+		dc.b -3,ost_mappings
+		dc.l Map_Push
+		dc.b -2,ost_tile
+		dc.w $297+tile_pal3
+		dc.b ost_render,render_rel
+		dc.b ost_priority,3
+		dc.b ost_actwidth,16
+		dc.b -1
+		even
 ; ===========================================================================
 
 PushB_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto PushB_Action next
-		move.b	#$F,ost_height(a0)
-		move.b	#$F,ost_width(a0)
-		move.l	#Map_Push,ost_mappings(a0)
-		move.w	#$297+tile_pal3,ost_tile(a0)		; MZ specific code
+		lea	PushB_Settings(pc),a2
+		bsr.w	SetupObject
 		cmpi.b	#1,(v_zone).w				; is current zone Labyrinth?
 		bne.s	@notLZ					; if not, branch
 		move.w	#$3DE+tile_pal3,ost_tile(a0)		; LZ specific code
 
 	@notLZ:
-		move.b	#render_rel,ost_render(a0)
-		move.b	#3,ost_priority(a0)
 		move.w	ost_x_pos(a0),ost_pblock_x_start(a0)
 		move.w	ost_y_pos(a0),ost_pblock_y_start(a0)
-		moveq	#0,d0
-		move.b	ost_subtype(a0),d0			; get subtype
-		add.w	d0,d0
-		andi.w	#$E,d0					; read low nybble
-		lea	PushB_Var(pc,d0.w),a2			; get width & frame values from array
-		move.b	(a2)+,ost_actwidth(a0)
-		move.b	(a2)+,ost_frame(a0)
+		btst	#0,ost_subtype(a0)
+		beq.s	@not_1
+		move.b	#$40,ost_actwidth(a0)
+		move.b	#id_frame_pblock_four,ost_frame(a0)
+	@not_1:
 		tst.b	ost_subtype(a0)				; is subtype 0?
 		beq.s	@chkgone				; if yes, branch
 		bset	#tile_hi_bit,ost_tile(a0)		; make sprite appear in foreground

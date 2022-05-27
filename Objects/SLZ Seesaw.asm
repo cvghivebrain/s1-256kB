@@ -36,15 +36,22 @@ ost_seesaw_impact:	equ $38					; speed Sonic hits the seesaw (2 bytes)
 ost_seesaw_state:	equ $3A					; seesaw: 0 = left raised; 2 = right raised; 1 = flat
 								; spikeball: 0 = on/launched from right side; 2 = on/launched from left side
 ost_seesaw_parent:	equ $3C					; address of OST of parent object (4 bytes)
+
+See_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Seesaw
+		dc.b -2,ost_tile
+		dc.w $35F
+		dc.b ost_priority,4
+		dc.b ost_actwidth,$30
+		dc.b -1
+		even
 ; ===========================================================================
 
 See_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto See_Slope next
-		move.l	#Map_Seesaw,ost_mappings(a0)
-		move.w	#$35F,ost_tile(a0)
+		lea	See_Settings(pc),a2
+		bsr.w	SetupObject
 		ori.b	#render_rel,ost_render(a0)
-		move.b	#4,ost_priority(a0)
-		move.b	#$30,ost_actwidth(a0)
 		move.w	ost_x_pos(a0),ost_seesaw_x_start(a0)
 		tst.b	ost_subtype(a0)				; is object type 0?
 		bne.s	@noball					; if not, branch

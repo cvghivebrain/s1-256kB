@@ -54,37 +54,56 @@ Swing_Index:	index *,,2
 ost_swing_y_start:	equ $38					; original y-axis position (2 bytes)
 ost_swing_x_start:	equ $3A					; original x-axis position (2 bytes)
 ost_swing_radius:	equ $3C					; distance of chainlink from anchor
+
+Swing_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Swing_GHZ
+		dc.b -2,ost_tile
+		dc.w $6B0+tile_pal3
+		dc.b ost_render,render_rel
+		dc.b ost_priority,3
+		dc.b ost_actwidth,32
+		dc.b ost_height,8
+		dc.b -1
+		even
+SwSLZ_Settings:	dc.b -3,ost_mappings
+		dc.l Map_Swing_SLZ
+		dc.b -2,ost_tile
+		dc.w $3D9+tile_pal3
+		dc.b ost_height,16
+		dc.b ost_col_type,id_col_32x8+id_col_hurt
+		dc.b -1
+		even
+SwSBZ_Settings:	dc.b -3,ost_mappings
+		dc.l Map_BBall
+		dc.b -2,ost_tile
+		dc.w $8BC0/32
+		dc.b ost_height,24
+		dc.b ost_col_type,id_col_16x16+id_col_hurt
+		dc.b ost_routine,id_Swing_Action
+		dc.b -1
+		even
+		
+Swing_Setupbra:	bra.w	SetupObject
 ; ===========================================================================
 
 Swing_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Swing_SetSolid next
-		move.l	#Map_Swing_GHZ,ost_mappings(a0)		; GHZ and MZ specific code
-		move.w	#$6B0+tile_pal3,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#3,ost_priority(a0)
-		move.b	#$18,ost_actwidth(a0)
-		move.b	#8,ost_height(a0)
+		lea	Swing_Settings(pc),a2
+		bsr.s	Swing_Setupbra
 		move.w	ost_y_pos(a0),ost_swing_y_start(a0)
 		move.w	ost_x_pos(a0),ost_swing_x_start(a0)
 		cmpi.b	#id_SLZ,(v_zone).w			; check if level is SLZ
 		bne.s	@notSLZ
 
-		move.l	#Map_Swing_SLZ,ost_mappings(a0)		; SLZ specific code
-		move.w	#$3D9+tile_pal3,ost_tile(a0)
-		move.b	#$20,ost_actwidth(a0)
-		move.b	#$10,ost_height(a0)
-		move.b	#id_col_32x8+id_col_hurt,ost_col_type(a0)
+		lea	SwSLZ_Settings(pc),a2
+		bsr.s	Swing_Setupbra
 
 	@notSLZ:
 		cmpi.b	#id_SBZ,(v_zone).w			; check if level is SBZ
 		bne.s	@length
 
-		move.l	#Map_BBall,ost_mappings(a0)		; SBZ specific code
-		move.w	#$8BC0/32,ost_tile(a0)
-		move.b	#$18,ost_actwidth(a0)
-		move.b	#$18,ost_height(a0)
-		move.b	#id_col_16x16+id_col_hurt,ost_col_type(a0)
-		move.b	#id_Swing_Action,ost_routine(a0)	; goto Swing_Action next
+		lea	SwSBZ_Settings(pc),a2
+		bsr.s	Swing_Setupbra
 
 @length:
 		move.b	ost_id(a0),d4

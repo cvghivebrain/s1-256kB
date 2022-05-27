@@ -18,16 +18,24 @@ ESth_Index:	index *,,2
 		ptr ESth_GotoCredits
 
 ost_esth_wait_time:	equ $30					; time until exit (2 bytes)
+
+EStH_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_x_pos
+		dc.l $FFE000D8
+		dc.b -3,ost_mappings
+		dc.l Map_ESTH
+		dc.b -2,ost_tile
+		dc.w tile_Nem_EndStH
+		dc.b ost_render,render_abs
+		dc.b -2,ost_esth_wait_time
+		dc.w 300
+		dc.b -1
+		even
 ; ===========================================================================
 
 ESth_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto ESth_Move next
-		move.w	#-$20,ost_x_pos(a0)			; object starts outside the level boundary
-		move.w	#$D8,ost_y_screen(a0)
-		move.l	#Map_ESTH,ost_mappings(a0)
-		move.w	#tile_Nem_EndStH,ost_tile(a0)
-		move.b	#render_abs,ost_render(a0)
-		move.b	#0,ost_priority(a0)
+		lea	EStH_Settings(pc),a2
+		jsr	SetupObject
 
 ESth_Move:	; Routine 2
 		cmpi.w	#$C0,ost_x_pos(a0)			; has object reached $C0?
@@ -37,7 +45,6 @@ ESth_Move:	; Routine 2
 
 @at_target:
 		addq.b	#2,ost_routine(a0)			; goto ESth_GotoCredits next
-		move.w	#300,ost_esth_wait_time(a0)	; set duration for delay (5 seconds)
 
 ESth_GotoCredits:
 		; Routine 4

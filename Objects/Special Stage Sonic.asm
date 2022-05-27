@@ -21,17 +21,23 @@ ost_ss_updown_time:	equ $36					; time until UP/DOWN can be triggered again
 ost_ss_r_time:		equ $37					; time until R can be triggered again
 ost_ss_restart_time:	equ $38					; time until game mode changes after exiting SS (2 bytes; nonfunctional)
 ost_ss_ghost:		equ $3A					; status of ghost blocks - 0 = ghost; 1 = passed; 2 = solid
+
+SSS_Settings:	dc.b ost_routine,2
+		dc.b ost_height,14
+		dc.b ost_width,7
+		dc.b -3,ost_mappings
+		dc.l Map_Sonic
+		dc.b -2,ost_tile
+		dc.w vram_sonic/sizeof_cell
+		dc.b ost_render,render_rel
+		dc.b ost_anim,id_Roll
+		dc.b -1
+		even
 ; ===========================================================================
 
 SSS_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)
-		move.b	#$E,ost_height(a0)
-		move.b	#7,ost_width(a0)
-		move.l	#Map_Sonic,ost_mappings(a0)
-		move.w	#vram_sonic/sizeof_cell,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#0,ost_priority(a0)
-		move.b	#id_Roll,ost_anim(a0)
+		lea	SSS_Settings(pc),a2
+		jsr	SetupObject
 		bset	#status_jump_bit,ost_status(a0)
 		bset	#status_air_bit,ost_status(a0)
 

@@ -31,14 +31,21 @@ ost_spike_y_start:	equ $32					; original Y position (2 bytes)
 ost_spike_move_dist:	equ $34					; pixel distance to move object * $100, either direction (2 bytes)
 ost_spike_move_flag:	equ $36					; 0 = original position; 1 = moved position (2 bytes)
 ost_spike_move_time:	equ $38					; time until object moves again (2 bytes)
+
+Spike_Settings:	dc.b ost_routine,2
+		dc.b -3,ost_mappings
+		dc.l Map_Spike
+		dc.b -2,ost_tile
+		dc.w vram_spikes/32
+		dc.b ost_priority,4
+		dc.b -1
+		even
 ; ===========================================================================
 
 Spike_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto Spike_Solid next
-		move.l	#Map_Spike,ost_mappings(a0)
-		move.w	#vram_spikes/32,ost_tile(a0)
+		lea	Spike_Settings(pc),a2
+		bsr.w	SetupObject
 		ori.b	#render_rel,ost_render(a0)
-		move.b	#4,ost_priority(a0)
 		move.b	ost_subtype(a0),d0
 		andi.b	#$F,ost_subtype(a0)			; read only low nybble of subtype
 		andi.w	#$F0,d0					; read high nybble
