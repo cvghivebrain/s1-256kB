@@ -22,15 +22,15 @@ ost_eeggman_wait_time:	equ $30					; time between juggle motions (2 bytes)
 
 EEgg_Settings:	dc.b ost_routine,2
 		dc.b ost_render,render_abs
-		dc.b -3,ost_x_pos
+		dc.b so_write_long,ost_x_pos
 		dc.l $12000F4
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_EEgg
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w tile_Nem_TryAgain
 		dc.b ost_priority,2
 		dc.b ost_anim,id_ani_eegg_end
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

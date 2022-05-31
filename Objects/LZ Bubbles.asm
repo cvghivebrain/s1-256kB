@@ -30,14 +30,14 @@ ost_bubble_random_time:	equ $38					; randomised time between mini bubble spawns
 ost_bubble_type_list:	equ $3C					; address of bubble type list (4 bytes)
 
 Bub_Settings:	dc.b ost_routine,2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Bub
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $327+tile_hi
 		dc.b ost_render,render_onscreen+render_rel
 		dc.b ost_actwidth,16
 		dc.b ost_priority,1
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

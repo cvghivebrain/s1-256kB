@@ -20,13 +20,13 @@ Gar_Index:	index *,,2
 		ptr Gar_AniFire
 
 Gar_Settings:	dc.b ost_routine,2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Gar
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $2CE+tile_pal3
 		dc.b ost_priority,3
 		dc.b ost_actwidth,16
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 
@@ -60,16 +60,16 @@ Gar_MakeFire:	; Routine 2
 ; ===========================================================================
 
 GarF_Settings:	dc.b ost_routine,id_Gar_AniFire
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_GarFire
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $2CE
 		dc.b ost_priority,4
 		dc.b ost_actwidth,8
 		dc.b ost_col_type,id_col_4x4+id_col_hurt
-		dc.b -2,ost_x_vel
+		dc.b so_write_word,ost_x_vel
 		dc.w $200
-		dc.b -1
+		dc.b so_end
 		even
 
 Gar_FireBall:	; Routine 4

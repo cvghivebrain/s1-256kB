@@ -20,6 +20,21 @@ ost_echaos_x_start:	equ $38					; x-axis centre of emerald circle (2 bytes)
 ost_echaos_y_start:	equ $3A					; y-axis centre of emerald circle (2 bytes)
 ost_echaos_radius:	equ $3C					; radius (2 bytes)
 ost_echaos_angle:	equ $3E					; angle for rotation (2 bytes)
+
+ECha_Settings:	dc.b ost_id,id_EndChaos
+		dc.b ost_routine,2
+		dc.b so_write_long,ost_mappings
+		dc.l Map_ECha
+		dc.b so_write_word,ost_tile
+		dc.w tile_Nem_EndEm
+		dc.b ost_render,render_rel
+		dc.b ost_priority,1
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_inherit_word,ost_y_pos
+		dc.b so_copy_word,ost_x_pos,ost_echaos_x_start
+		dc.b so_copy_word,ost_y_pos,ost_echaos_y_start
+		dc.b so_end
+		even
 ; ===========================================================================
 
 ECha_Main:	; Routine 0
@@ -35,24 +50,18 @@ ECha_CreateEms:
 		movea.l	a0,a1
 		moveq	#0,d3
 		moveq	#id_frame_echaos_blue,d2
-		moveq	#6-1,d1
+		moveq	#6-1,d4
 
 	ECha_LoadLoop:
-		move.b	#id_EndChaos,(a1)			; load chaos emerald object
-		addq.b	#2,ost_routine(a1)			; goto ECha_Move next
-		move.l	#Map_ECha,ost_mappings(a1)
-		move.w	#tile_Nem_EndEm,ost_tile(a1)
-		move.b	#render_rel,ost_render(a1)
-		move.b	#1,ost_priority(a1)
-		move.w	ost_x_pos(a0),ost_echaos_x_start(a1)
-		move.w	ost_y_pos(a0),ost_echaos_y_start(a1)
+		lea	ECha_Settings(pc),a2
+		jsr	SetupChild
 		move.b	d2,ost_anim(a1)
 		move.b	d2,ost_frame(a1)
 		addq.b	#1,d2
 		move.b	d3,ost_angle(a1)
 		addi.b	#$100/6,d3				; angle between each emerald
 		lea	sizeof_ost(a1),a1
-		dbf	d1,ECha_LoadLoop			; repeat 5 more times
+		dbf	d4,ECha_LoadLoop			; repeat 5 more times
 
 ECha_Move:	; Routine 2
 		move.w	ost_echaos_angle(a0),d0

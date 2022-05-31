@@ -19,13 +19,13 @@ ost_surf_x_start:	equ $30					; original x-axis position (2 bytes)
 ost_surf_freeze:	equ $32					; flag to freeze animation
 
 Surf_Settings:	dc.b ost_routine,2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Surf
 		dc.b ost_actwidth,128
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $2DF+tile_pal3+tile_hi
 		dc.b ost_render,render_rel
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

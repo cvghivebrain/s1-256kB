@@ -16,12 +16,12 @@ Light_Index:	index *,,2
 		ptr Light_Animate
 
 Light_Settings:	dc.b ost_routine,2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Light
 		dc.b ost_render,render_rel
 		dc.b ost_actwidth,16
 		dc.b ost_priority,6
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

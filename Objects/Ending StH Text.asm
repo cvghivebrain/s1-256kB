@@ -20,16 +20,16 @@ ESth_Index:	index *,,2
 ost_esth_wait_time:	equ $30					; time until exit (2 bytes)
 
 EStH_Settings:	dc.b ost_routine,2
-		dc.b -3,ost_x_pos
+		dc.b so_write_long,ost_x_pos
 		dc.l $FFE000D8
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_ESTH
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w tile_Nem_EndStH
 		dc.b ost_render,render_abs
-		dc.b -2,ost_esth_wait_time
+		dc.b so_write_word,ost_esth_wait_time
 		dc.w 300
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

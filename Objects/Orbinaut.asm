@@ -26,14 +26,14 @@ ost_orb_child_count:	equ $37					; number of child objects
 ost_orb_child_list:	equ $38					; OST indices of child objects (4 bytes - 1 byte per ball)
 ost_orb_parent:		equ $3C					; address of OST of parent object (4 bytes)
 
-Orb_Settings:	dc.b -3,ost_mappings
+Orb_Settings:	dc.b so_write_long,ost_mappings
 		dc.l Map_Orb
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w (vram_orbinaut/32)+tile_pal2
 		dc.b ost_priority,4
 		dc.b ost_col_type,id_col_8x8
 		dc.b ost_actwidth,12
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

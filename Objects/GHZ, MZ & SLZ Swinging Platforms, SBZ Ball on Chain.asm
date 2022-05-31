@@ -56,32 +56,32 @@ ost_swing_x_start:	equ $3A					; original x-axis position (2 bytes)
 ost_swing_radius:	equ $3C					; distance of chainlink from anchor
 
 Swing_Settings:	dc.b ost_routine,2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Swing_GHZ
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $6B0+tile_pal3
 		dc.b ost_render,render_rel
 		dc.b ost_priority,3
 		dc.b ost_actwidth,32
 		dc.b ost_height,8
-		dc.b -1
+		dc.b so_end
 		even
-SwSLZ_Settings:	dc.b -3,ost_mappings
+SwSLZ_Settings:	dc.b so_write_long,ost_mappings
 		dc.l Map_Swing_SLZ
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $3D9+tile_pal3
 		dc.b ost_height,16
 		dc.b ost_col_type,id_col_32x8+id_col_hurt
-		dc.b -1
+		dc.b so_end
 		even
-SwSBZ_Settings:	dc.b -3,ost_mappings
+SwSBZ_Settings:	dc.b so_write_long,ost_mappings
 		dc.l Map_BBall
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $8BC0/32
 		dc.b ost_height,24
 		dc.b ost_col_type,id_col_16x16+id_col_hurt
 		dc.b ost_routine,id_Swing_Action
-		dc.b -1
+		dc.b so_end
 		even
 		
 Swing_Setupbra:	bra.w	SetupObject

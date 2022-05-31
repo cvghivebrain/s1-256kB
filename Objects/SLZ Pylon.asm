@@ -16,12 +16,12 @@ Pyl_Index:	index *,,2
 		ptr Pyl_Display
 
 Pyl_Settings:	dc.b ost_routine,2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Pylon
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $3C9+tile_hi
 		dc.b ost_actwidth,16
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

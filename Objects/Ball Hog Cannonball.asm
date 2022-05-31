@@ -23,11 +23,11 @@ Cbal_Settings:	dc.b ost_height,7
 		dc.b ost_col_type,id_col_6x6+id_col_hurt
 		dc.b ost_actwidth,8
 		dc.b ost_routine,2
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $2EB+tile_pal2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Hog
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

@@ -27,15 +27,18 @@ ost_plat_y_nudge:	equ $38					; amount of dip when Sonic is on the platform
 ost_plat_wait_time:	equ $3A					; time delay for platform moving when stood on (2 bytes)
 
 Plat_Settings:	dc.b ost_routine,2
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w 0+tile_pal3
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Plat_GHZ
 		dc.b ost_actwidth,32
 		dc.b ost_render,render_rel
 		dc.b ost_priority,4
 		dc.b ost_angle+1,$80
-		dc.b -1
+		dc.b so_copy_word,ost_y_pos,ost_plat_y_pos
+		dc.b so_copy_word,ost_y_pos,ost_plat_y_start
+		dc.b so_copy_word,ost_x_pos,ost_plat_x_start
+		dc.b so_end
 		even
 ; ===========================================================================
 
@@ -55,9 +58,6 @@ Plat_Main:	; Routine 0
 		move.b	#id_Plat_Type_Falls,ost_subtype(a0)	; force subtype 3
 
 	@notSLZ:
-		move.w	ost_y_pos(a0),ost_plat_y_pos(a0)
-		move.w	ost_y_pos(a0),ost_plat_y_start(a0)
-		move.w	ost_x_pos(a0),ost_plat_x_start(a0)
 		moveq	#0,d1
 		move.b	ost_subtype(a0),d0
 		cmpi.b	#id_Plat_Type_UpDown_Large,d0		; is object type $A (large platform)?

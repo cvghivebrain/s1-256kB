@@ -19,13 +19,13 @@ GRing_Index:	index *,,2
 		ptr GRing_Collect
 		ptr GRing_Delete
 
-GRing_Settings:	dc.b -3,ost_mappings
+GRing_Settings:	dc.b so_write_long,ost_mappings
 		dc.l Map_GRing
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w (vram_giantring/sizeof_cell)+tile_pal2
 		dc.b ost_actwidth,$40
 		dc.b ost_priority,2
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

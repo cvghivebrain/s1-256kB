@@ -23,11 +23,11 @@ Hog_Settings:	dc.b ost_height,$13
 		dc.b ost_priority,4
 		dc.b ost_col_type,id_col_12x18
 		dc.b ost_actwidth,12
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $2EB+tile_pal2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Hog
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 
@@ -67,10 +67,8 @@ Hog_Action:	; Routine 2
 		move.b	#1,ost_hog_flag(a0)
 		bsr.w	FindFreeObj
 		bne.s	@fail
-		move.b	#id_Cannonball,ost_id(a1)		; load cannonball object ($20)
-		move.w	ost_x_pos(a0),ost_x_pos(a1)
-		move.w	ost_y_pos(a0),ost_y_pos(a1)
-		move.w	#-$100,ost_x_vel(a1)			; cannonball bounces to the left
+		lea	Hog_Settings2(pc),a2
+		bsr.w	SetupChild
 		moveq	#-4,d0
 		btst	#status_xflip_bit,ost_status(a0)	; is Ball Hog facing right?
 		beq.s	@noflip					; if not, branch
@@ -85,6 +83,13 @@ Hog_Action:	; Routine 2
 	@fail:
 		bra.s	@remember
 
+Hog_Settings2:	dc.b ost_id,id_Cannonball
+		dc.b so_write_word,ost_x_vel
+		dc.w -$100
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_inherit_word,ost_y_pos
+		dc.b so_end
+		even
 ; ---------------------------------------------------------------------------
 ; Animation script
 ; ---------------------------------------------------------------------------

@@ -34,14 +34,14 @@ sizeof_grass_data:	equ LGrass_Data_1-LGrass_Data
 
 LGrass_Settings:
 		dc.b ost_routine,2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_LGrass
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w tile_pal3+tile_hi
 		dc.b ost_render,render_rel+render_useheight
 		dc.b ost_priority,5
 		dc.b ost_height,$40
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

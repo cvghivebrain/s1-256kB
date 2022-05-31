@@ -29,13 +29,13 @@ ost_esonic_wait_time:	equ $30					; time to wait between events (2 bytes)
 ESon_Settings:	dc.b ost_routine2,2
 		dc.b ost_render,render_rel
 		dc.b ost_priority,2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_ESon
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w tile_Nem_EndSonic
-		dc.b -2,ost_esonic_wait_time
+		dc.b so_write_word,ost_esonic_wait_time
 		dc.w 80
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

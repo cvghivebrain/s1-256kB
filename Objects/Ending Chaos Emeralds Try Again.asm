@@ -20,27 +20,34 @@ ost_ectry_x_start:	equ $38					; x-axis centre of emerald circle (2 bytes)
 ost_ectry_y_start:	equ $3A					; y-axis centre of emerald circle (2 bytes)
 ost_ectry_radius:	equ $3C					; radius
 ost_ectry_speed:	equ $3E					; speed at which emeralds rotate around central point (2 bytes)
+
+TCha_Settings:	dc.b ost_id,id_TryChaos
+		dc.b ost_routine,2
+		dc.b so_write_long,ost_mappings
+		dc.l Map_ECha
+		dc.b so_write_word,ost_tile
+		dc.w tile_Nem_EndEm_TryAgain
+		dc.b ost_priority,1
+		dc.b so_write_long,ost_x_pos
+		dc.l $10400EC
+		dc.b so_write_word,ost_ectry_x_start
+		dc.w $120
+		dc.b ost_ectry_radius,$1C
+		dc.b so_copy_word,ost_y_screen,ost_ectry_y_start
+		dc.b so_end
+		even
 ; ===========================================================================
 
 TCha_Main:	; Routine 0
 		movea.l	a0,a1
 		moveq	#0,d2
 		moveq	#0,d3
-		moveq	#6-1,d1
-		sub.b	(v_emeralds).w,d1
+		moveq	#6-1,d4
+		sub.b	(v_emeralds).w,d4
 
 @makeemerald:
-		move.b	#id_TryChaos,(a1)			; load emerald object
-		addq.b	#2,ost_routine(a1)			; goto TCha_Move next
-		move.l	#Map_ECha,ost_mappings(a1)
-		move.w	#tile_Nem_EndEm_TryAgain,ost_tile(a1)
-		move.b	#render_abs,ost_render(a1)
-		move.b	#1,ost_priority(a1)
-		move.w	#$104,ost_x_pos(a1)
-		move.w	#$120,ost_ectry_x_start(a1)
-		move.w	#$EC,ost_y_screen(a1)
-		move.w	ost_y_screen(a1),ost_ectry_y_start(a1)
-		move.b	#$1C,ost_ectry_radius(a1)
+		lea	TCha_Settings(pc),a2
+		jsr	SetupChild
 		lea	(v_emerald_list).w,a3
 
 	@chkemerald:
@@ -67,7 +74,7 @@ TCha_Main:	; Routine 0
 		move.b	d3,ost_anim_delay(a1)
 		addi.w	#10,d3
 		lea	sizeof_ost(a1),a1
-		dbf	d1,@makeemerald
+		dbf	d4,@makeemerald
 
 TCha_Move:	; Routine 2
 		tst.w	ost_ectry_speed(a0)			; should be 0, 2 or -2 (changed by Eggman object)

@@ -20,17 +20,17 @@ ost_pole_time:		equ $30					; time between grabbing the pole & breaking (2 bytes
 ost_pole_grabbed:	equ $32					; flag set when Sonic grabs the pole
 
 Pole_Settings:	dc.b ost_routine,2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Pole
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $3BD+tile_pal3
 		dc.b ost_render,render_rel
 		dc.b ost_actwidth,8
 		dc.b ost_priority,4
 		dc.b ost_col_type,id_col_4x32+id_col_custom
-		dc.b -2,ost_pole_time
+		dc.b so_write_word,ost_pole_time
 		dc.w 240
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

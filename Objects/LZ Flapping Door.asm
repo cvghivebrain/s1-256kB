@@ -19,14 +19,14 @@ ost_flap_wait:	equ $30						; time until change (2 bytes)
 ost_flap_time:	equ $32						; time between opening/closing (2 bytes)
 
 Flap_Settings:	dc.b ost_routine,2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Flap
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $307+tile_pal3
 		dc.b ost_actwidth,$28
-		dc.b -2,ost_flap_time
+		dc.b so_write_word,ost_flap_time
 		dc.w 120
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

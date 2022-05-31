@@ -38,13 +38,13 @@ ost_seesaw_state:	equ $3A					; seesaw: 0 = left raised; 2 = right raised; 1 = f
 ost_seesaw_parent:	equ $3C					; address of OST of parent object (4 bytes)
 
 See_Settings:	dc.b ost_routine,2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Seesaw
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $35F
 		dc.b ost_priority,4
 		dc.b ost_actwidth,$30
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

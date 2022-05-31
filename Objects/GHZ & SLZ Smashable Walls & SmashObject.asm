@@ -21,14 +21,14 @@ Smash_Index:	index *,,2
 ost_smash_x_vel:	equ $30					; Sonic's horizontal speed (2 bytes)
 
 Smash_Settings:	dc.b ost_routine,2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Smash
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $348+tile_pal3
 		dc.b ost_render,render_rel
 		dc.b ost_actwidth,16
 		dc.b ost_priority,4
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

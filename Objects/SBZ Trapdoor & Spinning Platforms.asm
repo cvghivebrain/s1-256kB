@@ -22,21 +22,21 @@ ost_spin_flag:		equ $34					; 1 = switch between animations, spinning platforms 
 ost_spin_sync:		equ $36					; bitmask used to synchronise timing: subtype $8x = $3F; subtype $9x = $7F (2 bytes)
 
 Spin_Settings:	dc.b ost_routine,2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Trap
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $3E1+tile_pal3
 		dc.b ost_actwidth,128
-		dc.b -1
+		dc.b so_end
 		even
 SpinS_Settings:	dc.b ost_routine,4
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Spin
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $42E
 		dc.b ost_actwidth,16
 		dc.b ost_anim,id_ani_spin_1
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

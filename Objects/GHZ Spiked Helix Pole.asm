@@ -22,15 +22,15 @@ ost_helix_frame:	equ $3E					; start frame (different for each spike)
 ost_helix_child_list:	equ $29					; list of child OST indices (up to 15 bytes)
 
 Hel_Settings:	dc.b ost_routine,2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Hel
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $38E+tile_pal3
 		dc.b ost_status,status_xflip+status_yflip+status_jump
 		dc.b ost_render,render_rel
 		dc.b ost_priority,3
 		dc.b ost_actwidth,8
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

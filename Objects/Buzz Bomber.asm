@@ -26,11 +26,11 @@ Buzz_Settings:	dc.b ost_routine,2
 		dc.b ost_priority,3
 		dc.b ost_col_type,id_col_24x12
 		dc.b ost_actwidth,$18
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $488
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Buzz
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 
@@ -80,13 +80,9 @@ Buzz_Move:
 	@fire:
 		bsr.w	FindFreeObj
 		bne.s	@fail
-		move.b	#id_Missile,ost_id(a1)			; load missile object
-		move.w	ost_tile(a0),ost_tile(a1)
-		move.w	ost_x_pos(a0),ost_x_pos(a1)
-		move.w	ost_y_pos(a0),ost_y_pos(a1)
+		lea	Buzz_Settings2(pc),a2
+		bsr.w	SetupChild
 		addi.w	#$1C,ost_y_pos(a1)
-		move.w	#$200,ost_y_vel(a1)			; move missile downwards
-		move.w	#$200,ost_x_vel(a1)			; move missile to the right
 		move.w	#$18,d0
 		btst	#status_xflip_bit,ost_status(a0)	; is Buzz Bomber facing left?
 		bne.s	@noflip					; if not, branch
@@ -95,15 +91,25 @@ Buzz_Move:
 
 	@noflip:
 		add.w	d0,ost_x_pos(a1)
-		move.b	ost_status(a0),ost_status(a1)
-		move.w	#$E,ost_missile_wait_time(a1)
 		move.l	a0,ost_missile_parent(a1)
 		move.b	#1,ost_buzz_mode(a0)			; set to "already fired" to prevent refiring
 		move.w	#59,ost_buzz_wait_time(a0)
 		move.b	#id_ani_buzz_fire,ost_anim(a0)		; use "firing" animation
 
 	@fail:
-		rts	
+		rts
+
+Buzz_Settings2:	dc.b ost_id,id_Missile
+		dc.b so_write_word,ost_y_vel
+		dc.w $200
+		dc.b ost_missile_wait_time+1,14
+		dc.b so_copy_word,ost_y_vel,ost_x_vel
+		dc.b so_inherit_word,ost_tile
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_inherit_word,ost_y_pos
+		dc.b so_inherit_byte,ost_status
+		dc.b so_end
+		even
 ; ===========================================================================
 
 Buzz_ChkDist:

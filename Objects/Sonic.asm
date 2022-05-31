@@ -22,14 +22,14 @@ Sonic_Index:	index *,,2
 Sonic_Settings:	dc.b ost_routine,2
 		dc.b ost_height,sonic_height
 		dc.b ost_width,sonic_width
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Sonic
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w vram_sonic/sizeof_cell
 		dc.b ost_priority,2
 		dc.b ost_actwidth,$18
 		dc.b ost_render,render_rel
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

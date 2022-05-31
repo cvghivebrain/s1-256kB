@@ -25,15 +25,15 @@ ost_crab_mode:		equ $32					; current action - 0/1 = not firing; 2/3 = firing
 
 Crab_Settings:	dc.b ost_height,16
 		dc.b ost_width,8
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $45E
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Crab
 		dc.b ost_render,render_rel
 		dc.b ost_priority,3
 		dc.b ost_col_type,id_col_16x16
 		dc.b ost_actwidth,$15
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 
@@ -105,16 +105,22 @@ Crab_WaitFire:
 	@failleft:
 		bsr.w	FindFreeObj
 		bne.s	@failright
-		move.b	#id_Crabmeat,ost_id(a1)			; load right fireball
-		move.b	#id_Crab_BallMain,ost_routine(a1)
-		move.w	ost_x_pos(a0),ost_x_pos(a1)
+		lea	Crab_Settings2(pc),a2
+		bsr.w	SetupChild
 		addi.w	#$10,ost_x_pos(a1)
-		move.w	ost_y_pos(a0),ost_y_pos(a1)
-		move.w	#$100,ost_x_vel(a1)
-		move.w	ost_tile(a0),ost_tile(a1)
 
 	@failright:
-		rts	
+		rts
+
+Crab_Settings2:	dc.b ost_id,id_Crabmeat
+		dc.b ost_routine,id_Crab_BallMain
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_inherit_word,ost_y_pos
+		dc.b so_write_word,ost_x_vel
+		dc.w $100
+		dc.b so_inherit_word,ost_tile
+		dc.b so_end
+		even
 ; ===========================================================================
 
 Crab_Walk:
@@ -162,14 +168,8 @@ Crab_Delete:	; Routine 4
 ; ---------------------------------------------------------------------------
 
 Crab_BallMain:	; Routine 6
-		addq.b	#2,ost_routine(a0)			; goto Crab_BallMove next
-		move.l	#Map_Crab,ost_mappings(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#3,ost_priority(a0)
-		move.b	#id_col_6x6+id_col_hurt,ost_col_type(a0)
-		move.b	#8,ost_actwidth(a0)
-		move.w	#-$400,ost_y_vel(a0)
-		move.b	#id_ani_crab_ball,ost_anim(a0)
+		lea	Crab_Settings3(pc),a2
+		bsr.w	SetupObject
 
 Crab_BallMove:	; Routine 8
 		lea	(Ani_Crab).l,a1
@@ -182,6 +182,18 @@ Crab_BallMove:	; Routine 8
 		bcs.s	Crab_Delete					; if yes, branch
 		rts	
 
+Crab_Settings3:	dc.b ost_routine,8
+		dc.b ost_render,render_rel
+		dc.b ost_priority,3
+		dc.b ost_col_type,id_col_6x6+id_col_hurt
+		dc.b ost_actwidth,8
+		dc.b ost_anim,id_ani_crab_ball
+		dc.b so_write_long,ost_mappings
+		dc.l Map_Crab
+		dc.b so_write_word,ost_y_vel
+		dc.w -$400
+		dc.b so_end
+		even
 ; ---------------------------------------------------------------------------
 ; Animation script
 ; ---------------------------------------------------------------------------

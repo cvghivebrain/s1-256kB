@@ -17,13 +17,13 @@ Edge_Index:	index *,,2
 		ptr Edge_Display
 
 Edge_Settings:	dc.b ost_routine,2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Edge
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $332+tile_pal3
 		dc.b ost_actwidth,8
 		dc.b ost_priority,6
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

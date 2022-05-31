@@ -20,14 +20,14 @@ Bonus_Index:	index *,,2
 ost_bonus_wait_time:	equ $30					; length of time to display bonus sprites (2 bytes)
 
 Bonus_Settings:	dc.b ost_routine,2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Bonus
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w tile_Nem_Bonus+tile_hi
 		dc.b ost_actwidth,16
-		dc.b -2,ost_bonus_wait_time
+		dc.b so_write_word,ost_bonus_wait_time
 		dc.w 119
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

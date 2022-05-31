@@ -23,15 +23,15 @@ ost_ledge_wait_time:	equ $38					; time between touching the ledge and it collap
 ost_ledge_flag:		equ $3A					; flag set when ledge is stood on
 
 Ledge_Settings:	dc.b ost_routine,2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Ledge
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w 0+tile_pal3
 		dc.b ost_priority,4
 		dc.b ost_ledge_wait_time,7
 		dc.b ost_actwidth,$64
 		dc.b ost_height,$38
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

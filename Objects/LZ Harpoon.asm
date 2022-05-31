@@ -19,15 +19,15 @@ Harp_Index:	index *,,2
 ost_harp_time:	equ $30						; time between stabbing/retracting (2 bytes)
 
 Harp_Settings:	dc.b ost_routine,2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Harp
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $3AB
 		dc.b ost_priority,4
 		dc.b ost_actwidth,20
-		dc.b -2,ost_harp_time
+		dc.b so_write_word,ost_harp_time
 		dc.w 60
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

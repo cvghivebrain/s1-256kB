@@ -23,20 +23,20 @@ Chop_Settings:	dc.b ost_routine,2
 		dc.b ost_priority,4
 		dc.b ost_col_type,id_col_12x16
 		dc.b ost_actwidth,16
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $3CC
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Chop
-		dc.b -2,ost_y_vel
+		dc.b so_write_word,ost_y_vel
 		dc.w -$700
-		dc.b -1
+		dc.b so_copy_word,ost_y_pos,ost_chopper_y_start
+		dc.b so_end
 		even
 ; ===========================================================================
 
 Chop_Main:	; Routine 0
 		lea	Chop_Settings(pc),a2
 		bsr.w	SetupObject
-		move.w	ost_y_pos(a0),ost_chopper_y_start(a0)	; save original position
 
 Chop_ChgSpeed:	; Routine 2
 		lea	(Ani_Chop).l,a1

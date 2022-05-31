@@ -119,13 +119,16 @@ Anml_Main:	; Routine 0
 		bra.w	DisplaySprite
 
 Anml_Main_sub:
-		move.b	#$C,ost_height(a0)
-		move.b	#render_rel,ost_render(a0)
-		bset	#render_xflip_bit,ost_render(a0)
-		move.b	#6,ost_priority(a0)
-		move.b	#8,ost_actwidth(a0)
-		move.b	#7,ost_anim_time(a0)
-		rts
+		lea	Anml_Settings(pc),a2
+		bra.w	SetupObject
+
+Anml_Settings:	dc.b ost_height,12
+		dc.b ost_render,render_rel+render_xflip
+		dc.b ost_priority,6
+		dc.b ost_actwidth,8
+		dc.b ost_anim_time,7
+		dc.b so_end
+		even
 ; ===========================================================================
 
 Anml_FromEnemy:
@@ -172,7 +175,7 @@ Anml_FromEnemy:
 @after_boss:
 		move.b	#id_Anml_FromPrison,ost_routine(a0)	; goto Anml_FromPrison next
 		clr.w	ost_x_vel(a0)
-		bra.w	DisplaySprite
+		bra.s	@display
 ; ===========================================================================
 
 Anml_ChkFloor:	; Routine 2

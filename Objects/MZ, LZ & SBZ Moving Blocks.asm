@@ -34,12 +34,12 @@ ost_mblock_move_flag:	equ $36					; 1 = move platform back to its original posit
 
 MBlock_Settings:
 		dc.b ost_routine,2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_MBlock
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $297+tile_pal3
 		dc.b ost_render,render_rel
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

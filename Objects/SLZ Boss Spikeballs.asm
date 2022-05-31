@@ -35,15 +35,15 @@ ost_bspike_state:	equ $3A					; seesaw state: 0 = left raised; 2 = right raised;
 ost_bspike_seesaw:	equ $3C					; address of OST of seesaw (4 bytes)
 
 BSpike_Settings:
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_SSawBall
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $38B
 		dc.b ost_frame,id_frame_seesaw_silver
 		dc.b ost_priority,4
 		dc.b ost_col_type,id_col_8x8+id_col_hurt
 		dc.b ost_actwidth,12
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

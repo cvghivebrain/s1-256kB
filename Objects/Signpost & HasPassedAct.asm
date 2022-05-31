@@ -30,14 +30,14 @@ ost_sign_sparkle_time:	equ $32					; time between sparkles (2 bytes)
 ost_sign_sparkle_id:	equ $34					; counter to keep track of sparkles
 
 Sign_Settings:	dc.b ost_routine,2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Sign
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w tile_Nem_SignPost
 		dc.b ost_render,render_rel
 		dc.b ost_actwidth,$18
 		dc.b ost_priority,4
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

@@ -17,14 +17,14 @@ Over_Index:	index *,,2
 		ptr Over_Wait
 
 Over_Settings:	dc.b ost_routine,2
-		dc.b -3,ost_x_pos
+		dc.b so_write_long,ost_x_pos
 		dc.l $5000F0
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Over
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w tile_Nem_GameOver+tile_hi
 		dc.b ost_render,render_abs
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

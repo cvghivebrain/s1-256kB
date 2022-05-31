@@ -20,21 +20,21 @@ SEgg_Index:	index *,,2
 ost_eggman_parent:	equ $34					; address of OST of parent object (4 bytes)
 ost_eggman_wait_time:	equ $3C					; time delay between events (2 bytes)
 
-SEgg_Settings:	dc.b -2,ost_x_pos
+SEgg_Settings:	dc.b so_write_word,ost_x_pos
 		dc.w $2160
-		dc.b -2,ost_y_pos
+		dc.b so_write_word,ost_y_pos
 		dc.w $5A4
 		dc.b ost_col_type,id_col_24x24
 		dc.b ost_col_property,16
 		dc.b ost_routine,id_SEgg_Eggman
 		dc.b ost_priority,3
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_SEgg
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w tile_Nem_Sbz2Eggman
 		dc.b ost_render,render_rel+render_onscreen
 		dc.b ost_actwidth,32
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

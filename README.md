@@ -85,6 +85,7 @@ Compressed Special Stage graphics. | 449592 | -638
 Added ClearRAM subroutine instead of manually clearing sections of RAM. | 449386 | -206
 Added SetupObject subroutine to initialise OST values with a script. | 449170 | -216
 Used SetupObject for more objects. | 448328 | -842
+Extended SetupObject functionality. | 448174 | -154
 Target | 262144 | 
 
 ## Credits

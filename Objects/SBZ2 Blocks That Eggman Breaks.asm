@@ -28,14 +28,14 @@ FFloor_Index:	index *,,2
 ost_ffloor_children:	equ $30					; addresses of OSTs of child objects (2 bytes * 8)
 
 FFloor_Settings:
-		dc.b -2,ost_x_pos
+		dc.b so_write_word,ost_x_pos
 		dc.w $2080
-		dc.b -2,ost_y_pos
+		dc.b so_write_word,ost_y_pos
 		dc.w $5D0
 		dc.b ost_actwidth,128
 		dc.b ost_height,16
 		dc.b ost_render,render_rel+render_onscreen
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

@@ -19,16 +19,16 @@ ost_jaws_turn_time:	equ $30					; time until jaws turns (2 bytes)
 ost_jaws_turn_master:	equ $32					; time between turns, copied to ost_jaws_turn_time every turn (2 bytes)
 
 Jaws_Settings:	dc.b ost_routine,2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Jaws
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $445+tile_pal2
 		dc.b ost_col_type,id_col_16x12
 		dc.b ost_priority,4
 		dc.b ost_actwidth,16
-		dc.b -2,ost_x_vel
+		dc.b so_write_word,ost_x_vel
 		dc.w -$40
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

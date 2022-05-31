@@ -25,14 +25,14 @@ ost_bridge_bend:	equ $3E					; number of pixels a log has been deflected
 ost_bridge_current_log:	equ $3F					; log Sonic is currently standing on (left to right, starts at 0)
 
 Bri_Settings:	dc.b ost_routine,2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Bri
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $33E+tile_pal3
 		dc.b ost_render,render_rel
 		dc.b ost_priority,3
 		dc.b ost_actwidth,128
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

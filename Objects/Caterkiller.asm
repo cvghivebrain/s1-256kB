@@ -30,14 +30,27 @@ ost_cat_segment_pos:	equ $3C					; segment position - starts as 0/4/8/$A, increm
 
 Cat_Settings:	dc.b ost_height,7
 		dc.b ost_width,8
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w ($9040/32)+tile_pal2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Cat
 		dc.b ost_priority,4
 		dc.b ost_actwidth,8
 		dc.b ost_col_type,id_col_8x8
-		dc.b -1
+		dc.b so_render_rel,so_end
+		even
+
+Cat_Settings2:	dc.b ost_id,id_Caterkiller
+		dc.b so_inherit_long,ost_mappings
+		dc.b so_inherit_word,ost_tile
+		dc.b ost_priority,5
+		dc.b ost_actwidth,8
+		dc.b ost_col_type,id_col_8x8+id_col_custom
+		dc.b so_inherit_word,ost_y_pos
+		dc.b so_inherit_byte,ost_status
+		dc.b ost_frame,id_frame_cat_body1
+		dc.b so_copy_byte,ost_status,ost_render
+		dc.b so_end
 		even
 ; ===========================================================================
 
@@ -60,8 +73,7 @@ Cat_Main:	; Routine 0
 		move.w	#(vram_cater/32)+tile_pal2,ost_tile(a0)	; MZ specific code
 
 	@isscrapbrain:
-		andi.b	#render_xflip+render_yflip,ost_render(a0)
-		ori.b	#render_rel,ost_render(a0)
+		andi.b	#render_xflip+render_yflip+render_rel,ost_render(a0)
 		move.b	ost_render(a0),ost_status(a0)
 		move.w	ost_x_pos(a0),d2			; head x position
 		moveq	#12,d5					; distance between segments (12px)
@@ -71,35 +83,26 @@ Cat_Main:	; Routine 0
 
 	@noflip:
 		move.b	#id_Cat_BodySeg1,d6			; routine number
-		moveq	#0,d3
 		moveq	#4,d4
-		movea.l	a0,a2					; parent OST address
-		moveq	#3-1,d1					; 3 body segments
+		movea.l	a0,a3					; parent OST address
+		moveq	#3-1,d3					; 3 body segments
 
 Cat_Loop:
 		jsr	(FindNextFreeObj).l
 		bne.w	Cat_Despawn
-		move.b	#id_Caterkiller,ost_id(a1)		; load body segment object
+		lea	Cat_Settings2(pc),a2
+		bsr.w	SetupChild
 		move.b	d6,ost_routine(a1)			; goto Cat_BodySeg1 or Cat_BodySeg2 next
 		addq.b	#2,d6					; alternate between the two
-		move.l	ost_mappings(a0),ost_mappings(a1)
-		move.w	ost_tile(a0),ost_tile(a1)
-		move.b	#5,ost_priority(a1)
-		move.b	#8,ost_actwidth(a1)
-		move.b	#id_col_8x8+id_col_custom,ost_col_type(a1)
 		add.w	d5,d2
 		move.w	d2,ost_x_pos(a1)			; body segment x pos = previous segment x pos +12
-		move.w	ost_y_pos(a0),ost_y_pos(a1)
-		move.b	ost_status(a0),ost_status(a1)
-		move.b	ost_status(a0),ost_render(a1)
-		move.b	#id_frame_cat_body1,ost_frame(a1)
-		move.l	a2,ost_cat_parent(a1)
+		move.l	a3,ost_cat_parent(a1)
 		move.b	d4,ost_cat_segment_pos(a1)
 		addq.b	#4,d4
-		movea.l	a1,a2					; make adjacent segment the parent object instead of head
+		movea.l	a1,a3					; make adjacent segment the parent object instead of head
 
 	@fail:
-		dbf	d1,Cat_Loop				; repeat sequence 2 more times
+		dbf	d3,Cat_Loop				; repeat sequence 2 more times
 
 		move.b	#7,ost_cat_wait_time(a0)
 		clr.b	ost_cat_segment_pos(a0)
@@ -140,7 +143,7 @@ Cat_Despawn:
 
 	@delete:
 		move.b	#id_Cat_Delete,ost_routine(a0)		; goto Cat_Delete next
-		rts	
+		rts
 ; ===========================================================================
 
 Cat_Delete:	; Routine $A

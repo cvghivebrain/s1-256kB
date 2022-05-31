@@ -19,13 +19,13 @@ Flash_Index:	index *,,2
 ost_flash_parent:	equ $3C					; address of OST of parent object (4 bytes)
 
 Flash_Settings:	dc.b ost_routine,2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Flash
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w ((vram_giantring+sizeof_art_giantring)/sizeof_cell)+tile_pal2
 		dc.b ost_actwidth,$20
 		dc.b ost_frame,-1
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

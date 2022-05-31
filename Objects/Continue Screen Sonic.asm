@@ -24,13 +24,13 @@ CSon_Settings:	dc.b ost_routine,2
 		dc.b ost_render,render_rel
 		dc.b ost_priority,2
 		dc.b ost_anim,id_Float3
-		dc.b -3,ost_mappings
-		dc.l Map_Sonic
-		dc.b -2,ost_tile
-		dc.w vram_sonic/sizeof_cell
-		dc.b -2,ost_y_vel
+		dc.b so_write_word,ost_y_vel
 		dc.w $400
-		dc.b -1
+CSon_Settings2:	dc.b so_write_long,ost_mappings
+		dc.l Map_Sonic
+		dc.b so_write_word,ost_tile
+		dc.w vram_sonic/sizeof_cell
+		dc.b so_end
 		even
 ; ===========================================================================
 
@@ -63,8 +63,8 @@ CSon_Animate:	; Routine 4
 
 	@start_pressed:
 		addq.b	#2,ost_routine(a0)			; goto CSon_Run next
-		move.l	#Map_Sonic,ost_mappings(a0)
-		move.w	#$780,ost_tile(a0)
+		lea	CSon_Settings2(pc),a2
+		jsr	SetupObject
 		move.b	#id_Float4,ost_anim(a0)			; use "getting up" animation
 		clr.w	ost_inertia(a0)
 		subq.w	#8,ost_y_pos(a0)

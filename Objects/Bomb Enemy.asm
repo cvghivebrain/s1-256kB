@@ -25,11 +25,11 @@ ost_bomb_parent:	equ $3C					; address of OST of parent object (4 bytes)
 Bom_Settings:	dc.b ost_priority,3
 		dc.b ost_actwidth,12
 		dc.b ost_routine,2
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w vram_bomb/32
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Bomb
-		dc.b -1
+		dc.b so_render_rel,so_end
 		even
 ; ===========================================================================
 
@@ -40,7 +40,6 @@ Bom_Main:	; Routine 0
 		bne.s	@not_sbz
 		move.w	#$492,ost_tile(a0)
 	@not_sbz:
-		ori.b	#render_rel,ost_render(a0)
 		move.b	ost_subtype(a0),d0
 		beq.s	@type0					; branch if subtype = 0
 		move.b	d0,ost_routine(a0)			; copy subtype to routine (4 = Bom_Fuse; 6 = Bom_Shrapnel)
@@ -135,24 +134,29 @@ Bom_ChkDist:
 		move.b	#id_ani_bomb_active,ost_anim(a0)	; use activated animation
 		bsr.w	FindNextFreeObj
 		bne.s	@outofrange
-		move.b	#id_Bomb,ost_id(a1)			; load fuse object
-		move.w	ost_x_pos(a0),ost_x_pos(a1)
-		move.w	ost_y_pos(a0),ost_y_pos(a1)
-		move.w	ost_y_pos(a0),ost_bomb_y_start(a1)
-		move.b	ost_status(a0),ost_status(a1)
-		move.b	#id_Bom_Fuse,ost_subtype(a1)
-		move.b	#id_ani_bomb_fuse,ost_anim(a1)
-		move.w	#$10,ost_y_vel(a1)
+		lea	Bom_Settings2(pc),a2
+		bsr.w	SetupChild
 		btst	#status_yflip_bit,ost_status(a0)	; is bomb upside-down?
 		beq.s	@normal					; if not, branch
 		neg.w	ost_y_vel(a1)				; reverse direction for fuse
 
 	@normal:
-		move.w	#143,ost_bomb_fuse_time(a1)		; set fuse time
 		move.l	a0,ost_bomb_parent(a1)
 
 @outofrange:
-		rts	
+		rts
+
+Bom_Settings2:	dc.b ost_id,id_Bomb
+		dc.b ost_subtype,id_Bom_Fuse
+		dc.b ost_anim,id_ani_bomb_fuse
+		dc.b ost_y_vel+1,16
+		dc.b ost_bomb_fuse_time+1,143
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_inherit_word,ost_y_pos
+		dc.b so_copy_word,ost_y_pos,ost_bomb_y_start
+		dc.b so_inherit_byte,ost_status
+		dc.b so_end
+		even
 ; ===========================================================================
 
 Bom_Fuse:	; Routine 4
@@ -173,9 +177,9 @@ Bom_Fuse_ChkTime:
 		clr.w	ost_bomb_fuse_time(a0)
 		clr.b	ost_routine(a0)
 		move.w	ost_bomb_y_start(a0),ost_y_pos(a0)
-		moveq	#4-1,d1					; 4 shrapnel objects
+		moveq	#4-1,d3					; 4 shrapnel objects
 		movea.l	a0,a1					; replace fuse object with 1st shrapnel object
-		lea	(Bom_ShrSpeed).l,a2			; load shrapnel speed data
+		lea	(Bom_ShrSpeed).l,a3			; load shrapnel speed data
 		bra.s	@makeshrapnel
 ; ===========================================================================
 
@@ -184,18 +188,14 @@ Bom_Fuse_ChkTime:
 		bne.s	@fail
 
 @makeshrapnel:
-		move.b	#id_Bomb,ost_id(a1)			; load shrapnel	object
-		move.w	ost_x_pos(a0),ost_x_pos(a1)
-		move.w	ost_y_pos(a0),ost_y_pos(a1)
-		move.b	#id_Bom_Shrapnel,ost_subtype(a1)	; this is copied to ost_routine later
-		move.b	#id_ani_bomb_shrapnel,ost_anim(a1)
-		move.w	(a2)+,ost_x_vel(a1)
-		move.w	(a2)+,ost_y_vel(a1)
-		move.b	#id_col_4x4+id_col_hurt,ost_col_type(a1)
+		lea	Bom_Settings3(pc),a2
+		bsr.w	SetupChild
+		move.w	(a3)+,ost_x_vel(a1)
+		move.w	(a3)+,ost_y_vel(a1)
 		bset	#render_onscreen_bit,ost_render(a1)
 
 	@fail:
-		dbf	d1,@loop				; repeat 3 more	times
+		dbf	d3,@loop				; repeat 3 more	times
 
 		move.b	#id_Bom_Shrapnel,ost_routine(a0)
 
@@ -212,6 +212,15 @@ Bom_ShrSpeed:	dc.w -$200, -$300				; top left
 		dc.w -$100, -$200				; bottom left
 		dc.w $200, -$300				; top right
 		dc.w $100, -$200				; bottom right
+
+Bom_Settings3:	dc.b ost_id,id_Bomb
+		dc.b ost_subtype,id_Bom_Shrapnel
+		dc.b ost_anim,id_ani_bomb_shrapnel
+		dc.b ost_col_type,id_col_4x4+id_col_hurt
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_inherit_word,ost_y_pos
+		dc.b so_end
+		even
 
 ; ---------------------------------------------------------------------------
 ; Animation script

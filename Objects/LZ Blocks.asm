@@ -29,13 +29,13 @@ ost_lblock_sink:	equ $3E					; amount the block sinks after Sonic stands on it
 ost_lblock_coll_flag:	equ $3F					; 0 = none; 1 = side collision; -1 = top/bottom collision
 
 LBlk_Settings:	dc.b ost_routine,2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_LBlock
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $3C5+tile_pal3
 		dc.b ost_render,render_rel
 		dc.b ost_priority,3
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

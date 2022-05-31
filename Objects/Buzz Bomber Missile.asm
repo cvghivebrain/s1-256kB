@@ -26,9 +26,9 @@ Msl_Settings:	dc.b ost_routine,2
 		dc.b ost_render,render_rel
 		dc.b ost_priority,3
 		dc.b ost_actwidth,8
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Missile
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

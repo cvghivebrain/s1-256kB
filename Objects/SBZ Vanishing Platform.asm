@@ -23,13 +23,13 @@ ost_vanish_sync_sub:	equ $36					; value to subtract from framecount for synchro
 ost_vanish_sync_mask:	equ $38					; bitmask for synchronising (2 bytes)
 
 VanP_Settings:	dc.b ost_routine,6
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_VanP
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $412+tile_pal3
 		dc.b ost_actwidth,16
 		dc.b ost_priority,4
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

@@ -21,14 +21,14 @@ ost_smash_sonic_ani:	equ $32					; Sonic's current animation number
 ost_smash_count:	equ $34					; number of blocks hit + enemies previously hit in a single jump (2 bytes)
 
 Smab_Settings:	dc.b ost_routine,2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Smab
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $297+tile_pal3
 		dc.b ost_render,render_rel
 		dc.b ost_actwidth,16
 		dc.b ost_priority,4
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

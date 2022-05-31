@@ -33,12 +33,12 @@ ost_spike_move_flag:	equ $36					; 0 = original position; 1 = moved position (2 
 ost_spike_move_time:	equ $38					; time until object moves again (2 bytes)
 
 Spike_Settings:	dc.b ost_routine,2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Spike
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w vram_spikes/32
 		dc.b ost_priority,4
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

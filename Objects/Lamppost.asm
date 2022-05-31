@@ -28,14 +28,14 @@ ost_lamp_y_start:	equ $32					; original y-axis position (2 bytes)
 ost_lamp_twirl_time:	equ $36					; length of time to twirl the lamp (2 bytes)
 
 Lamp_Settings:	dc.b ost_routine,2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Lamp
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $F400/sizeof_cell
 		dc.b ost_render,render_rel
 		dc.b ost_actwidth,8
 		dc.b ost_priority,5
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

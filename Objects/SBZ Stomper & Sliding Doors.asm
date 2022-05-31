@@ -34,12 +34,12 @@ ost_stomp_distance:	equ $3C					; distance to move (2 bytes)
 ost_stomp_button_num:	equ $3E					; button number associated with door
 
 Sto_Settings:	dc.b ost_routine,2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Stomp
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $2A9+tile_pal2
 		dc.b ost_priority,4
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

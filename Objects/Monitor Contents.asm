@@ -18,16 +18,16 @@ Pow_Index:	index *,,2
 		ptr Pow_Delete
 
 Pow_Settings:	dc.b ost_routine,2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Monitor
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $D000/sizeof_cell
 		dc.b ost_render,render_rel+render_rawmap
 		dc.b ost_priority,3
 		dc.b ost_actwidth,8
-		dc.b -2,ost_y_vel
+		dc.b so_write_word,ost_y_vel
 		dc.w -$300
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 

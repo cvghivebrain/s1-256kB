@@ -27,19 +27,19 @@ ost_plasma_count_any:	equ $38					; number of plasma balls on-screen (2 bytes)
 
 Plasma_Settings:
 		dc.b ost_routine,2
-		dc.b -2,ost_x_pos
+		dc.b so_write_word,ost_x_pos
 		dc.w $2588
-		dc.b -2,ost_y_pos
+		dc.b so_write_word,ost_y_pos
 		dc.w $53C
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w tile_Nem_FzBoss
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_PLaunch
 		dc.b ost_priority,3
 		dc.b ost_width,8
 		dc.b ost_height,8
 		dc.b ost_render,render_rel+render_onscreen
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 
@@ -100,19 +100,8 @@ Plasma_MakeBalls:
 
 	@loop:
 		jsr	(FindNextFreeObj).l			; find free OST slot
-		move.b	#id_BossPlasma,(a1)			; load plasma ball object
-		move.w	ost_x_pos(a0),ost_x_pos(a1)		; start at same position as launcher object
-		move.w	#$53C,ost_y_pos(a1)
-		move.b	#id_Plasma_Balls,ost_routine(a1)	; goto Plasma_Balls next
-		move.w	#tile_Nem_FzBoss+tile_pal2,ost_tile(a1)
-		move.l	#Map_Plasma,ost_mappings(a1)
-		move.b	#$C,ost_height(a1)
-		move.b	#$C,ost_width(a1)
-		move.b	#0,ost_col_type(a1)
-		move.b	#3,ost_priority(a1)
-		move.w	#$3E,ost_subtype(a1)
-		move.b	#render_rel,ost_render(a1)
-		bset	#render_onscreen_bit,ost_render(a1)
+		lea	Plasma_Settings2(pc),a2
+		jsr	SetupChild
 		move.l	a0,ost_plasma_parent(a1)		; save launcher OST to plasma ball OST
 		jsr	(RandomNumber).l			; d0 = random number
 		move.w	ost_plasma_count_top(a0),d1		; id of plasma ball (0-3)
@@ -133,6 +122,23 @@ Plasma_MakeBalls:
 
 	@update:
 		bra.w	Plasma_Update
+
+Plasma_Settings2:
+		dc.b ost_id,id_BossPlasma
+		dc.b ost_routine,id_Plasma_Balls
+		dc.b so_write_word,ost_tile
+		dc.w tile_Nem_FzBoss+tile_pal2
+		dc.b so_write_long,ost_mappings
+		dc.l Map_Plasma
+		dc.b ost_height,12
+		dc.b ost_width,12
+		dc.b ost_priority,3
+		dc.b ost_subtype+1,$3E
+		dc.b ost_render,render_rel+render_onscreen
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_inherit_word,ost_y_pos
+		dc.b so_end
+		even
 ; ===========================================================================
 
 Plasma_Finish:	; Routine 6

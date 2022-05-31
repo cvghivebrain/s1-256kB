@@ -22,14 +22,14 @@ ost_girder_setting:	equ $38					; which movement settings to use, increments by 
 ost_girder_wait_time:	equ $3A					; delay for movement (2 bytes)
 
 Gird_Settings:	dc.b ost_routine,2
-		dc.b -3,ost_mappings
+		dc.b so_write_long,ost_mappings
 		dc.l Map_Gird
-		dc.b -2,ost_tile
+		dc.b so_write_word,ost_tile
 		dc.w $2D9+tile_pal3
 		dc.b ost_priority,4
 		dc.b ost_actwidth,$60
 		dc.b ost_height,$18
-		dc.b -1
+		dc.b so_end
 		even
 ; ===========================================================================
 
