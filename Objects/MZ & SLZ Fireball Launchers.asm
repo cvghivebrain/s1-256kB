@@ -16,6 +16,13 @@ FireMaker:
 FireM_Index:	index *,,2
 		ptr FireM_Main
 		ptr FireM_MakeFire
+
+FireM_Settings:	dc.b ost_id,id_FireBall
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_inherit_word,ost_y_pos
+		dc.b so_inherit_byte,ost_subtype
+		dc.b so_end
+		even
 ; ===========================================================================
 
 FireM_Main:	; Routine 0
@@ -36,11 +43,8 @@ FireM_MakeFire:	; Routine 2
 		bne.s	@wait					; if not, branch
 		bsr.w	FindFreeObj				; find free OST slot
 		bne.s	@wait					; branch if not found
-
-		move.b	#id_FireBall,ost_id(a1)			; load fireball object
-		move.w	ost_x_pos(a0),ost_x_pos(a1)
-		move.w	ost_y_pos(a0),ost_y_pos(a1)
-		move.b	ost_subtype(a0),ost_subtype(a1)		; subtype = speed/direction
+		lea	FireM_Settings(pc),a2
+		bsr.w	SetupChild
 
 	@wait:
 		rts	

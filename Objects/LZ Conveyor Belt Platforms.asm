@@ -56,6 +56,7 @@ LCon_Settings:	dc.b ost_routine,2
 		dc.w $3D5+tile_pal3
 		dc.b ost_actwidth,16
 		dc.b ost_priority,4
+		dc.b so_render_rel
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -65,12 +66,11 @@ LCon_Main:	; Routine 0
 		bmi.w	LCon_LoadPlatforms			; branch if subtype is $80+
 		lea	LCon_Settings(pc),a2
 		bsr.w	SetupObject
-		ori.b	#render_rel,ost_render(a0)
 		cmpi.b	#type_lcon_wheel,ost_subtype(a0)	; is object a wheel? ($7F)
 		bne.s	LCon_Platform_Init			; if not, branch
 		
 		addq.b	#4,ost_routine(a0)			; goto LCon_Wheel next
-		move.w	#$3D5,ost_tile(a0)
+		bclr	#tile_pal34_bit,ost_tile(a0)
 		move.b	#1,ost_priority(a0)
 		bra.w	LCon_Wheel
 ; ===========================================================================

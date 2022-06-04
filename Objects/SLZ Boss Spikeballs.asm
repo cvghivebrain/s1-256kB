@@ -43,6 +43,7 @@ BSpike_Settings:
 		dc.b ost_priority,4
 		dc.b ost_col_type,id_col_8x8+id_col_hurt
 		dc.b ost_actwidth,12
+		dc.b so_render_rel
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -50,7 +51,6 @@ BSpike_Settings:
 BSpike_Main:	; Routine 0
 		lea	BSpike_Settings(pc),a2
 		jsr	SetupObject
-		ori.b	#render_rel,ost_render(a0)
 		movea.l	ost_bspike_seesaw(a0),a1		; get address of OST of seesaw below
 		move.w	ost_x_pos(a1),ost_bspike_x_start(a0)
 		move.w	ost_y_pos(a1),ost_bspike_y_start(a0)
@@ -345,30 +345,37 @@ BSpike_Explode:	; Routine 8
 
 @make_frags:
 		move.w	ost_bspike_y_start(a0),ost_y_pos(a0)
-		moveq	#4-1,d1					; number of fragments
-		lea	BSpike_FragSpeed(pc),a2
+		moveq	#4-1,d2					; number of fragments
+		lea	BSpike_FragSpeed(pc),a3
 
 	@loop:
 		jsr	(FindFreeObj).l				; find free OST slot
 		bne.s	@fail					; branch if not found
-		move.b	#id_BossSpikeball,(a1)			; load shrapnel object
-		move.b	#id_BSpike_MoveFrag,ost_routine(a1)	; goto BSpike_MoveFrag next
-		move.l	#Map_BSBall,ost_mappings(a1)
-		move.b	#3,ost_priority(a1)
-		move.w	#0,ost_tile(a1)
-		move.w	ost_x_pos(a0),ost_x_pos(a1)
-		move.w	ost_y_pos(a0),ost_y_pos(a1)
-		move.w	(a2)+,ost_x_vel(a1)
-		move.w	(a2)+,ost_y_vel(a1)
-		move.b	#id_col_4x4+id_col_hurt,ost_col_type(a1)
-		ori.b	#render_rel,ost_render(a1)
-		bset	#render_onscreen_bit,ost_render(a1)
-		move.b	#$C,ost_actwidth(a1)
+		lea	BSpike_Settings2(pc),a2
+		jsr	SetupChild
+		move.w	(a3)+,ost_x_vel(a1)
+		move.w	(a3)+,ost_y_vel(a1)
 
 	@fail:
-		dbf	d1,@loop				; repeat sequence 3 more times
+		dbf	d2,@loop				; repeat sequence 3 more times
 
-		rts	
+		rts
+
+BSpike_Settings2:
+		dc.b ost_id,id_BossSpikeball
+		dc.b ost_routine,id_BSpike_MoveFrag
+		dc.b so_write_long,ost_mappings
+		dc.l Map_BSBall
+		dc.b so_write_word,ost_tile
+		dc.w $46F
+		dc.b ost_priority,3
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_inherit_word,ost_y_pos
+		dc.b ost_col_type,id_col_4x4+id_col_hurt
+		dc.b ost_render,render_rel+render_onscreen
+		dc.b ost_actwidth,12
+		dc.b so_end
+		even
 ; ===========================================================================
 BSpike_FragSpeed:
 		dc.w -$100, -$340				; horizontal, vertical

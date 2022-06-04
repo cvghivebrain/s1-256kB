@@ -36,6 +36,22 @@ SEgg_Settings:	dc.b so_write_word,ost_x_pos
 		dc.b ost_actwidth,32
 		dc.b so_end
 		even
+SEgg_Settings2:	dc.b ost_id,id_ScrapEggman
+		dc.b so_write_word,ost_x_pos
+		dc.w $2130
+		dc.b so_write_word,ost_y_pos
+		dc.w $5BC
+		dc.b ost_routine,id_SEgg_Button
+		dc.b ost_priority,3
+		dc.b so_write_long,ost_mappings
+		dc.l Map_But
+		dc.b so_write_word,ost_tile
+		dc.w vram_button/32
+		dc.b ost_render,render_rel+render_onscreen
+		dc.b ost_actwidth,16
+		dc.b so_set_parent,ost_eggman_parent
+		dc.b so_end
+		even
 ; ===========================================================================
 
 SEgg_Main:	; Routine 0
@@ -45,18 +61,8 @@ SEgg_Main:	; Routine 0
 
 		jsr	(FindNextFreeObj).l			; find free OST slot
 		bne.s	SEgg_Eggman				; branch if not found
-		move.l	a0,ost_eggman_parent(a1)		; save address of OST of Eggman as parent
-		move.b	#id_ScrapEggman,(a1)			; load button object
-		move.w	#$2130,ost_x_pos(a1)
-		move.w	#$5BC,ost_y_pos(a1)
-		move.b	id_SEgg_Button,ost_routine(a1)			; goto SEgg_Button next
-		move.b	#3,ost_priority(a1)
-		move.l	#Map_But,ost_mappings(a1)
-		move.w	#vram_button/32,ost_tile(a1)
-		move.b	#render_rel,ost_render(a1)
-		bset	#render_onscreen_bit,ost_render(a1)
-		move.b	#$10,ost_actwidth(a1)
-		move.b	#id_frame_button_up,ost_frame(a1)	; use unpressed frame
+		lea	SEgg_Settings2(pc),a2
+		jsr	SetupChild
 
 SEgg_Eggman:	; Routine 2
 		moveq	#0,d0

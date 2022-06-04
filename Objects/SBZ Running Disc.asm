@@ -30,6 +30,8 @@ Disc_Settings:	dc.b ost_routine,2
 		dc.b ost_render,render_rel
 		dc.b ost_priority,4
 		dc.b ost_actwidth,8
+		dc.b so_copy_word,ost_x_pos,ost_disc_x_start
+		dc.b so_copy_word,ost_y_pos,ost_disc_y_start
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -37,8 +39,6 @@ Disc_Settings:	dc.b ost_routine,2
 Disc_Main:	; Routine 0
 		lea	Disc_Settings(pc),a2
 		bsr.w	SetupObject
-		move.w	ost_x_pos(a0),ost_disc_x_start(a0)
-		move.w	ost_y_pos(a0),ost_disc_y_start(a0)
 		move.b	ost_status(a0),d0			; get object status
 		ror.b	#2,d0					; move x/yflip bits to top
 		andi.b	#(status_xflip+status_yflip)<<6,d0	; read only those

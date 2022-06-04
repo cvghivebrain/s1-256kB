@@ -25,6 +25,7 @@ Flash_Settings:	dc.b ost_routine,2
 		dc.w ((vram_giantring+sizeof_art_giantring)/sizeof_cell)+tile_pal2
 		dc.b ost_actwidth,$20
 		dc.b ost_frame,-1
+		dc.b so_render_rel
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -32,7 +33,6 @@ Flash_Settings:	dc.b ost_routine,2
 Flash_Main:	; Routine 0
 		lea	Flash_Settings(pc),a2
 		bsr.w	SetupObject
-		ori.b	#render_rel,ost_render(a0)
 
 Flash_ChkDel:	; Routine 2
 		bsr.s	Flash_Collect

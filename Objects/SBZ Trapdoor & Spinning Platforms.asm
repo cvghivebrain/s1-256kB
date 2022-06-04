@@ -27,6 +27,7 @@ Spin_Settings:	dc.b ost_routine,2
 		dc.b so_write_word,ost_tile
 		dc.w $3E1+tile_pal3
 		dc.b ost_actwidth,128
+		dc.b so_render_rel
 		dc.b so_end
 		even
 SpinS_Settings:	dc.b ost_routine,4
@@ -43,7 +44,6 @@ SpinS_Settings:	dc.b ost_routine,4
 Spin_Main:	; Routine 0
 		lea	Spin_Settings(pc),a2
 		bsr.w	SetupObject
-		ori.b	#render_rel,ost_render(a0)
 		moveq	#0,d0
 		move.b	ost_subtype(a0),d0			; get subtype
 		andi.w	#$F,d0					; read only low nybble

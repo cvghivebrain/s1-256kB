@@ -25,6 +25,7 @@ Surf_Settings:	dc.b ost_routine,2
 		dc.b so_write_word,ost_tile
 		dc.w $2DF+tile_pal3+tile_hi
 		dc.b ost_render,render_rel
+		dc.b so_copy_word,ost_x_pos,ost_surf_x_start
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -32,7 +33,6 @@ Surf_Settings:	dc.b ost_routine,2
 Surf_Main:	; Routine 0
 		lea	Surf_Settings(pc),a2
 		bsr.w	SetupObject
-		move.w	ost_x_pos(a0),ost_surf_x_start(a0)	; save initial x position ($60 or $120)
 
 Surf_Action:	; Routine 2
 		move.w	(v_camera_x_pos).w,d1			; get camera x position

@@ -25,10 +25,10 @@ Glass_Index:	index *,,2
 		ptr Glass_Block34
 		ptr Glass_Reflect34
 
-Glass_Vars012:	dc.b id_Glass_Block012,	0, id_frame_glass_tall	; routine num, y-axis dist from	origin,	frame num
-		dc.b id_Glass_Reflect012, 0, id_frame_glass_shine
-Glass_Vars34:	dc.b id_Glass_Block34, 0, id_frame_glass_short
-		dc.b id_Glass_Reflect34, 0, id_frame_glass_shine
+Glass_Vars012:	dc.b id_Glass_Block012,	id_frame_glass_tall	; routine num, frame num
+		dc.b id_Glass_Reflect012, id_frame_glass_shine
+Glass_Vars34:	dc.b id_Glass_Block34, id_frame_glass_short
+		dc.b id_Glass_Reflect34, id_frame_glass_shine
 
 ost_glass_y_start:	equ $30					; original y position (2 bytes)
 ost_glass_y_dist:	equ $32					; distance block moves when switch is pressed (2 bytes)
@@ -37,17 +37,31 @@ ost_glass_jump_init:	equ $35					; 1 when block has been jumped on at least once
 ost_glass_sink_dist:	equ $36					; distance to make block sink when jumped on; unused type 3 block (2 bytes)
 ost_glass_sink_delay:	equ $38					; time to delay block sinking
 ost_glass_parent:	equ $3C					; address of OST of parent object (4 bytes)
+
+Glass_Settings:	dc.b ost_id,id_GlassBlock
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_inherit_word,ost_y_pos
+		dc.b so_write_long,ost_mappings
+		dc.l Map_Glass
+		dc.b so_write_word,ost_tile
+		dc.w $2AF+tile_pal3+tile_hi
+		dc.b ost_render,render_rel
+		dc.b so_copy_word,ost_y_pos,ost_glass_y_start
+		dc.b so_inherit_byte,ost_subtype
+		dc.b ost_actwidth,32
+		dc.b ost_priority,4
+		dc.b so_set_parent,ost_glass_parent
+		dc.b so_end
+		even
 ; ===========================================================================
 
 Glass_Main:	; Routine 0
-		lea	(Glass_Vars012).l,a2
-		moveq	#1,d1
+		lea	(Glass_Vars012).l,a3
+		moveq	#1,d2
 		move.b	#$48,ost_height(a0)
 		cmpi.b	#2,ost_subtype(a0)			; is object type 0/1/2 ?
 		bcs.s	@type012				; if yes, branch
-
-		lea	(Glass_Vars34).l,a2
-		moveq	#1,d1
+		lea	(Glass_Vars34).l,a3
 		move.b	#$38,ost_height(a0)
 
 	@type012:
@@ -60,23 +74,11 @@ Glass_Main:	; Routine 0
 		bne.s	@fail
 
 @load:
-		move.b	(a2)+,ost_routine(a1)			; goto Glass_Block012/Glass_Reflect012/Glass_Block34/Glass_Reflect34 next
-		move.b	#id_GlassBlock,ost_id(a1)
-		move.w	ost_x_pos(a0),ost_x_pos(a1)
-		move.b	(a2)+,d0				; get relative y position (it's always 0)
-		ext.w	d0
-		add.w	ost_y_pos(a0),d0
-		move.w	d0,ost_y_pos(a1)
-		move.l	#Map_Glass,ost_mappings(a1)
-		move.w	#$2AF+tile_pal3+tile_hi,ost_tile(a1)
-		move.b	#render_rel,ost_render(a1)
-		move.w	ost_y_pos(a1),ost_glass_y_start(a1)
-		move.b	ost_subtype(a0),ost_subtype(a1)
-		move.b	#$20,ost_actwidth(a1)
-		move.b	#4,ost_priority(a1)
-		move.b	(a2)+,ost_frame(a1)			; get frame
-		move.l	a0,ost_glass_parent(a1)			; save address of OST of parent object
-		dbf	d1,@repeat				; repeat once to load "reflection object"
+		lea	Glass_Settings(pc),a2
+		bsr.w	SetupChild
+		move.b	(a3)+,ost_routine(a1)			; goto Glass_Block012/Glass_Reflect012/Glass_Block34/Glass_Reflect34 next
+		move.b	(a3)+,ost_frame(a1)			; get frame
+		dbf	d2,@repeat				; repeat once to load "reflection object"
 
 		move.b	#$10,ost_actwidth(a1)
 		move.b	#3,ost_priority(a1)

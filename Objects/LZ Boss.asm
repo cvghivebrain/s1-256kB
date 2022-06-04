@@ -29,41 +29,53 @@ ost_blz_wait_time:	equ $3C					; time to wait between each action
 ost_blz_beaten_flag:	equ $3D					; $FF when boss is beaten
 ost_blz_flash_num:	equ $3E					; number of times to make boss flash when hit
 ost_blz_wobble:		equ $3F					; wobble state as Eggman moves back & forth (1 byte incremented every frame & interpreted by CalcSine)
+
+BLZ_Settings:	dc.b so_write_word,ost_x_pos
+		dc.w $1E10
+		dc.b so_write_word,ost_y_pos
+		dc.w $5C0
+		dc.b so_copy_word,ost_x_pos,ost_blz_parent_x_pos
+		dc.b so_copy_word,ost_y_pos,ost_blz_parent_y_pos
+		dc.b ost_col_type,id_col_24x24
+		dc.b ost_col_property,8
+		dc.b ost_priority,4
+		dc.b so_end
+		even
+BLZ_Settings2:	dc.b so_inherit_byte,ost_priority
+		dc.b ost_id,id_BossLabyrinth
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_inherit_word,ost_y_pos
+		dc.b so_write_long,ost_mappings
+		dc.l Map_Bosses
+		dc.b so_write_word,ost_tile
+		dc.w tile_Nem_Eggman
+		dc.b ost_render,render_rel
+		dc.b ost_actwidth,32
+		dc.b so_set_parent,ost_blz_parent
+		dc.b so_end
+		even
 ; ===========================================================================
 
 BLZ_Main:	; Routine 0
-		move.w	#$1E10,ost_x_pos(a0)
-		move.w	#$5C0,ost_y_pos(a0)
-		move.w	ost_x_pos(a0),ost_blz_parent_x_pos(a0)
-		move.w	ost_y_pos(a0),ost_blz_parent_y_pos(a0)
-		move.b	#id_col_24x24,ost_col_type(a0)
-		move.b	#8,ost_col_property(a0)			; set number of hits to 8
-		move.b	#4,ost_priority(a0)
-		lea	BLZ_ObjData(pc),a2			; get data for routine number & animation
+		lea	BLZ_Settings(pc),a2
+		bsr.w	SetupObject
+		lea	BLZ_ObjData(pc),a3			; get data for routine number & animation
 		movea.l	a0,a1					; replace current object with 1st in list
-		moveq	#2,d1					; 2 additional objects
+		moveq	#2,d2					; 2 additional objects
 		bra.s	@load_boss
 ; ===========================================================================
 
 @loop:
 		jsr	(FindNextFreeObj).l			; find free OST slot
 		bne.s	BLZ_ShipMain				; branch if not found
-		move.b	#id_BossLabyrinth,ost_id(a1)
-		move.w	ost_x_pos(a0),ost_x_pos(a1)
-		move.w	ost_y_pos(a0),ost_y_pos(a1)
 
 @load_boss:
+		lea	BLZ_Settings2(pc),a2
+		bsr.w	SetupObject
 		bclr	#status_xflip_bit,ost_status(a0)
-		clr.b	ost_routine2(a1)
-		move.b	(a2)+,ost_routine(a1)			; goto BLZ_ShipMain/BLZ_FaceMain/BLZ_FlameMain next
-		move.b	(a2)+,ost_anim(a1)
-		move.b	ost_priority(a0),ost_priority(a1)
-		move.l	#Map_Bosses,ost_mappings(a1)
-		move.w	#tile_Nem_Eggman,ost_tile(a1)
-		move.b	#render_rel,ost_render(a1)
-		move.b	#$20,ost_actwidth(a1)
-		move.l	a0,ost_blz_parent(a1)			; save address of OST of parent
-		dbf	d1,@loop				; repeat sequence 2 more times
+		move.b	(a3)+,ost_routine(a1)			; goto BLZ_ShipMain/BLZ_FaceMain/BLZ_FlameMain next
+		move.b	(a3)+,ost_anim(a1)
+		dbf	d2,@loop				; repeat sequence 2 more times
 
 BLZ_ShipMain:	; Routine 2
 		lea	(v_ost_player).w,a1

@@ -23,6 +23,8 @@ Edge_Settings:	dc.b ost_routine,2
 		dc.w $332+tile_pal3
 		dc.b ost_actwidth,8
 		dc.b ost_priority,6
+		dc.b so_copy_byte,ost_subtype,ost_frame
+		dc.b so_render_rel
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -30,8 +32,6 @@ Edge_Settings:	dc.b ost_routine,2
 Edge_Main:	; Routine 0
 		lea	Edge_Settings(pc),a2
 		bsr.w	SetupObject
-		ori.b	#render_rel,ost_render(a0)
-		move.b	ost_subtype(a0),ost_frame(a0)		; copy object type number to frame number
 		bclr	#4,ost_frame(a0)			; clear 4th bit (deduct $10)
 		beq.s	Edge_Solid				; branch if already clear (subtype 0/1/2 is solid)
 

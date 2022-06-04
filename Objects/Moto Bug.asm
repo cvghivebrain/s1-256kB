@@ -106,11 +106,8 @@ Moto_FindFloor:
 		move.b	#$F,ost_moto_smoke_time(a0)		; reset timer
 		bsr.w	FindFreeObj				; find free OST slot
 		bne.s	@nosmoke				; branch if not found
-		move.b	#id_MotoBug,ost_id(a1)			; load exhaust smoke object
-		move.w	ost_x_pos(a0),ost_x_pos(a1)
-		move.w	ost_y_pos(a0),ost_y_pos(a1)
-		move.b	ost_status(a0),ost_status(a1)
-		move.b	#id_ani_moto_smoke,ost_anim(a1)
+		lea	Moto_Settings2(pc),a2
+		bsr.w	SetupChild
 
 	@nosmoke:
 		rts	
@@ -120,7 +117,15 @@ Moto_FindFloor:
 		move.w	#59,ost_moto_wait_time(a0)		; set pause time to 1 second
 		move.w	#0,ost_x_vel(a0)			; stop the object moving
 		move.b	#id_ani_moto_stand,ost_anim(a0)
-		rts	
+		rts
+
+Moto_Settings2:	dc.b ost_id,id_MotoBug
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_inherit_word,ost_y_pos
+		dc.b so_inherit_byte,ost_status
+		dc.b ost_anim,id_ani_moto_smoke
+		dc.b so_end
+		even
 ; ===========================================================================
 
 Moto_Animate:	; Routine 4

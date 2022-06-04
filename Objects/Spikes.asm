@@ -38,6 +38,9 @@ Spike_Settings:	dc.b ost_routine,2
 		dc.b so_write_word,ost_tile
 		dc.w vram_spikes/32
 		dc.b ost_priority,4
+		dc.b so_copy_word,ost_x_pos,ost_spike_x_start
+		dc.b so_copy_word,ost_y_pos,ost_spike_y_start
+		dc.b so_render_rel
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -45,7 +48,6 @@ Spike_Settings:	dc.b ost_routine,2
 Spike_Main:	; Routine 0
 		lea	Spike_Settings(pc),a2
 		bsr.w	SetupObject
-		ori.b	#render_rel,ost_render(a0)
 		move.b	ost_subtype(a0),d0
 		andi.b	#$F,ost_subtype(a0)			; read only low nybble of subtype
 		andi.w	#$F0,d0					; read high nybble
@@ -54,8 +56,6 @@ Spike_Main:	; Routine 0
 		adda.w	d0,a1					; use high nybble of subtype to get frame & width info
 		move.b	(a1)+,ost_frame(a0)
 		move.b	(a1)+,ost_actwidth(a0)
-		move.w	ost_x_pos(a0),ost_spike_x_start(a0)
-		move.w	ost_y_pos(a0),ost_spike_y_start(a0)
 
 Spike_Solid:	; Routine 2
 		bsr.w	Spike_Move				; update position

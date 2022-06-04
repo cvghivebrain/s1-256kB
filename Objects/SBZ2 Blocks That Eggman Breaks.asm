@@ -37,6 +37,20 @@ FFloor_Settings:
 		dc.b ost_render,render_rel+render_onscreen
 		dc.b so_end
 		even
+FFloor_Settings2:
+		dc.b ost_id,id_FalseFloor
+		dc.b so_write_long,ost_mappings
+		dc.l Map_FFloor
+		dc.b so_write_word,ost_tile
+		dc.w $412+tile_pal3
+		dc.b ost_render,render_rel
+		dc.b ost_actwidth,16
+		dc.b ost_height,16
+		dc.b ost_priority,3
+		dc.b so_inherit_word,ost_y_pos
+		dc.b ost_routine,id_FFloor_Block
+		dc.b so_end
+		even
 ; ===========================================================================
 
 FFloor_Main:	; Routine 0
@@ -45,23 +59,16 @@ FFloor_Main:	; Routine 0
 		moveq	#0,d4
 		move.w	#$2010,d5				; initial x position
 		moveq	#8-1,d6					; 8 blocks
-		lea	ost_ffloor_children(a0),a2
+		lea	ost_ffloor_children(a0),a3
 
 @loop:
 		jsr	(FindFreeObj).l				; find free OST slot
 		bne.s	@fail					; branch if not found
-		move.w	a1,(a2)+				; save child OST address to list in parent OST
-		move.b	#id_FalseFloor,(a1)			; load block object
-		move.l	#Map_FFloor,ost_mappings(a1)
-		move.w	#$412+tile_pal3,ost_tile(a1)
-		move.b	#render_rel,ost_render(a1)
-		move.b	#$10,ost_actwidth(a1)
-		move.b	#$10,ost_height(a1)
-		move.b	#3,ost_priority(a1)
+		lea	FFloor_Settings2(pc),a2
+		jsr	SetupChild
+		move.w	a1,(a3)+				; save child OST address to list in parent OST
 		move.w	d5,ost_x_pos(a1)			; set x position
-		move.w	#$5D0,ost_y_pos(a1)
 		addi.w	#$20,d5					; add $20 for next x position
-		move.b	#id_FFloor_Block,ost_routine(a1)		; goto FFloor_Block next
 		dbf	d6,@loop				; repeat sequence 7 more times
 
 	@fail:

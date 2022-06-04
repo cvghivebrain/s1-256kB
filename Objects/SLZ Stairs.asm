@@ -26,6 +26,21 @@ ost_stair_flag:		equ $36					; 1 = stood on; $80+ = hit from below
 ost_stair_child_id:	equ $37					; which child the current object is; $38-$3B
 ost_stair_y_diff_list:	equ $38					; distance moved by each child object (4 bytes)
 ost_stair_parent:	equ $3C					; address of OST of parent object (4 bytes)
+
+Stair_Settings:	dc.b ost_id,id_Staircase
+		dc.b so_write_long,ost_mappings
+		dc.l Map_Stair
+		dc.b so_write_word,ost_tile
+		dc.w 0+tile_pal3
+		dc.b ost_render,render_rel
+		dc.b ost_priority,3
+		dc.b ost_actwidth,16
+		dc.b so_inherit_byte,ost_subtype
+		dc.b so_inherit_word,ost_y_pos
+		dc.b so_copy_word,ost_y_pos,ost_stair_y_start
+		dc.b so_set_parent,ost_stair_parent
+		dc.b so_end
+		even
 ; ===========================================================================
 
 Stair_Main:	; Routine 0
@@ -40,7 +55,7 @@ Stair_Main:	; Routine 0
 	@notflipped:
 		move.w	ost_x_pos(a0),d2
 		movea.l	a0,a1					; replace current object with first stair
-		moveq	#3,d1					; 3 additional stairs
+		moveq	#3,d5					; 3 additional stairs
 		bra.s	@makeblocks
 ; ===========================================================================
 
@@ -50,22 +65,14 @@ Stair_Main:	; Routine 0
 		move.b	#4,ost_routine(a1)			; goto Stair_Solid next
 
 @makeblocks:
-		move.b	#id_Staircase,ost_id(a1)		; load another stair object
-		move.l	#Map_Stair,ost_mappings(a1)
-		move.w	#0+tile_pal3,ost_tile(a1)
-		move.b	#render_rel,ost_render(a1)
-		move.b	#3,ost_priority(a1)
-		move.b	#$10,ost_actwidth(a1)
-		move.b	ost_subtype(a0),ost_subtype(a1)
+		lea	Stair_Settings(pc),a2
+		bsr.w	SetupChild
 		move.w	d2,ost_x_pos(a1)
-		move.w	ost_y_pos(a0),ost_y_pos(a1)
 		move.w	ost_x_pos(a0),ost_stair_x_start(a1)
-		move.w	ost_y_pos(a1),ost_stair_y_start(a1)
 		addi.w	#$20,d2					; next stair is 32px to the right of previous
 		move.b	d3,ost_stair_child_id(a1)		; values $38-$3B (or $3B-$38 if flipped)
-		move.l	a0,ost_stair_parent(a1)
 		add.b	d4,d3					; next child id
-		dbf	d1,@loop				; repeat sequence 3 times
+		dbf	d5,@loop				; repeat sequence 3 times
 
 	@fail:
 

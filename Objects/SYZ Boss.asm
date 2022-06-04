@@ -19,10 +19,10 @@ BSYZ_Index:	index *,,2
 		ptr BSYZ_FlameMain
 		ptr BSYZ_SpikeMain
 
-BSYZ_ObjData:	dc.b id_BSYZ_ShipMain,	id_ani_boss_ship, 5	; routine number, animation, priority
-		dc.b id_BSYZ_FaceMain,	id_ani_boss_face1, 5
-		dc.b id_BSYZ_FlameMain, id_ani_boss_blank, 5
-		dc.b id_BSYZ_SpikeMain, 0, 5
+BSYZ_ObjData:	dc.b id_BSYZ_ShipMain,	id_ani_boss_ship	; routine number, animation
+		dc.b id_BSYZ_FaceMain,	id_ani_boss_face1
+		dc.b id_BSYZ_FlameMain, id_ani_boss_blank
+		dc.b id_BSYZ_SpikeMain, 0
 
 ost_bsyz_mode:		equ $29					; $FF = lifting block
 ost_bsyz_parent_x_pos:	equ $30					; parent x position (2 bytes)
@@ -33,40 +33,52 @@ ost_bsyz_parent_y_pos:	equ $38					; parent y position (2 bytes)
 ost_bsyz_wait_time:	equ $3C					; time to wait between each action (2 bytes)
 ost_bsyz_flash_num:	equ $3E					; number of times to make boss flash when hit
 ost_bsyz_wobble:	equ $3F					; wobble state as Eggman moves back & forth (1 byte incremented every frame & interpreted by CalcSine)
+
+BSYZ_Settings:	dc.b so_write_word,ost_x_pos
+		dc.w $2DB0
+		dc.b so_write_word,ost_y_pos
+		dc.w $4DA
+		dc.b so_copy_word,ost_x_pos,ost_bsyz_parent_x_pos
+		dc.b so_copy_word,ost_y_pos,ost_bsyz_parent_y_pos
+		dc.b ost_col_type,id_col_24x24
+		dc.b ost_col_property,8
+		dc.b so_end
+		even
+BSYZ_Settings2:	dc.b ost_id,id_BossSpringYard
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_inherit_word,ost_y_pos
+		dc.b so_write_long,ost_mappings
+		dc.l Map_Bosses
+		dc.b so_write_word,ost_tile
+		dc.w tile_Nem_Eggman
+		dc.b ost_render,render_rel
+		dc.b ost_actwidth,32
+		dc.b ost_priority,5
+		dc.b so_set_parent,ost_bsyz_parent
+		dc.b so_end
+		even
 ; ===========================================================================
 
 BSYZ_Main:	; Routine 0
-		move.w	#$2DB0,ost_x_pos(a0)
-		move.w	#$4DA,ost_y_pos(a0)
-		move.w	ost_x_pos(a0),ost_bsyz_parent_x_pos(a0)
-		move.w	ost_y_pos(a0),ost_bsyz_parent_y_pos(a0)
-		move.b	#id_col_24x24,ost_col_type(a0)
-		move.b	#8,ost_col_property(a0)			; set number of hits to 8
-		lea	BSYZ_ObjData(pc),a2			; get routine number, animation & priority
+		lea	BSYZ_Settings(pc),a2
+		jsr	SetupObject
+		lea	BSYZ_ObjData(pc),a3			; get routine number, animation & priority
 		movea.l	a0,a1					; replace current object with 1st in list
-		moveq	#3,d1					; 3 additional objects
+		moveq	#3,d2					; 3 additional objects
 		bra.s	@load_boss
 ; ===========================================================================
 
 @loop:
 		jsr	(FindNextFreeObj).l
 		bne.s	BSYZ_ShipMain
-		move.b	#id_BossSpringYard,(a1)
-		move.w	ost_x_pos(a0),ost_x_pos(a1)
-		move.w	ost_y_pos(a0),ost_y_pos(a1)
 
 @load_boss:
+		lea	BSYZ_Settings2(pc),a2
+		jsr	SetupChild
 		bclr	#status_xflip_bit,ost_status(a0)
-		clr.b	ost_routine2(a1)
-		move.b	(a2)+,ost_routine(a1)			; goto BSYZ_ShipMain/BSYZ_FaceMain/BSYZ_FlameMain/BSYZ_SpikeMain next
-		move.b	(a2)+,ost_anim(a1)
-		move.b	(a2)+,ost_priority(a1)
-		move.l	#Map_Bosses,ost_mappings(a1)
-		move.w	#tile_Nem_Eggman,ost_tile(a1)
-		move.b	#render_rel,ost_render(a1)
-		move.b	#$20,ost_actwidth(a1)
-		move.l	a0,ost_bsyz_parent(a1)			; save address of OST of parent
-		dbf	d1,@loop				; repeat sequence 3 more times
+		move.b	(a3)+,ost_routine(a1)			; goto BSYZ_ShipMain/BSYZ_FaceMain/BSYZ_FlameMain/BSYZ_SpikeMain next
+		move.b	(a3)+,ost_anim(a1)
+		dbf	d2,@loop				; repeat sequence 3 more times
 
 BSYZ_ShipMain:	; Routine 2
 		moveq	#0,d0

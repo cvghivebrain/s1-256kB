@@ -21,15 +21,15 @@ ost_card_x_stop:	equ $30					; on screen x position (2 bytes)
 ost_card_x_start:	equ $32					; start & finish x position (2 bytes)
 
 include_Card_Data:	macro
-Card_ItemData:	; y position, routine number, frame number
-		dc.w $D0
-		dc.b id_Card_Move, id_frame_card_ghz		; zone name (frame number changes)
-		dc.w $E4
-		dc.b id_Card_Move, id_frame_card_zone		; "ZONE"
-		dc.w $EA
-		dc.b id_Card_Move, id_frame_card_act1		; act number (frame number changes)
-		dc.w $E0
-		dc.b id_Card_Move, id_frame_card_oval		; oval
+Card_ItemData:	; y position, frame number
+		dc.b $D0
+		dc.b id_frame_card_ghz		; zone name (frame number changes)
+		dc.b $E4
+		dc.b id_frame_card_zone		; "ZONE"
+		dc.b $EA
+		dc.b id_frame_card_act1		; act number (frame number changes)
+		dc.b $E0
+		dc.b id_frame_card_oval		; oval
 
 Card_PosData:	; y pos, x pos
 		dc.w 0,	$120					; GREEN HILL
@@ -61,6 +61,18 @@ Card_PosData:	; y pos, x pos
 		dc.w $3EC, $3EC
 		dc.w $1EC, $12C
 		endm
+
+Card_Settings:	dc.b ost_id,id_TitleCard
+		dc.b so_write_long,ost_mappings
+		dc.l Map_Card
+		dc.b so_write_word,ost_tile
+		dc.w tile_Nem_TitleCard+tile_hi
+		dc.b ost_actwidth,$78
+		dc.b ost_anim_time+1,60
+		dc.b ost_routine,id_Card_Move
+		dc.b so_copy_word,ost_x_pos,ost_card_x_start
+		dc.b so_end
+		even
 ; ===========================================================================
 
 Card_Main:	; Routine 0
@@ -82,17 +94,16 @@ Card_Main:	; Routine 0
 		lea	(Card_PosData).l,a3			; x/y pos data for all items
 		lsl.w	#4,d0					; multiply zone by 8
 		adda.w	d0,a3					; jump to relevant data
-		lea	(Card_ItemData).l,a2			; y pos/routine/frame for each item
-		moveq	#4-1,d1					; there are 4 items (minus 1 for 1st loop)
+		lea	(Card_ItemData).l,a4			; y pos/routine/frame for each item
+		moveq	#4-1,d3					; there are 4 items (minus 1 for 1st loop)
 
 @loop:
-		move.b	#id_TitleCard,ost_id(a1)
-		move.w	(a3),ost_x_pos(a1)			; set initial x position
-		move.w	(a3)+,ost_card_x_start(a1)
+		move.w	(a3)+,ost_x_pos(a1)			; set initial x position
+		lea	Card_Settings(pc),a2
+		bsr.w	SetupChild
 		move.w	(a3)+,ost_card_x_stop(a1)		; set target x position
-		move.w	(a2)+,ost_y_screen(a1)			; set y position
-		move.b	(a2)+,ost_routine(a1)			; goto Card_Move next
-		move.b	(a2)+,d0				; set frame number
+		move.b	(a4)+,ost_y_screen+1(a1)			; set y position
+		move.b	(a4)+,d0				; set frame number
 		bne.s	@not_ghz				; branch if not 0 (GREEN HILL)
 		move.b	d2,d0					; use zone number instead (or $B for FZ)
 
@@ -106,14 +117,8 @@ Card_Main:	; Routine 0
 
 	@not_act:
 		move.b	d0,ost_frame(a1)			; display frame number d0
-		move.l	#Map_Card,ost_mappings(a1)
-		move.w	#tile_Nem_TitleCard+tile_hi,ost_tile(a1)
-		move.b	#$78,ost_actwidth(a1)
-		move.b	#render_abs,ost_render(a1)
-		move.b	#0,ost_priority(a1)
-		move.w	#60,ost_anim_time(a1)			; set time delay to 1 second
 		lea	sizeof_ost(a1),a1			; next object
-		dbf	d1,@loop				; repeat sequence 3 times
+		dbf	d3,@loop				; repeat sequence 3 times
 
 Card_Move:	; Routine 2
 		moveq	#$10,d1					; set to move 16px right

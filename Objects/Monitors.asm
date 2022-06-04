@@ -33,6 +33,7 @@ Mon_Settings:	dc.b ost_routine,2
 		dc.b ost_render,render_rel
 		dc.b ost_priority,3
 		dc.b ost_actwidth,15
+		dc.b so_copy_byte,ost_subtype,ost_anim
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -53,7 +54,6 @@ Mon_Main:	; Routine 0
 
 	@notbroken:
 		move.b	#id_col_16x16+id_col_item,ost_col_type(a0)
-		move.b	ost_subtype(a0),ost_anim(a0)		; use animation based on subtype
 
 Mon_Solid:	; Routine 2
 		move.b	ost_routine2(a0),d0			; is monitor being stood on or falling?

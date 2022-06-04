@@ -19,18 +19,26 @@ ost_bball_y_start:	equ $38					; original y-axis position (2 bytes)
 ost_bball_x_start:	equ $3A					; original x-axis position (2 bytes)
 ost_bball_radius:	equ $3C					; radius of circle
 ost_bball_speed:	equ $3E					; speed (2 bytes)
+
+BBall_Settings:	dc.b ost_routine,2
+		dc.b so_write_long,ost_mappings
+		dc.l Map_BBall
+		dc.b so_write_word,ost_tile
+		dc.w $3E3
+		dc.b ost_render,render_rel
+		dc.b ost_priority,4
+		dc.b ost_actwidth,$18
+		dc.b ost_col_type,id_col_16x16+id_col_hurt
+		dc.b ost_bball_radius,$50
+		dc.b so_copy_word,ost_x_pos,ost_bball_x_start
+		dc.b so_copy_word,ost_y_pos,ost_bball_y_start
+		dc.b so_end
+		even
 ; ===========================================================================
 
 BBall_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto BBall_Move next
-		move.l	#Map_BBall,ost_mappings(a0)
-		move.w	#$3E3,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#4,ost_priority(a0)
-		move.b	#$18,ost_actwidth(a0)
-		move.w	ost_x_pos(a0),ost_bball_x_start(a0)
-		move.w	ost_y_pos(a0),ost_bball_y_start(a0)
-		move.b	#id_col_16x16+id_col_hurt,ost_col_type(a0)
+		lea	BBall_Settings(pc),a2
+		bsr.w	SetupObject
 		move.b	ost_subtype(a0),d1			; get object type
 		andi.b	#$F0,d1					; read only the	high nybble
 		ext.w	d1
@@ -40,7 +48,6 @@ BBall_Main:	; Routine 0
 		ror.b	#2,d0
 		andi.b	#$C0,d0					; move x/yflip bits into bits 6-7
 		move.b	d0,ost_angle(a0)			; use as angle
-		move.b	#$50,ost_bball_radius(a0)		; set radius of circle motion
 
 BBall_Move:	; Routine 2
 		moveq	#0,d0

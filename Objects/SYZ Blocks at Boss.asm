@@ -19,6 +19,22 @@ BBlock_Index:	index *,,2
 
 ost_bblock_mode:	equ $29					; same as subtype = solid; $FF = lifted; $A = breaking
 ost_bblock_boss:	equ $34					; address of OST of main boss object (4 bytes)
+
+BBlock_Settings:
+		dc.b ost_id,id_BossBlock
+		dc.b so_write_long,ost_mappings
+		dc.l Map_BossBlock
+		dc.b so_write_word,ost_tile
+		dc.w 0+tile_pal3
+		dc.b ost_render,render_rel
+		dc.b ost_actwidth,16
+		dc.b ost_height,16
+		dc.b ost_priority,3
+		dc.b so_write_word,ost_y_pos
+		dc.w $582
+		dc.b ost_routine,2
+		dc.b so_end
+		even
 ; ===========================================================================
 
 BBlock_Main:	; Routine 0
@@ -34,19 +50,12 @@ BBlock_Main:	; Routine 0
 		bne.s	@fail					; branch if not found
 
 @load_block:
-		move.b	#id_BossBlock,(a1)
-		move.l	#Map_BossBlock,ost_mappings(a1)
-		move.w	#0+tile_pal3,ost_tile(a1)
-		move.b	#render_rel,ost_render(a1)
-		move.b	#$10,ost_actwidth(a1)
-		move.b	#$10,ost_height(a1)
-		move.b	#3,ost_priority(a1)
+		lea	BBlock_Settings(pc),a2
+		jsr	SetupChild
 		move.w	d5,ost_x_pos(a1)			; set x position
-		move.w	#$582,ost_y_pos(a1)
 		move.w	d4,ost_subtype(a1)			; blocks have subtypes 0-9
 		addi.w	#$101,d4				; increment subtype
 		addi.w	#$20,d5					; +32px for next x position
-		addq.b	#2,ost_routine(a1)			; goto BBlock_Action next
 		dbf	d6,@loop				; repeat sequence 9 more times
 
 	@fail:

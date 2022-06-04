@@ -45,6 +45,8 @@ Elev_Settings:	dc.b ost_routine,2
 		dc.w 0+tile_pal3
 		dc.b ost_render,render_rel
 		dc.b ost_priority,4
+		dc.b so_copy_word,ost_x_pos,ost_elev_x_start
+		dc.b so_copy_word,ost_y_pos,ost_elev_y_start
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -71,8 +73,6 @@ Elev_Main:	; Routine 0
 		lsl.w	#2,d0					; multiply by 4
 		move.w	d0,ost_elev_distance(a0)		; set distance to move
 		move.b	(a2)+,ost_subtype(a0)			; set type
-		move.w	ost_x_pos(a0),ost_elev_x_start(a0)
-		move.w	ost_y_pos(a0),ost_elev_y_start(a0)
 
 Elev_Platform:	; Routine 2
 		moveq	#0,d1
@@ -248,12 +248,18 @@ Elev_MakeMulti:	; Routine 6
 		move.w	ost_elev_dist_master(a0),ost_elev_distance(a0) ; reset timer
 		bsr.w	FindFreeObj				; find free OST slot
 		bne.s	@chkdel					; branch if not found
-		move.b	#id_Elevator,ost_id(a1)			; create elevator object
-		move.w	ost_x_pos(a0),ost_x_pos(a1)		; match position
-		move.w	ost_y_pos(a0),ost_y_pos(a1)
-		move.b	#type_elev_up_vanish_1,ost_subtype(a1)	; platform rises and vanishes
+		lea	Elev_Settings2(pc),a2
+		bsr.w	SetupObject
 
 	@chkdel:
 		addq.l	#4,sp
 		out_of_range	DeleteObject
 		rts	
+
+Elev_Settings2:	dc.b ost_id,id_Elevator
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_inherit_word,ost_y_pos
+		dc.b ost_subtype,type_elev_up_vanish_1
+		dc.b so_end
+		even
+		

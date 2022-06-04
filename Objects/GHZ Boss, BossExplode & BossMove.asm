@@ -28,12 +28,32 @@ ost_bghz_parent_y_pos:	equ $38					; parent y position (2 bytes)
 ost_bghz_wait_time:	equ $3C					; time to wait between each action (2 bytes)
 ost_bghz_flash_num:	equ $3E					; number of times to make boss flash when hit
 ost_bghz_wobble:	equ $3F					; wobble state as Eggman moves back & forth (1 byte incremented every frame & interpreted by CalcSine)
+
+BGHZ_Settings:	dc.b ost_id,id_BossGreenHill
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_inherit_word,ost_y_pos
+		dc.b so_write_long,ost_mappings
+		dc.l Map_Bosses
+		dc.b so_write_word,ost_tile
+		dc.w tile_Nem_Eggman
+		dc.b ost_render,render_rel
+		dc.b ost_actwidth,32
+		dc.b ost_priority,3
+		dc.b so_set_parent,ost_bghz_parent
+		dc.b so_end
+		even
+BGHZ_Settings2:	dc.b so_copy_word,ost_x_pos,ost_bghz_parent_x_pos
+		dc.b so_copy_word,ost_y_pos,ost_bghz_parent_y_pos
+		dc.b ost_col_type,id_col_24x24
+		dc.b ost_col_property,8
+		dc.b so_end
+		even
 ; ===========================================================================
 
 BGHZ_Main:	; Routine 0
-		lea	(BGHZ_ObjData).l,a2			; get data for routine number & animation
+		lea	(BGHZ_ObjData).l,a3			; get data for routine number & animation
 		movea.l	a0,a1					; replace current object with 1st in list
-		moveq	#2,d1					; 2 additional objects
+		moveq	#2,d2					; 2 additional objects
 		bra.s	@load_boss
 ; ===========================================================================
 
@@ -42,24 +62,15 @@ BGHZ_Main:	; Routine 0
 		bne.s	@fail					; branch if not found
 
 @load_boss:
-		move.b	(a2)+,ost_routine(a1)			; goto BGHZ_ShipMain/BGHZ_FaceMain/BGHZ_FlameMain next
-		move.b	#id_BossGreenHill,ost_id(a1)
-		move.w	ost_x_pos(a0),ost_x_pos(a1)
-		move.w	ost_y_pos(a0),ost_y_pos(a1)
-		move.l	#Map_Bosses,ost_mappings(a1)
-		move.w	#tile_Nem_Eggman,ost_tile(a1)
-		move.b	#render_rel,ost_render(a1)
-		move.b	#$20,ost_actwidth(a1)
-		move.b	#3,ost_priority(a1)
-		move.b	(a2)+,ost_anim(a1)
-		move.l	a0,ost_bghz_parent(a1)			; save address of OST of parent
-		dbf	d1,@loop				; repeat sequence 2 more times
+		move.b	(a3)+,ost_routine(a1)			; goto BGHZ_ShipMain/BGHZ_FaceMain/BGHZ_FlameMain next
+		lea	BGHZ_Settings(pc),a2
+		bsr.w	SetupChild
+		move.b	(a3)+,ost_anim(a1)
+		dbf	d2,@loop				; repeat sequence 2 more times
 
 	@fail:
-		move.w	ost_x_pos(a0),ost_bghz_parent_x_pos(a0)
-		move.w	ost_y_pos(a0),ost_bghz_parent_y_pos(a0)
-		move.b	#id_col_24x24,ost_col_type(a0)
-		move.b	#8,ost_col_property(a0)			; set number of hits to 8
+		lea	BGHZ_Settings2(pc),a2
+		bsr.w	SetupObject
 
 BGHZ_ShipMain:	; Routine 2
 		moveq	#0,d0

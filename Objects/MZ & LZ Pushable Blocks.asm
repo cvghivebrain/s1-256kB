@@ -37,6 +37,8 @@ PushB_Settings:	dc.b ost_routine,2
 		dc.b ost_render,render_rel
 		dc.b ost_priority,3
 		dc.b ost_actwidth,16
+		dc.b so_copy_word,ost_x_pos,ost_pblock_x_start
+		dc.b so_copy_word,ost_y_pos,ost_pblock_y_start
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -49,8 +51,6 @@ PushB_Main:	; Routine 0
 		move.w	#$3DE+tile_pal3,ost_tile(a0)		; LZ specific code
 
 	@notLZ:
-		move.w	ost_x_pos(a0),ost_pblock_x_start(a0)
-		move.w	ost_y_pos(a0),ost_pblock_y_start(a0)
 		btst	#0,ost_subtype(a0)
 		beq.s	@not_1
 		move.b	#$40,ost_actwidth(a0)
@@ -246,16 +246,21 @@ PushB_ChkGeyser:
 PushB_LoadLava:
 		bsr.w	FindFreeObj				; find free OST slot
 		bne.s	@fail					; branch if not found
-		move.b	#id_GeyserMaker,ost_id(a1)		; load lava geyser object
-		move.w	ost_x_pos(a0),ost_x_pos(a1)
+		lea	PushB_Settings2(pc),a2
+		bsr.w	SetupChild
 		add.w	d2,ost_x_pos(a1)
-		move.w	ost_y_pos(a0),ost_y_pos(a1)
 		addi.w	#$10,ost_y_pos(a1)
-		move.l	a0,ost_gmake_parent(a1)			; record block OST address as geyser's parent
 
 	@fail:
 		rts
 
+PushB_Settings2:
+		dc.b ost_id,id_GeyserMaker
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_inherit_word,ost_y_pos
+		dc.b so_set_parent,ost_gmake_parent
+		dc.b so_end
+		even
 ; ---------------------------------------------------------------------------
 ; Subroutine to make the block solid, update its speed/position when pushed
 ; or on lava

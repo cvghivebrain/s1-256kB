@@ -24,7 +24,7 @@ Pri_Index:	index *,,2
 		ptr Pri_Animals
 		ptr Pri_EndAct
 
-		; routine, width, priority, frame
+		; routine, priority, frame
 Pri_Var:	dc.b id_Pri_Body, 4, id_frame_prison_capsule ; 0 - body
 		dc.b id_Pri_Switch, 5, id_frame_prison_switch1 ; 1 - switch
 

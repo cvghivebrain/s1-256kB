@@ -28,17 +28,49 @@ ost_ball_base_x_pos:	equ $3A					; x position of base (2 bytes)
 ost_ball_radius:	equ $3C					; distance of ball/link from base
 ost_ball_side:		equ $3D					; which side the ball is on - 0 = right; 1 = left
 ost_ball_speed:		equ $3E					; rate of change of angle (2 bytes)
+
+GBall_Settings:	dc.b ost_routine,2
+		dc.b so_write_word,ost_angle
+		dc.w $4080
+		dc.b so_write_word,ost_ball_speed
+		dc.w -$200
+		dc.b so_write_long,ost_mappings
+		dc.l Map_BossItems
+		dc.b so_write_word,ost_tile
+		dc.w tile_Nem_Weapons
+		dc.b so_end
+		even
+GBall_Settings2:
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_inherit_word,ost_y_pos
+		dc.b ost_id,id_BossBall
+		dc.b ost_routine,id_GBall_Link
+		dc.b so_write_long,ost_mappings
+		dc.l Map_Swing_GHZ
+		dc.b so_write_word,ost_tile
+		dc.w $6B0
+		dc.b ost_frame,id_frame_swing_chain
+		dc.b so_end
+		even
+GBall_Settings3:
+		dc.b ost_routine,id_GBall_Ball
+		dc.b so_write_long,ost_mappings
+		dc.l Map_GBall
+		dc.b so_write_word,ost_tile
+		dc.w $3A0+tile_pal3
+		dc.b ost_frame,id_frame_ball_check1
+		dc.b ost_priority,5
+		dc.b ost_col_type,id_col_20x20+id_col_hurt
+		dc.b so_end
+		even
 ; ===========================================================================
 
 GBall_Main:	; Routine 0
-		addq.b	#2,ost_routine(a0)			; goto GBall_Base next
-		move.w	#$4080,ost_angle(a0)
-		move.w	#-$200,ost_ball_speed(a0)
-		move.l	#Map_BossItems,ost_mappings(a0)
-		move.w	#tile_Nem_Weapons,ost_tile(a0)
-		lea	ost_subtype(a0),a2
-		move.b	#0,(a2)+
-		moveq	#5,d1					; load 5 additional objects
+		lea	GBall_Settings(pc),a2
+		bsr.w	SetupObject
+		lea	ost_subtype(a0),a3
+		move.b	#0,(a3)+
+		moveq	#5,d2					; load 5 additional objects
 		movea.l	a0,a1					; replace current object with chain base
 		bra.s	@chain_base
 ; ===========================================================================
@@ -46,13 +78,8 @@ GBall_Main:	; Routine 0
 	@loop:
 		jsr	(FindNextFreeObj).l			; find free OST slot
 		bne.s	@fail					; branch if not found
-		move.w	ost_x_pos(a0),ost_x_pos(a1)
-		move.w	ost_y_pos(a0),ost_y_pos(a1)
-		move.b	#id_BossBall,ost_id(a1)			; load chain link object
-		move.b	#id_GBall_Link,ost_routine(a1)
-		move.l	#Map_Swing_GHZ,ost_mappings(a1)
-		move.w	#$6B0,ost_tile(a1)
-		move.b	#id_frame_swing_chain,ost_frame(a1)
+		lea	GBall_Settings2(pc),a2
+		bsr.w	SetupChild
 		addq.b	#1,ost_subtype(a0)			; increment parent's subtype (ends up being 5)
 
 @chain_base:
@@ -60,20 +87,16 @@ GBall_Main:	; Routine 0
 		subi.w	#v_ost_all&$FFFF,d5
 		lsr.w	#6,d5
 		andi.w	#$7F,d5					; convert address to OST index
-		move.b	d5,(a2)+				; add to list in parent OST
+		move.b	d5,(a3)+				; add to list in parent OST
 		move.b	#render_rel,ost_render(a1)
 		move.b	#8,ost_actwidth(a1)
 		move.b	#6,ost_priority(a1)
 		move.l	ost_ball_parent(a0),ost_ball_parent(a1)
-		dbf	d1,@loop				; repeat sequence 5 more times
+		dbf	d2,@loop				; repeat sequence 5 more times
 
 	@fail:
-		move.b	#id_GBall_Ball,ost_routine(a1)
-		move.l	#Map_GBall,ost_mappings(a1)		; replace last object with ball
-		move.w	#$3A0+tile_pal3,ost_tile(a1)
-		move.b	#id_frame_ball_check1,ost_frame(a1)
-		move.b	#5,ost_priority(a1)
-		move.b	#id_col_20x20+id_col_hurt,ost_col_type(a1) ; make object hurt Sonic
+		lea	GBall_Settings3(pc),a2
+		bsr.w	SetupChild
 		rts	
 ; ===========================================================================
 

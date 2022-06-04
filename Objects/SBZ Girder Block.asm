@@ -29,6 +29,8 @@ Gird_Settings:	dc.b ost_routine,2
 		dc.b ost_priority,4
 		dc.b ost_actwidth,$60
 		dc.b ost_height,$18
+		dc.b so_copy_word,ost_x_pos,ost_girder_x_start
+		dc.b so_render_rel
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -36,8 +38,6 @@ Gird_Settings:	dc.b ost_routine,2
 Gird_Main:	; Routine 0
 		lea	Gird_Settings(pc),a2
 		bsr.w	SetupObject
-		ori.b	#render_rel,ost_render(a0)
-		move.w	ost_x_pos(a0),ost_girder_x_start(a0)
 		bsr.w	Gird_ChgDir				; set initial speed & direction
 
 Gird_Action:	; Routine 2

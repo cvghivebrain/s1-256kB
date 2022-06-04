@@ -21,12 +21,27 @@ LWall_Index:	index *,,2
 
 ost_lwall_flag:		equ $36					; flag to start wall moving
 ost_lwall_parent:	equ $3C					; address of OST of parent object (4 bytes)
+
+LWall_Settings:	dc.b ost_id,id_LavaWall
+		dc.b so_write_long,ost_mappings
+		dc.l Map_LWall
+		dc.b so_write_word,ost_tile
+		dc.w $34A+tile_pal4
+		dc.b ost_render,render_rel
+		dc.b ost_actwidth,$50
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_inherit_word,ost_y_pos
+		dc.b ost_priority,1
+		dc.b ost_col_type,id_col_64x32+id_col_hurt
+		dc.b so_set_parent,ost_lwall_parent
+		dc.b so_end
+		even
 ; ===========================================================================
 
 LWall_Main:	; Routine 0
 		addq.b	#id_LWall_Action,ost_routine(a0)	; goto LWall_Action next
 		movea.l	a0,a1
-		moveq	#1,d1
+		moveq	#1,d2
 		bra.s	@make
 ; ===========================================================================
 
@@ -35,19 +50,11 @@ LWall_Main:	; Routine 0
 		bne.s	@fail					; branch if not found
 
 @make:
-		move.b	#id_LavaWall,ost_id(a1)			; load object
-		move.l	#Map_LWall,ost_mappings(a1)
-		move.w	#$34A+tile_pal4,ost_tile(a1)
-		move.b	#render_rel,ost_render(a1)
-		move.b	#$50,ost_actwidth(a1)
-		move.w	ost_x_pos(a0),ost_x_pos(a1)
-		move.w	ost_y_pos(a0),ost_y_pos(a1)
-		move.b	#1,ost_priority(a1)
-		move.b	#id_col_64x32+id_col_hurt,ost_col_type(a1)
-		move.l	a0,ost_lwall_parent(a1)
+		lea	LWall_Settings(pc),a2
+		bsr.w	SetupChild
 
 	@fail:
-		dbf	d1,@loop				; repeat sequence once
+		dbf	d2,@loop				; repeat sequence once
 
 		addq.b	#id_LWall_BackHalf,ost_routine(a1)	; goto LWall_BackHalf next (2nd object only)
 		move.b	#id_frame_lavawall_back,ost_frame(a1)	; use back of lava wall frame

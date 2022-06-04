@@ -25,6 +25,7 @@ GRing_Settings:	dc.b so_write_long,ost_mappings
 		dc.w (vram_giantring/sizeof_cell)+tile_pal2
 		dc.b ost_actwidth,$40
 		dc.b ost_priority,2
+		dc.b so_render_rel
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -32,7 +33,6 @@ GRing_Settings:	dc.b so_write_long,ost_mappings
 GRing_Main:	; Routine 0
 		lea	GRing_Settings(pc),a2
 		bsr.w	SetupObject
-		ori.b	#render_rel,ost_render(a0)
 		tst.b	ost_render(a0)
 		bpl.s	GRing_Animate
 		cmpi.b	#6,(v_emeralds).w			; do you have 6 emeralds?
@@ -57,9 +57,8 @@ GRing_Collect:	; Routine 4
 		move.b	#0,ost_col_type(a0)
 		bsr.w	FindFreeObj				; find free OST slot
 		bne.w	@fail					; branch if not found
-		move.b	#id_RingFlash,ost_id(a1)		; load giant ring flash object
-		move.w	ost_x_pos(a0),ost_x_pos(a1)
-		move.w	ost_y_pos(a0),ost_y_pos(a1)
+		lea	GRing_Settings2(pc),a2
+		bsr.w	SetupChild
 		move.l	a0,ost_flash_parent(a1)
 		move.w	(v_ost_player+ost_x_pos).w,d0
 		cmp.w	ost_x_pos(a0),d0			; has Sonic come from the left?
@@ -74,3 +73,10 @@ GRing_Collect:	; Routine 4
 
 GRing_Delete:	; Routine 6
 		bra.w	DeleteObject
+
+GRing_Settings2:
+		dc.b ost_id,id_RingFlash
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_inherit_word,ost_y_pos
+		dc.b so_end
+		even

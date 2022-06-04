@@ -22,38 +22,45 @@ ost_junc_grab_frame:	equ $32					; which frame the junction grabbed Sonic on
 ost_junc_direction:	equ $34					; direction of rotation: 1 or -1 (added to the frame number)
 ost_junc_button_flag:	equ $36					; flag set when button is pressed
 ost_junc_button_num:	equ $38					; which button will reverse the disc
+
+Jun_Settings:	dc.b ost_id,id_Junction
+		dc.b ost_routine,id_Jun_Display
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_inherit_word,ost_y_pos
+		dc.b ost_priority,3
+		dc.b ost_frame,id_frame_junc_circle
+Jun_Settings2:	dc.b so_write_long,ost_mappings
+		dc.l Map_Jun
+		dc.b so_write_word,ost_tile
+		dc.w $31E+tile_pal3
+		dc.b ost_actwidth,$38
+		dc.b ost_junc_direction,1
+		dc.b so_copy_byte,ost_subtype,ost_junc_button_num
+		dc.b so_render_rel
+		dc.b so_end
+		even
 ; ===========================================================================
 
 Jun_Main:	; Routine 0
 		addq.b	#2,ost_routine(a0)			; goto Jun_Action next
-		move.w	#1,d1
+		move.w	#1,d2
 		movea.l	a0,a1
+		lea	Jun_Settings2(pc),a2
 		bra.s	@makeitem
 ; ===========================================================================
 
 	@loop:
 		bsr.w	FindFreeObj				; find free OST slot
 		bne.s	@fail					; branch if not found
-		move.b	#id_Junction,ost_id(a1)			; load 2nd junction object
-		addq.b	#4,ost_routine(a1)			; goto Jun_Display next
-		move.w	ost_x_pos(a0),ost_x_pos(a1)
-		move.w	ost_y_pos(a0),ost_y_pos(a1)
-		move.b	#3,ost_priority(a1)
-		move.b	#id_frame_junc_circle,ost_frame(a1)	; use large circular sprite
+		lea	Jun_Settings(pc),a2
 
 @makeitem:
-		move.l	#Map_Jun,ost_mappings(a1)
-		move.w	#$31E+tile_pal3,ost_tile(a1)
-		ori.b	#render_rel,ost_render(a1)
-		move.b	#$38,ost_actwidth(a1)
+		bsr.w	SetupChild
 
 	@fail:
-		dbf	d1,@loop				; repeat once for large background circle
+		dbf	d2,@loop				; repeat once for large background circle
 
-		move.b	#$30,ost_actwidth(a0)
 		move.b	#4,ost_priority(a0)
-		move.b	#1,ost_junc_direction(a0)		; set default direction (anticlockwise)
-		move.b	ost_subtype(a0),ost_junc_button_num(a0)
 
 Jun_Action:	; Routine 2
 		bsr.w	Jun_Update				; check if button is pressed and animate the junction

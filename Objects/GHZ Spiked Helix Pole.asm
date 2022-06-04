@@ -32,17 +32,25 @@ Hel_Settings:	dc.b ost_routine,2
 		dc.b ost_actwidth,8
 		dc.b so_end
 		even
+Hel_Settings2:	dc.b ost_routine,id_Hel_Display
+		dc.b so_inherit_byte,ost_id
+		dc.b so_inherit_word,ost_y_pos
+		dc.b so_inherit_word,ost_tile
+		dc.b so_inherit_long,ost_mappings
+		dc.b ost_render,render_rel
+		dc.b ost_priority,3
+		dc.b ost_actwidth,8
+		dc.b so_end
+		even
 ; ===========================================================================
 
 Hel_Main:	; Routine 0
 		lea	Hel_Settings(pc),a2
 		bsr.w	SetupObject
-		move.w	ost_y_pos(a0),d2
 		move.w	ost_x_pos(a0),d3
-		move.b	ost_id(a0),d4
-		lea	ost_subtype+1(a0),a2			; (a2) = subtype, followed by child list
+		lea	ost_subtype+1(a0),a3			; (a2) = subtype, followed by child list
 		sub.w	#8*16,d3					; d3 is x-axis position of leftmost spike
-		moveq	#14,d1					; d1 = number of spikes, minus 1 for parent, minus 1 for first loop
+		moveq	#14,d2					; d1 = number of spikes, minus 1 for parent, minus 1 for first loop
 		bcs.s	Hel_Action				; skip to action if length is only 1
 		moveq	#0,d6
 
@@ -53,16 +61,10 @@ Hel_Main:	; Routine 0
 		subi.w	#v_ost_all&$FFFF,d5
 		lsr.w	#6,d5
 		andi.w	#$7F,d5
-		move.b	d5,(a2)+				; copy child OST index to byte list in parent OST
-		move.b	#id_Hel_Display,ost_routine(a1)
-		move.b	d4,ost_id(a1)
-		move.w	d2,ost_y_pos(a1)
+		move.b	d5,(a3)+				; copy child OST index to byte list in parent OST
+		lea	Hel_Settings2(pc),a2
+		bsr.w	SetupChild
 		move.w	d3,ost_x_pos(a1)
-		move.l	ost_mappings(a0),ost_mappings(a1)
-		move.w	#$38E+tile_pal3,ost_tile(a1)
-		move.b	#render_rel,ost_render(a1)
-		move.b	#3,ost_priority(a1)
-		move.b	#8,ost_actwidth(a1)
 		move.b	d6,ost_helix_frame(a1)			; set frame for current spike
 		addq.b	#1,d6					; use next frame on next spike
 		andi.b	#7,d6					; there are only 8 frames
@@ -76,7 +78,7 @@ Hel_Main:	; Routine 0
 		addi.w	#$10,d3					; skip to next spike
 
 	@not_centre:
-		dbf	d1,@loop				; repeat d1 times (helix length)
+		dbf	d2,@loop				; repeat d1 times (helix length)
 
 Hel_Action:	; Routine 2, 4
 		bsr.w	Hel_RotateSpikes

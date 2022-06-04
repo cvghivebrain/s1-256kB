@@ -141,7 +141,6 @@ Bom_ChkDist:
 		neg.w	ost_y_vel(a1)				; reverse direction for fuse
 
 	@normal:
-		move.l	a0,ost_bomb_parent(a1)
 
 @outofrange:
 		rts
@@ -155,6 +154,7 @@ Bom_Settings2:	dc.b ost_id,id_Bomb
 		dc.b so_inherit_word,ost_y_pos
 		dc.b so_copy_word,ost_y_pos,ost_bomb_y_start
 		dc.b so_inherit_byte,ost_status
+		dc.b so_set_parent,ost_bomb_parent
 		dc.b so_end
 		even
 ; ===========================================================================

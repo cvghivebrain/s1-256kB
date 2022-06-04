@@ -95,18 +95,9 @@ Lamp_Blue:	; Routine 2
 		addq.b	#2,ost_routine(a0)			; goto Lamp_Finish next
 		jsr	(FindFreeObj).l				; find free OST slot
 		bne.s	@fail					; branch if not found
-		move.b	#id_Lamppost,ost_id(a1)			; load twirling lamp object
-		move.b	#id_Lamp_Twirl,ost_routine(a1)		; child object goto Lamp_Twirl next
-		move.w	ost_x_pos(a0),ost_lamp_x_start(a1)
-		move.w	ost_y_pos(a0),ost_lamp_y_start(a1)
+		lea	Lamp_Settings2(pc),a2
+		bsr.w	SetupChild
 		subi.w	#$18,ost_lamp_y_start(a1)
-		move.l	#Map_Lamp,ost_mappings(a1)
-		move.w	#$F400/sizeof_cell,ost_tile(a1)
-		move.b	#render_rel,ost_render(a1)
-		move.b	#8,ost_actwidth(a1)
-		move.b	#4,ost_priority(a1)
-		move.b	#id_frame_lamp_redballonly,ost_frame(a1) ; use "ball only" frame
-		move.w	#32,ost_lamp_twirl_time(a1)
 
 	@fail:
 		move.b	#id_frame_lamp_poleonly,ost_frame(a0)	; use "post only" frame
@@ -121,6 +112,22 @@ Lamp_Blue_sub:
 Lamp_Blue_donothing:
 Lamp_Finish:	; Routine 4
 		rts
+
+Lamp_Settings2:	dc.b ost_id,id_Lamppost
+		dc.b ost_routine,id_Lamp_Twirl
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_inherit_word,ost_y_pos
+		dc.b so_copy_word,ost_x_pos,ost_lamp_x_start
+		dc.b so_copy_word,ost_y_pos,ost_lamp_y_start
+		dc.b so_inherit_long,ost_mappings
+		dc.b so_inherit_word,ost_tile
+		dc.b ost_render,render_rel
+		dc.b ost_actwidth,8
+		dc.b ost_priority,4
+		dc.b ost_frame,id_frame_lamp_redballonly
+		dc.b ost_lamp_twirl_time+1,32
+		dc.b so_end
+		even
 ; ===========================================================================
 
 Lamp_Twirl:	; Routine 6

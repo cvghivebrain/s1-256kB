@@ -18,6 +18,23 @@ RLoss_Index:	index *,,2
 		ptr RLoss_Collect
 		ptr RLoss_Sparkle
 		ptr RLoss_Delete
+
+RLoss_Settings:	dc.b ost_id,id_RingLoss
+		dc.b ost_routine,2
+		dc.b ost_height,8
+		dc.b ost_width,8
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_inherit_word,ost_y_pos
+		dc.b so_write_long,ost_mappings
+		dc.l Map_Ring
+		dc.b so_write_word,ost_tile
+		dc.w $7AA+tile_pal2
+		dc.b ost_render,render_rel
+		dc.b ost_priority,3
+		dc.b ost_col_type,id_col_6x6+id_col_item
+		dc.b ost_actwidth,8
+		dc.b so_end
+		even
 ; ===========================================================================
 
 RLoss_Count:	; Routine 0
@@ -40,18 +57,8 @@ RLoss_Count:	; Routine 0
 		bne.w	@fail					; branch if not found
 
 @makerings:
-		move.b	#id_RingLoss,ost_id(a1)			; load bouncing ring object
-		addq.b	#2,ost_routine(a1)			; goto RLoss_Bounce next
-		move.b	#8,ost_height(a1)
-		move.b	#8,ost_width(a1)
-		move.w	ost_x_pos(a0),ost_x_pos(a1)
-		move.w	ost_y_pos(a0),ost_y_pos(a1)
-		move.l	#Map_Ring,ost_mappings(a1)
-		move.w	#$7AA+tile_pal2,ost_tile(a1)
-		move.b	#render_rel,ost_render(a1)
-		move.b	#3,ost_priority(a1)
-		move.b	#id_col_6x6+id_col_item,ost_col_type(a1) ; goto RLoss_Collect when touched
-		move.b	#8,ost_actwidth(a1)
+		lea	RLoss_Settings(pc),a2
+		bsr.w	SetupChild
 		move.b	#255,(v_syncani_3_time).w		; reset deletion/animation timer
 		tst.w	d4
 		bmi.s	@skip_calcsine

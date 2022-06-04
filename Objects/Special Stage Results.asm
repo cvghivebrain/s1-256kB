@@ -28,22 +28,28 @@ ost_ssr_x_stop:		equ $30					; on screen x position (2 bytes)
 
 include_SSR_Config:	macro
 		; x pos start, x pos stop, y pos
-		; routine number, frame number
+		; frame number
 SSR_Config:	dc.w $20, $120,	$C4
-		dc.b id_SSR_Move, id_frame_ssr_chaos
-
 		dc.w $320, $120, $118
-		dc.b id_SSR_Move, id_frame_ssr_score
-
 		dc.w $360, $120, $128
-		dc.b id_SSR_Move, id_frame_ssr_ringbonus
-
 		dc.w $1EC, $11C, $C4
-		dc.b id_SSR_Move, id_frame_card_oval_3
-
 		dc.w $3A0, $120, $138
-		dc.b id_SSR_Move, id_frame_ssr_continue
 		endm
+SSR_Config2:	dc.b id_frame_ssr_chaos
+		dc.b id_frame_ssr_score
+		dc.b id_frame_ssr_ringbonus
+		dc.b id_frame_card_oval_3
+		dc.b id_frame_ssr_continue
+		even
+
+SSR_Settings:	dc.b ost_id,id_SSResult
+		dc.b ost_routine,id_SSR_Move
+		dc.b so_write_long,ost_mappings
+		dc.l Map_SSR
+		dc.b so_write_word,ost_tile
+		dc.w tile_Nem_TitleCard+tile_hi
+		dc.b so_end
+		even
 ; ===========================================================================
 
 SSR_Main:	; Routine 0
@@ -54,24 +60,22 @@ SSR_Main:	; Routine 0
 
 @plc_free:
 		movea.l	a0,a1					; replace current object with 1st from list
-		lea	(SSR_Config).l,a2			; position, routine & frame settings
-		moveq	#3,d1					; 3 additional items
+		lea	(SSR_Config).l,a3			; position, routine & frame settings
+		lea	SSR_Config2(pc),a4
+		moveq	#3,d2					; 3 additional items
 		cmpi.w	#50,(v_rings).w				; do you have 50 or more rings?
 		bcs.s	@loop					; if no, branch
-		addq.w	#1,d1					; if yes, add 1	item (continue)
+		addq.w	#1,d2					; if yes, add 1	item (continue)
 
 	@loop:
-		move.b	#id_SSResult,ost_id(a1)
-		move.w	(a2)+,ost_x_pos(a1)			; set actual x position
-		move.w	(a2)+,ost_ssr_x_stop(a1)		; set stop x position
-		move.w	(a2)+,ost_y_screen(a1)			; set y position
-		move.b	(a2)+,ost_routine(a1)			; goto SSR_Move next
-		move.b	(a2)+,ost_frame(a1)			; set frame number
-		move.l	#Map_SSR,ost_mappings(a1)
-		move.w	#tile_Nem_TitleCard+tile_hi,ost_tile(a1)
-		move.b	#render_abs,ost_render(a1)
+		lea	SSR_Settings(pc),a2
+		bsr.w	SetupChild
+		move.w	(a3)+,ost_x_pos(a1)			; set actual x position
+		move.w	(a3)+,ost_ssr_x_stop(a1)		; set stop x position
+		move.w	(a3)+,ost_y_screen(a1)			; set y position
+		move.b	(a4)+,ost_frame(a1)			; set frame number
 		lea	sizeof_ost(a1),a1			; next OST slot in RAM
-		dbf	d1,@loop				; repeat 3 or 4 times
+		dbf	d2,@loop				; repeat 3 or 4 times
 
 		moveq	#7,d0
 		move.b	(v_emeralds).w,d1

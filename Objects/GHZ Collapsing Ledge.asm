@@ -31,6 +31,7 @@ Ledge_Settings:	dc.b ost_routine,2
 		dc.b ost_ledge_wait_time,7
 		dc.b ost_actwidth,$64
 		dc.b ost_height,$38
+		dc.b so_copy_byte,ost_subtype,ost_frame
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -39,7 +40,6 @@ Ledge_Main:	; Routine 0
 		lea	Ledge_Settings(pc),a2
 		bsr.w	SetupObject
 		ori.b	#render_rel+render_useheight,ost_render(a0)
-		move.b	ost_subtype(a0),ost_frame(a0)
 
 Ledge_Touch:	; Routine 2
 		tst.b	ost_ledge_flag(a0)			; has ledge been stood on?
@@ -128,7 +128,7 @@ Ledge_Fragment:
 
 Ledge_Fragment_2:
 		lea	(Ledge_FragTiming).l,a4			; fragment timing data
-		moveq	#$19-1,d1				; number of fragments, minus 1
+		moveq	#$19-1,d2				; number of fragments, minus 1
 		addq.b	#2,ost_frame(a0)			; use frame consisting of smaller pieces
 
 ; ---------------------------------------------------------------------------
@@ -136,7 +136,7 @@ Ledge_Fragment_2:
 
 ; input:
 ;	a4 = address of fragment timing values
-;	d1 = number of fragments, minus 1
+;	d2 = number of fragments, minus 1
 ; ---------------------------------------------------------------------------
 
 FragmentObject:
@@ -147,8 +147,6 @@ FragmentObject:
 		adda.w	(a3,d0.w),a3
 		addq.w	#1,a3					; jump to raw sprite data
 		bset	#render_rawmap_bit,ost_render(a0)	; use raw mappings
-		move.b	ost_id(a0),d4
-		move.b	ost_render(a0),d5
 		movea.l	a0,a1					; replace ledge object with fragment
 		bra.s	@skip_findost
 ; ===========================================================================
@@ -159,22 +157,16 @@ FragmentObject:
 		addq.w	#5,a3					; next sprite piece
 
 @skip_findost:
-		move.b	#id_Ledge_WaitFall,ost_routine(a1)	; id_CFlo_WaitFall in CollapseFloor object
-		move.b	d4,ost_id(a1)
+		lea	Ledge_Settings2(pc),a2
+		bsr.w	SetupChild
 		move.l	a3,ost_mappings(a1)
-		move.b	d5,ost_render(a1)
-		move.w	ost_x_pos(a0),ost_x_pos(a1)
-		move.w	ost_y_pos(a0),ost_y_pos(a1)
-		move.w	ost_tile(a0),ost_tile(a1)
-		move.b	ost_priority(a0),ost_priority(a1)
-		move.b	ost_actwidth(a0),ost_actwidth(a1)
 		move.b	(a4)+,ost_ledge_wait_time(a1)		; each fragment has different timing
 		cmpa.l	a0,a1					; is this fragment the first? (i.e. parent object)
 		bhs.s	@firstfrag				; if yes, branch
 		bsr.w	DisplaySprite_a1
 
 	@firstfrag:
-		dbf	d1,@loop				; repeat for all fragments
+		dbf	d2,@loop				; repeat for all fragments
 
 	@display:
 		bsr.w	DisplaySprite
@@ -183,6 +175,17 @@ FragmentObject:
 Ledge_FragTiming:
 		dc.b $1C, $18, $14, $10, $1A, $16, $12,	$E, $A,	6, $18,	$14, $10, $C, 8, 4
 		dc.b $16, $12, $E, $A, 6, 2, $14, $10, $C
+		even
+Ledge_Settings2:
+		dc.b ost_routine,id_Ledge_WaitFall
+		dc.b so_inherit_byte,ost_id
+		dc.b so_inherit_byte,ost_render
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_inherit_word,ost_y_pos
+		dc.b so_inherit_word,ost_tile
+		dc.b so_inherit_byte,ost_priority
+		dc.b so_inherit_byte,ost_actwidth
+		dc.b so_end
 		even
 		
 		endm

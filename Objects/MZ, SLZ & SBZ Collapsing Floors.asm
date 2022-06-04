@@ -32,6 +32,7 @@ CFlo_Settings:	dc.b ost_routine,2
 		dc.b ost_priority,4
 		dc.b ost_cfloor_wait_time,7
 		dc.b ost_actwidth,$44
+		dc.b so_render_rel
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -51,7 +52,6 @@ CFlo_Main:	; Routine 0
 		move.w	#$3A7+tile_pal3,ost_tile(a0) ; SBZ specific code
 
 	@notSBZ:
-		ori.b	#render_rel,ost_render(a0)
 
 CFlo_Touch:	; Routine 2
 		tst.b	ost_cfloor_flag(a0)			; has Sonic touched the object?
@@ -145,7 +145,7 @@ CFlo_Collapse_Now:
 		lea	(CFlo_FragTiming_1).l,a4
 
 	@type_0:
-		moveq	#8-1,d1
+		moveq	#8-1,d2
 		addq.b	#1,ost_frame(a0)			; use broken frame which comprises 8 sprites
 		bra.s	FragmentObject				; split into 8 fragments, goto CFlo_WaitFall next
 								; see GHZ Collapsing Ledge.asm

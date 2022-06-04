@@ -24,8 +24,8 @@ Flap_Settings:	dc.b ost_routine,2
 		dc.b so_write_word,ost_tile
 		dc.w $307+tile_pal3
 		dc.b ost_actwidth,$28
-		dc.b so_write_word,ost_flap_time
-		dc.w 120
+		dc.b ost_flap_time+1,120
+		dc.b so_render_rel
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -33,7 +33,6 @@ Flap_Settings:	dc.b ost_routine,2
 Flap_Main:	; Routine 0
 		lea	Flap_Settings(pc),a2
 		bsr.w	SetupObject
-		ori.b	#render_rel,ost_render(a0)
 
 Flap_OpenClose:	; Routine 2
 		subq.w	#1,ost_flap_wait(a0)			; decrement time delay

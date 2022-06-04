@@ -143,6 +143,17 @@ Newt_Type0_Fly:
 		bsr.w	SpeedToPos				; update position (flies straight)
 		rts	
 ; ===========================================================================
+Newt_Settings2:	dc.b ost_id,id_Missile
+		dc.b so_write_word,ost_tile
+		dc.w $488
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_inherit_word,ost_y_pos
+		dc.b so_write_word,ost_x_vel
+		dc.w $200
+		dc.b so_inherit_byte,ost_status
+		dc.b ost_subtype,1
+		dc.b so_end
+		even
 
 Newt_Type1:
 		cmpi.b	#id_frame_newt_norm,ost_frame(a0)
@@ -158,12 +169,9 @@ Newt_Type1:
 		move.b	#1,ost_newtron_fire_flag(a0)		; set fired flag
 		bsr.w	FindFreeObj				; find free OST slot
 		bne.s	@fail					; branch if not found
-		move.b	#id_Missile,ost_id(a1)			; load missile object
-		move.w	#$488,ost_tile(a1)
-		move.w	ost_x_pos(a0),ost_x_pos(a1)
-		move.w	ost_y_pos(a0),ost_y_pos(a1)
+		lea	Newt_Settings2(pc),a2
+		bsr.w	SetupChild
 		subq.w	#8,ost_y_pos(a1)
-		move.w	#$200,ost_x_vel(a1)			; missile goes right
 		move.w	#$14,d0
 		btst	#status_xflip_bit,ost_status(a0)	; is newtron facing right?
 		bne.s	@noflip					; if yes, branch
@@ -172,8 +180,6 @@ Newt_Type1:
 
 	@noflip:
 		add.w	d0,ost_x_pos(a1)
-		move.b	ost_status(a0),ost_status(a1)
-		move.b	#1,ost_subtype(a1)
 
 	@fail:
 		rts	

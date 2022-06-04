@@ -23,6 +23,7 @@ Spla_Settings:	dc.b ost_routine,2
 		dc.b ost_actwidth,16
 		dc.b so_write_word,ost_tile
 		dc.w $23E+tile_pal3
+		dc.b so_render_rel
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -30,7 +31,6 @@ Spla_Settings:	dc.b ost_routine,2
 Spla_Main:	; Routine 0
 		lea	Spla_Settings(pc),a2
 		bsr.w	SetupObject
-		ori.b	#render_rel,ost_render(a0)
 		move.w	(v_ost_player+ost_x_pos).w,ost_x_pos(a0) ; copy x position from Sonic
 
 Spla_Display:	; Routine 2

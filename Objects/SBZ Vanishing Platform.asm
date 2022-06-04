@@ -29,6 +29,7 @@ VanP_Settings:	dc.b ost_routine,6
 		dc.w $412+tile_pal3
 		dc.b ost_actwidth,16
 		dc.b ost_priority,4
+		dc.b so_render_rel
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -36,7 +37,6 @@ VanP_Settings:	dc.b ost_routine,6
 VanP_Main:	; Routine 0
 		lea	VanP_Settings(pc),a2
 		bsr.w	SetupObject
-		ori.b	#render_rel,ost_render(a0)
 		moveq	#0,d0
 		move.b	ost_subtype(a0),d0			; get object type
 		andi.w	#$F,d0					; read only low nybble

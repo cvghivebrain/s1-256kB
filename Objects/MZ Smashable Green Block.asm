@@ -37,7 +37,6 @@ Smab_Main:	; Routine 0
 		bsr.w	SetupObject
 
 Smab_Solid:	; Routine 2
-
 		move.w	(v_enemy_combo).w,ost_smash_count(a0)
 		move.b	(v_ost_player+ost_anim).w,ost_smash_sonic_ani(a0) ; load Sonic's animation number
 		move.w	#$1B,d1
@@ -67,7 +66,7 @@ Smab_Solid:	; Routine 2
 		bclr	#status_platform_bit,ost_status(a0)
 		clr.b	ost_solid(a0)
 		lea	(Smab_Speeds).l,a4			; load broken fragment speed data
-		moveq	#3,d1					; set number of	fragments to 4
+		moveq	#3,d3					; set number of	fragments to 4
 		move.w	#$38,d2					; gravity
 		bsr.w	SmashObject				; break block into 4 fragments, goto Smab_FragMove next
 

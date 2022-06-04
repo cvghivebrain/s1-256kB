@@ -64,6 +64,8 @@ Swing_Settings:	dc.b ost_routine,2
 		dc.b ost_priority,3
 		dc.b ost_actwidth,32
 		dc.b ost_height,8
+		dc.b so_copy_word,ost_y_pos,ost_swing_y_start
+		dc.b so_copy_word,ost_x_pos,ost_swing_x_start
 		dc.b so_end
 		even
 SwSLZ_Settings:	dc.b so_write_long,ost_mappings
@@ -83,6 +85,16 @@ SwSBZ_Settings:	dc.b so_write_long,ost_mappings
 		dc.b ost_routine,id_Swing_Action
 		dc.b so_end
 		even
+Swing_Settings2:
+		dc.b ost_routine,id_Swing_Display
+		dc.b so_inherit_long,ost_mappings
+		dc.b so_inherit_word,ost_tile
+		dc.b ost_render,render_rel
+		dc.b ost_priority,4
+		dc.b ost_actwidth,8
+		dc.b ost_frame,id_frame_swing_chain
+		dc.b so_end
+		even
 		
 Swing_Setupbra:	bra.w	SetupObject
 ; ===========================================================================
@@ -90,8 +102,6 @@ Swing_Setupbra:	bra.w	SetupObject
 Swing_Main:	; Routine 0
 		lea	Swing_Settings(pc),a2
 		bsr.s	Swing_Setupbra
-		move.w	ost_y_pos(a0),ost_swing_y_start(a0)
-		move.w	ost_x_pos(a0),ost_swing_x_start(a0)
 		cmpi.b	#id_SLZ,(v_zone).w			; check if level is SLZ
 		bne.s	@notSLZ
 
@@ -107,12 +117,12 @@ Swing_Main:	; Routine 0
 
 @length:
 		move.b	ost_id(a0),d4
-		moveq	#0,d1
-		lea	ost_subtype(a0),a2			; (a2) = chain length, followed by child OST indices
-		move.b	(a2),d1					; d1 = chain length
-		andi.w	#$F,d1					; max length is 15
-		move.b	#0,(a2)+				; clear subtype
-		move.w	d1,d3
+		moveq	#0,d2
+		lea	ost_subtype(a0),a3			; (a3) = chain length, followed by child OST indices
+		move.b	(a3),d2					; d2 = chain length
+		andi.w	#$F,d2					; max length is 15
+		move.b	#0,(a3)+				; clear subtype
+		move.w	d2,d3
 		lsl.w	#4,d3					; d3 = chain length in pixels
 		addq.b	#8,d3
 		move.b	d3,ost_swing_radius(a0)			; relative position of parent (the platform itself)
@@ -120,7 +130,7 @@ Swing_Main:	; Routine 0
 		tst.b	ost_frame(a0)
 		beq.s	@makechain
 		addq.b	#8,d3
-		subq.w	#1,d1
+		subq.w	#1,d2
 
 @makechain:
 		bsr.w	FindFreeObj				; find free OST slot
@@ -130,16 +140,11 @@ Swing_Main:	; Routine 0
 		subi.w	#v_ost_all&$FFFF,d5
 		lsr.w	#6,d5
 		andi.w	#$7F,d5					; convert child OST address to index
-		move.b	d5,(a2)+				; save child OST index to byte list in parent OST
-		move.b	#id_Swing_Display,ost_routine(a1)	; goto Swing_Display next
+		move.b	d5,(a3)+				; save child OST index to byte list in parent OST
+		lea	Swing_Settings2(pc),a2
+		bsr.w	SetupChild
 		move.b	d4,ost_id(a1)				; load swinging	object
-		move.l	ost_mappings(a0),ost_mappings(a1)
-		move.w	ost_tile(a0),ost_tile(a1)
 		bclr	#tile_pal34_bit,ost_tile(a1)
-		move.b	#render_rel,ost_render(a1)
-		move.b	#4,ost_priority(a1)
-		move.b	#8,ost_actwidth(a1)
-		move.b	#id_frame_swing_chain,ost_frame(a1)	; use chain sprite
 		move.b	d3,ost_swing_radius(a1)			; radius is smaller for chainlinks closer to top
 		subi.b	#$10,d3					; each one is 16px higher
 		bcc.s	@notanchor				; branch if not the highest link
@@ -148,14 +153,14 @@ Swing_Main:	; Routine 0
 		bset	#tile_pal34_bit,ost_tile(a1)
 
 	@notanchor:
-		dbf	d1,@makechain				; repeat d1 times (chain length)
+		dbf	d2,@makechain				; repeat d2 times (chain length)
 
 	@fail:
 		move.w	a0,d5					; get parent OST address
 		subi.w	#v_ost_all&$FFFF,d5
 		lsr.w	#6,d5
 		andi.w	#$7F,d5					; convert to index
-		move.b	d5,(a2)+				; save to end of child OST list
+		move.b	d5,(a3)+				; save to end of child OST list
 		cmpi.b	#id_SBZ,(v_zone).w			; is zone SBZ?
 		beq.s	Swing_Action				; if yes, branch
 

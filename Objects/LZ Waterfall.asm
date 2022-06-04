@@ -25,6 +25,7 @@ WFall_Settings:	dc.b ost_routine,4
 		dc.w $23E+tile_pal3
 		dc.b ost_actwidth,$18
 		dc.b ost_priority,1
+		dc.b so_render_rel
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -32,7 +33,6 @@ WFall_Settings:	dc.b ost_routine,4
 WFall_Main:	; Routine 0
 		lea	WFall_Settings(pc),a2
 		bsr.w	SetupObject
-		ori.b	#render_rel,ost_render(a0)
 		move.b	ost_subtype(a0),d0			; get object type
 		bpl.s	@under80				; branch if $00-$7F
 		bset	#tile_hi_bit,ost_tile(a0)

@@ -54,6 +54,7 @@ SpinC_Settings:	dc.b ost_routine,2
 		dc.w $42E
 		dc.b ost_actwidth,16
 		dc.b ost_priority,4
+		dc.b so_render_rel
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -63,7 +64,6 @@ SpinC_Main:	; Routine 0
 		bmi.w	SpinC_LoadPlatforms			; branch if subtype is $80+
 		lea	SpinC_Settings(pc),a2
 		bsr.w	SetupObject
-		ori.b	#render_rel,ost_render(a0)
 
 		moveq	#0,d0
 		move.b	ost_subtype(a0),d0			; get subtype (not the same as initial subtype)

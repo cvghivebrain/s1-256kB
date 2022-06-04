@@ -25,8 +25,9 @@ Harp_Settings:	dc.b ost_routine,2
 		dc.w $3AB
 		dc.b ost_priority,4
 		dc.b ost_actwidth,20
-		dc.b so_write_word,ost_harp_time
-		dc.w 60
+		dc.b ost_harp_time+1,60
+		dc.b so_copy_byte,ost_subtype,ost_anim
+		dc.b so_render_rel
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -34,8 +35,6 @@ Harp_Settings:	dc.b ost_routine,2
 Harp_Main:	; Routine 0
 		lea	Harp_Settings(pc),a2
 		bsr.w	SetupObject
-		ori.b	#render_rel,ost_render(a0)
-		move.b	ost_subtype(a0),ost_anim(a0)		; get type (vert/horiz)
 
 Harp_Move:	; Routine 2
 		lea	(Ani_Harp).l,a1

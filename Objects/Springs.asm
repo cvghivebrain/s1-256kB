@@ -44,6 +44,16 @@ Spring_Settings:
 		dc.w vram_hspring/32
 		dc.b ost_actwidth,16
 		dc.b ost_priority,4
+		dc.b so_render_rel
+		dc.b so_end
+		even
+Spring_Settings2:
+		dc.b ost_routine,id_Spring_LR
+		dc.b ost_anim,id_ani_spring_left
+		dc.b ost_frame,id_frame_spring_left
+		dc.b so_write_word,ost_tile
+		dc.w vram_vspring/32
+		dc.b ost_actwidth,8
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -51,16 +61,11 @@ Spring_Settings:
 Spring_Main:	; Routine 0
 		lea	Spring_Settings(pc),a2
 		bsr.w	SetupObject
-		ori.b	#render_rel,ost_render(a0)
 		move.b	ost_subtype(a0),d0
 		btst	#4,d0					; is spring type $1x? (horizontal)
 		beq.s	@not_horizontal				; if not, branch
-
-		move.b	#id_Spring_LR,ost_routine(a0)		; goto Spring_LR next
-		move.b	#id_ani_spring_left,ost_anim(a0)
-		move.b	#id_frame_spring_left,ost_frame(a0)
-		move.w	#vram_vspring/32,ost_tile(a0)
-		move.b	#8,ost_actwidth(a0)
+		lea	Spring_Settings2(pc),a2
+		bsr.w	SetupObject
 
 	@not_horizontal:
 		btst	#5,d0					; is spring type $2x? (downwards)

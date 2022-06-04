@@ -7,10 +7,10 @@ Map_BSBall:	index *
 
 frame_bsball_fireball1:
 		spritemap
-		piece	-4, -4, 1x1, $27
+		piece	-4, -4, 1x1, 0
 		endsprite
 frame_bsball_fireball2:
 		spritemap
-		piece	-4, -4, 1x1, $28
+		piece	-4, -4, 1x1, 1
 		endsprite
 		even

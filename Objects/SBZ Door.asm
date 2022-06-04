@@ -22,6 +22,7 @@ ADoor_Settings:	dc.b ost_routine,2
 		dc.w $2D1+tile_pal3
 		dc.b ost_actwidth,8
 		dc.b ost_priority,4
+		dc.b so_render_rel
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -29,7 +30,6 @@ ADoor_Settings:	dc.b ost_routine,2
 ADoor_Main:	; Routine 0
 		lea	ADoor_Settings(pc),a2
 		bsr.w	SetupObject
-		ori.b	#render_rel,ost_render(a0)
 
 ADoor_OpenShut:	; Routine 2
 		move.w	#$40,d1					; set range for door detection

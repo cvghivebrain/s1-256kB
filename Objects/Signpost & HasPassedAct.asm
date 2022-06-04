@@ -81,8 +81,6 @@ Sign_Spin:	; Routine 4
 		lea	Sign_SparkPos(pc,d0.w),a2		; load sparkle position data
 		bsr.w	FindFreeObj				; find free OST slot
 		bne.s	@fail					; branch if not found
-		move.b	#id_Rings,ost_id(a1)			; load rings object
-		move.b	#id_Ring_Sparkle,ost_routine(a1)	; jump to ring sparkle subroutine
 		move.b	(a2)+,d0				; get relative x position
 		ext.w	d0
 		add.w	ost_x_pos(a0),d0			; add to signpost x position
@@ -91,14 +89,24 @@ Sign_Spin:	; Routine 4
 		ext.w	d0
 		add.w	ost_y_pos(a0),d0
 		move.w	d0,ost_y_pos(a1)
-		move.l	#Map_Ring,ost_mappings(a1)
-		move.w	#$7AA+tile_pal2,ost_tile(a1)
-		move.b	#render_rel,ost_render(a1)
-		move.b	#2,ost_priority(a1)
-		move.b	#8,ost_actwidth(a1)
+		lea	Sign_Settings2(pc),a2
+		bsr.w	SetupChild
 
 	@fail:
-		rts	
+		rts
+
+Sign_Settings2:
+		dc.b so_write_long,ost_mappings
+		dc.l Map_Ring
+		dc.b so_write_word,ost_tile
+		dc.w $7AA+tile_pal2
+		dc.b ost_render,render_rel
+		dc.b ost_priority,2
+		dc.b ost_actwidth,8
+		dc.b ost_id,id_Rings
+		dc.b ost_routine,id_Ring_Sparkle
+		dc.b so_end
+		even
 ; ===========================================================================
 Sign_SparkPos:	; x pos, y pos
 		dc.b -$18,-$10

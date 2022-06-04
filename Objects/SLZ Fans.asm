@@ -25,6 +25,7 @@ Fan_Settings:	dc.b ost_routine,2
 		dc.w $39D+tile_pal3
 		dc.b ost_actwidth,16
 		dc.b ost_priority,4
+		dc.b so_render_rel
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -32,7 +33,6 @@ Fan_Settings:	dc.b ost_routine,2
 Fan_Main:	; Routine 0
 		lea	Fan_Settings(pc),a2
 		bsr.w	SetupObject
-		ori.b	#render_rel,ost_render(a0)
 
 Fan_Delay:	; Routine 2
 		btst	#1,ost_subtype(a0)			; is object type 2 or 3? (always on)

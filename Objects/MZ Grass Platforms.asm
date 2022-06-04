@@ -41,6 +41,8 @@ LGrass_Settings:
 		dc.b ost_render,render_rel+render_useheight
 		dc.b ost_priority,5
 		dc.b ost_height,$40
+		dc.b so_copy_word,ost_y_pos,ost_grass_y_start
+		dc.b so_copy_word,ost_x_pos,ost_grass_x_start
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -48,8 +50,6 @@ LGrass_Settings:
 LGrass_Main:	; Routine 0
 		lea	LGrass_Settings(pc),a2
 		bsr.w	SetupObject
-		move.w	ost_y_pos(a0),ost_grass_y_start(a0)
-		move.w	ost_x_pos(a0),ost_grass_x_start(a0)
 		moveq	#0,d0
 		move.b	ost_subtype(a0),d0
 		lsr.w	#2,d0
@@ -196,14 +196,10 @@ LGrass_Type05:
 		bsr.w	FindNextFreeObj				; find free OST slot
 		bne.s	@skip_fire				; branch if not found
 
-		move.b	#id_GrassFire,ost_id(a1)		; load sitting flame object (this spreads itself)
-		move.w	ost_x_pos(a0),ost_x_pos(a1)
-		move.w	ost_grass_y_start(a0),ost_burn_y_start(a1)
-		addq.w	#8,ost_burn_y_start(a1)
-		subq.w	#3,ost_burn_y_start(a1)
+		lea	LGrass_Settings2(pc),a2
+		bsr.w	SetupChild
+		addq.w	#5,ost_burn_y_start(a1)
 		subi.w	#$40,ost_x_pos(a1)			; start at left side of platform
-		move.l	ost_grass_coll_ptr(a0),ost_burn_coll_ptr(a1)
-		move.l	a0,ost_burn_parent(a1)			; save parent OST address
 		movea.l	a0,a2
 		bsr.s	LGrass_AddChildToList			; save first flame OST index to list in parent OST
 
@@ -284,3 +280,13 @@ LGrass_DelFlames:
 
 	@no_fire:
 		rts
+
+
+LGrass_Settings2:
+		dc.b ost_id,id_GrassFire
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_inherit_word,ost_grass_y_start
+		dc.b so_inherit_long,ost_grass_coll_ptr
+		dc.b so_set_parent,ost_burn_parent
+		dc.b so_end
+		even

@@ -27,28 +27,40 @@ ost_has_x_start:	equ $32					; start & finish x position (2 bytes)
 
 include_Has_Config:	macro
 		; x pos start, x pos stop, y pos
-		; routine, frame
+		; frame
 Has_Config:	dc.w 4, $124, $BC				; "SONIC HAS"
-		dc.b id_Has_Move, id_frame_has_sonichas
 
 		dc.w -$120, $120, $D0				; "PASSED"
-		dc.b id_Has_Move, id_frame_has_passed
 
 		dc.w $40C, $14C, $D6				; "ACT" 1/2/3
-		dc.b id_Has_Move, id_frame_card_act1_6
 
 		dc.w $520, $120, $EC				; score
-		dc.b id_Has_Move, id_frame_has_score
 
 		dc.w $540, $120, $FC				; time bonus
-		dc.b id_Has_Move, id_frame_has_timebonus
 
 		dc.w $560, $120, $10C				; ring bonus
-		dc.b id_Has_Move, id_frame_has_ringbonus
 
 		dc.w $20C, $14C, $CC				; oval
-		dc.b id_Has_Move, id_frame_card_oval_5
 		endm
+
+Has_Config2:	dc.b id_frame_has_sonichas
+		dc.b id_frame_has_passed
+		dc.b id_frame_card_act1_6
+		dc.b id_frame_has_score
+		dc.b id_frame_has_timebonus
+		dc.b id_frame_has_ringbonus
+		dc.b id_frame_card_oval_5
+		even
+
+Has_Settings:	dc.b ost_id,id_HasPassedCard
+		dc.b ost_routine,id_Has_Move
+		dc.b so_write_long,ost_mappings
+		dc.l Map_Has
+		dc.b so_write_word,ost_tile
+		dc.w tile_Nem_TitleCard+tile_hi
+		dc.b so_copy_word,ost_x_pos,ost_has_x_start
+		dc.b so_end
+		even
 ; ===========================================================================
 
 Has_Main:	; Routine 0
@@ -59,28 +71,25 @@ Has_Main:	; Routine 0
 
 @plc_free:
 		movea.l	a0,a1					; replace current object with 1st from list
-		lea	(Has_Config).l,a2			; position, routine & frame settings
-		moveq	#6,d1					; 6 additional items
+		lea	(Has_Config).l,a3			; position, routine & frame settings
+		lea	Has_Config2(pc),a4
+		moveq	#6,d2					; 6 additional items
 
 	@loop:
-		move.b	#id_HasPassedCard,ost_id(a1)
-		move.w	(a2),ost_x_pos(a1)			; set actual x position
-		move.w	(a2)+,ost_has_x_start(a1)		; set start x position (same as actual)
-		move.w	(a2)+,ost_has_x_stop(a1)		; set stop x position
-		move.w	(a2)+,ost_y_screen(a1)			; set y position
-		move.b	(a2)+,ost_routine(a1)			; goto Has_Move next
-		move.b	(a2)+,d0				; get frame number
+		move.w	(a3)+,ost_x_pos(a1)			; set actual x position
+		lea	Has_Settings(pc),a2
+		bsr.w	SetupChild
+		move.w	(a3)+,ost_has_x_stop(a1)		; set stop x position
+		move.w	(a3)+,ost_y_screen(a1)			; set y position
+		move.b	(a4)+,d0				; get frame number
 		cmpi.b	#id_frame_card_act1_6,d0		; is object the act number?
 		bne.s	@not_act				; if not, branch
 		add.b	(v_act).w,d0				; add act number to frame number
 
 	@not_act:
 		move.b	d0,ost_frame(a1)			; set frame number
-		move.l	#Map_Has,ost_mappings(a1)
-		move.w	#tile_Nem_TitleCard+tile_hi,ost_tile(a1)
-		move.b	#render_abs,ost_render(a1)
 		lea	sizeof_ost(a1),a1			; next OST slot in RAM
-		dbf	d1,@loop				; repeat 6 times
+		dbf	d2,@loop				; repeat 6 times
 
 Has_Move:	; Routine 2
 		moveq	#$10,d1					; set horizontal speed (moves right)

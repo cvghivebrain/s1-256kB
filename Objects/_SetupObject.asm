@@ -16,6 +16,7 @@ so_inherit_byte:	equ -14
 so_inherit_word:	equ -16
 so_inherit_long:	equ -18
 so_render_rel:		equ -20
+so_set_parent:		equ -22
 
 SetupChild:
 		exg	a0,a1					; make child the primary object
@@ -50,6 +51,7 @@ SO_Index:	index *,,2
 		ptr @inherit_word	; 16
 		ptr @inherit_long	; 18
 		ptr @render_rel		; 20
+		ptr @set_parent		; 22
 	
 	@get_ost_pair:
 		moveq	#0,d1
@@ -76,12 +78,12 @@ SO_Index:	index *,,2
 		
 	@copy_word:
 		bsr.s	@get_ost_pair
-		move.w	(a0,d0.w),(a0,d1.w)			; write byte to OST
+		move.w	(a0,d0.w),(a0,d1.w)			; write word to OST
 		bra.s	SO_Loop					; continue reading script
 		
 	@copy_long:
 		bsr.s	@get_ost_pair
-		move.l	(a0,d0.w),(a0,d1.w)			; write byte to OST
+		move.l	(a0,d0.w),(a0,d1.w)			; write longword to OST
 		bra.s	SO_Loop					; continue reading script
 		
 	@inherit_byte:
@@ -91,15 +93,20 @@ SO_Index:	index *,,2
 		
 	@inherit_word:
 		move.b	(a2)+,d0				; get OST address
-		move.w	(a1,d0.w),(a0,d0.w)			; write byte to OST
+		move.w	(a1,d0.w),(a0,d0.w)			; write word to OST
 		bra.s	SO_Loop					; continue reading script
 		
 	@inherit_long:
 		move.b	(a2)+,d0				; get OST address
-		move.l	(a1,d0.w),(a0,d0.w)			; write byte to OST
+		move.l	(a1,d0.w),(a0,d0.w)			; write longword to OST
 		bra.s	SO_Loop					; continue reading script
 		
 	@render_rel:
 		ori.b	#render_rel,ost_render(a0)		; set render flag
+		bra.w	SO_Loop					; continue reading script
+		
+	@set_parent:
+		move.b	(a2)+,d0				; get OST address
+		move.l	a1,(a0,d0.w)				; write longword to OST
 		bra.w	SO_Loop					; continue reading script
 		

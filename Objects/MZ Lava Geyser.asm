@@ -23,6 +23,22 @@ Geyser_Speeds:	dc.w -$500					; 0 - geyser
 
 ost_geyser_y_start:	equ $30					; original y position (2 bytes)
 ost_geyser_parent:	equ $3C					; address of OST of parent object (4 bytes)
+
+Geyser_Settings:
+		dc.b ost_id,id_LavaGeyser
+		dc.b so_write_long,ost_mappings
+		dc.l Map_Geyser
+		dc.b so_write_word,ost_tile
+		dc.w $34A+tile_pal4
+		dc.b ost_render,render_rel
+		dc.b ost_actwidth,32
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_inherit_word,ost_y_pos
+		dc.b so_inherit_byte,ost_subtype
+		dc.b ost_priority,1
+		dc.b ost_anim,id_ani_geyser_bubble4
+		dc.b so_end
+		even
 ; ===========================================================================
 
 Geyser_Main:	; Routine 0
@@ -38,7 +54,7 @@ Geyser_Main:	; Routine 0
 		add.w	d0,d0
 		move.w	Geyser_Speeds(pc,d0.w),ost_y_vel(a0)	; set y speed based on subtype
 		movea.l	a0,a1
-		moveq	#1,d1
+		moveq	#1,d2
 		bsr.s	@makelava
 		bra.s	@activate
 ; ===========================================================================
@@ -48,23 +64,15 @@ Geyser_Main:	; Routine 0
 		bne.s	@fail
 
 @makelava:
-		move.b	#id_LavaGeyser,ost_id(a1)
-		move.l	#Map_Geyser,ost_mappings(a1)
-		move.w	#$34A+tile_pal4,ost_tile(a1)
-		move.b	#render_rel,ost_render(a1)
-		move.b	#$20,ost_actwidth(a1)
-		move.w	ost_x_pos(a0),ost_x_pos(a1)
-		move.w	ost_y_pos(a0),ost_y_pos(a1)
-		move.b	ost_subtype(a0),ost_subtype(a1)
-		move.b	#1,ost_priority(a1)
-		move.b	#id_ani_geyser_bubble4,ost_anim(a1)
+		lea	Geyser_Settings(pc),a2
+		bsr.w	SetupChild
 		tst.b	ost_subtype(a0)
 		beq.s	@fail					; branch if geyser
 		move.b	#id_ani_geyser_end,ost_anim(a1)		; use different animation for lavafall
 
 	@fail:
-		dbf	d1,@loop				; repeat once for middle section
-		rts	
+		dbf	d2,@loop				; repeat once for middle section
+		rts
 ; ===========================================================================
 
 @activate:
@@ -79,7 +87,7 @@ Geyser_Main:	; Routine 0
 		tst.b	ost_subtype(a0)
 		beq.s	@sound					; branch if geyser
 
-		moveq	#0,d1
+		moveq	#0,d2
 		bsr.w	@loop					; load one more object
 		addq.b	#2,ost_routine(a1)			; goto Geyser_Action next
 		bset	#tile_yflip_bit,ost_tile(a1)

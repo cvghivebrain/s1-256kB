@@ -39,6 +39,9 @@ Sto_Settings:	dc.b ost_routine,2
 		dc.b so_write_word,ost_tile
 		dc.w $2A9+tile_pal2
 		dc.b ost_priority,4
+		dc.b so_copy_word,ost_x_pos,ost_stomp_x_start
+		dc.b so_copy_word,ost_y_pos,ost_stomp_y_start
+		dc.b so_render_rel
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -86,9 +89,6 @@ Sto_Main:	; Routine 0
 ; ===========================================================================
 
 @skip_sbz3_init:
-		ori.b	#render_rel,ost_render(a0)
-		move.w	ost_x_pos(a0),ost_stomp_x_start(a0)
-		move.w	ost_y_pos(a0),ost_stomp_y_start(a0)
 		moveq	#0,d0
 		move.b	(a3)+,d0
 		move.w	d0,ost_stomp_distance(a0)		; set distance to move

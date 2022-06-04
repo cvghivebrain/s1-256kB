@@ -91,7 +91,6 @@ Buzz_Move:
 
 	@noflip:
 		add.w	d0,ost_x_pos(a1)
-		move.l	a0,ost_missile_parent(a1)
 		move.b	#1,ost_buzz_mode(a0)			; set to "already fired" to prevent refiring
 		move.w	#59,ost_buzz_wait_time(a0)
 		move.b	#id_ani_buzz_fire,ost_anim(a0)		; use "firing" animation
@@ -108,6 +107,7 @@ Buzz_Settings2:	dc.b ost_id,id_Missile
 		dc.b so_inherit_word,ost_x_pos
 		dc.b so_inherit_word,ost_y_pos
 		dc.b so_inherit_byte,ost_status
+		dc.b so_set_parent,ost_missile_parent
 		dc.b so_end
 		even
 ; ===========================================================================

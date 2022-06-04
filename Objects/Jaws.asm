@@ -28,6 +28,7 @@ Jaws_Settings:	dc.b ost_routine,2
 		dc.b ost_actwidth,16
 		dc.b so_write_word,ost_x_vel
 		dc.w -$40
+		dc.b so_render_rel
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -35,7 +36,6 @@ Jaws_Settings:	dc.b ost_routine,2
 Jaws_Main:	; Routine 0
 		lea	Jaws_Settings(pc),a2
 		bsr.w	SetupObject
-		ori.b	#render_rel,ost_render(a0)
 		moveq	#0,d0
 		move.b	ost_subtype(a0),d0			; load object subtype number
 		lsl.w	#6,d0					; multiply d0 by 64

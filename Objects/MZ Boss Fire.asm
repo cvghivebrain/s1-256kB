@@ -23,18 +23,25 @@ ost_bfire_wait_time:	equ $29					; time to wait between events
 ost_bfire_x_start:	equ $30					; original x position (2 bytes)
 ost_bfire_x_prev:	equ $32					; x position where most recent fire spread object was spawned (2 bytes)
 ost_bfire_y_start:	equ $38					; original y position (2 bytes)
+
+BFire_Settings:	dc.b ost_height,8
+		dc.b ost_width,8
+		dc.b so_write_long,ost_mappings
+		dc.l Map_Fire
+		dc.b so_write_word,ost_tile
+		dc.w $3E6
+		dc.b ost_render,render_rel
+		dc.b ost_priority,5
+		dc.b ost_actwidth,8
+		dc.b ost_routine,2
+		dc.b so_copy_word,ost_y_pos,ost_bfire_y_start
+		dc.b so_end
+		even
 ; ===========================================================================
 
 BFire_Main:	; Routine 0
-		move.b	#8,ost_height(a0)
-		move.b	#8,ost_width(a0)
-		move.l	#Map_Fire,ost_mappings(a0)
-		move.w	#$3E6,ost_tile(a0)
-		move.b	#render_rel,ost_render(a0)
-		move.b	#5,ost_priority(a0)
-		move.w	ost_y_pos(a0),ost_bfire_y_start(a0)
-		move.b	#8,ost_actwidth(a0)
-		addq.b	#2,ost_routine(a0)			; goto BFire_Action next
+		lea	BFire_Settings(pc),a2
+		jsr	SetupObject
 		tst.b	ost_subtype(a0)				; is subtype 0?
 		bne.s	BFire_First				; if not, branch
 		move.b	#id_col_8x8+id_col_hurt,ost_col_type(a0)
@@ -115,14 +122,19 @@ BFire_addroutine2:
 BFire_SpawnFire:
 		jsr	(FindNextFreeObj).l			; find free OST slot
 		bne.s	@fail					; branch if not found
-		move.w	ost_x_pos(a0),ost_x_pos(a1)
-		move.w	ost_y_pos(a0),ost_y_pos(a1)
-		move.b	#id_BossFire,(a1)			; load fireball object
-		move.w	#$67,ost_subtype(a1)			; subtype 0, timer 1.7 seconds
+		lea	BFire_Settings2(pc),a2
+		jsr	SetupChild
 
 	@fail:
-		rts	
-; End of function BFire_SpawnFire
+		rts
+
+BFire_Settings2:
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_inherit_word,ost_y_pos
+		dc.b ost_id,id_BossFire
+		dc.b ost_subtype+1,$67
+		dc.b so_end
+		even
 
 ; ===========================================================================
 

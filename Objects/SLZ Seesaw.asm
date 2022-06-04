@@ -44,6 +44,16 @@ See_Settings:	dc.b ost_routine,2
 		dc.w $35F
 		dc.b ost_priority,4
 		dc.b ost_actwidth,$30
+		dc.b so_copy_word,ost_x_pos,ost_seesaw_x_start
+		dc.b so_render_rel
+		dc.b so_end
+		even
+See_Settings2:	dc.b ost_id,id_Seesaw
+		dc.b ost_routine,id_See_Spikeball
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_inherit_word,ost_y_pos
+		dc.b so_inherit_byte,ost_status
+		dc.b so_set_parent,ost_seesaw_parent
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -51,19 +61,13 @@ See_Settings:	dc.b ost_routine,2
 See_Main:	; Routine 0
 		lea	See_Settings(pc),a2
 		bsr.w	SetupObject
-		ori.b	#render_rel,ost_render(a0)
-		move.w	ost_x_pos(a0),ost_seesaw_x_start(a0)
 		tst.b	ost_subtype(a0)				; is object type 0?
 		bne.s	@noball					; if not, branch
 
 		bsr.w	FindNextFreeObj				; find free OST slot
 		bne.s	@noball					; branch if not found
-		move.b	#id_Seesaw,ost_id(a1)			; load spikeball object
-		addq.b	#id_See_Spikeball,ost_routine(a1)	; goto See_Spikeball next
-		move.w	ost_x_pos(a0),ost_x_pos(a1)		; spikeball position is updated later
-		move.w	ost_y_pos(a0),ost_y_pos(a1)
-		move.b	ost_status(a0),ost_status(a1)
-		move.l	a0,ost_seesaw_parent(a1)		; save address of OST of parent (seesaw)
+		lea	See_Settings2(pc),a2
+		bsr.w	SetupChild
 
 	@noball:
 		btst	#status_xflip_bit,ost_status(a0)	; is seesaw flipped?
@@ -146,19 +150,25 @@ See_ChgFrame:
 	@noflip:
 		rts	
 ; ===========================================================================
+See_Settings3:	dc.b ost_routine,id_See_SpikeAction
+		dc.b so_write_long,ost_mappings
+		dc.l Map_SSawBall
+		dc.b so_write_word,ost_tile
+		dc.w $38B
+		dc.b ost_priority,4
+		dc.b ost_col_type,id_col_8x8+id_col_hurt
+		dc.b ost_actwidth,12
+		dc.b so_copy_word,ost_x_pos,ost_seesaw_x_start
+		dc.b so_copy_word,ost_y_pos,ost_seesaw_y_start
+		dc.b ost_frame,id_frame_seesaw_silver
+		dc.b so_render_rel
+		dc.b so_end
+		even
 
 See_Spikeball:	; Routine 6
-		addq.b	#2,ost_routine(a0)			; goto See_SpikeAction next
-		move.l	#Map_SSawBall,ost_mappings(a0)
-		move.w	#$38B,ost_tile(a0)
-		ori.b	#render_rel,ost_render(a0)
-		move.b	#4,ost_priority(a0)
-		move.b	#id_col_8x8+id_col_hurt,ost_col_type(a0)
-		move.b	#$C,ost_actwidth(a0)
-		move.w	ost_x_pos(a0),ost_seesaw_x_start(a0)
+		lea	See_Settings3(pc),a2
+		bsr.w	SetupObject
 		addi.w	#$28,ost_x_pos(a0)			; move spikeball to right side
-		move.w	ost_y_pos(a0),ost_seesaw_y_start(a0)
-		move.b	#id_frame_seesaw_silver,ost_frame(a0)
 		btst	#status_xflip_bit,ost_status(a0)	; is seesaw flipped?
 		beq.s	See_SpikeAction				; if not, branch
 		subi.w	#$50,ost_x_pos(a0)			; move spikeball to left side

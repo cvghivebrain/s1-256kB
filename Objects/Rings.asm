@@ -38,6 +38,20 @@ Ring_Spacing:	dc.b $10, 0					; horizontal tight
 
 ost_ring_x_main:	equ $32					; x position of primary ring (2 bytes)
 ost_ring_num:		equ $34					; which ring in the group of 1-7 rings it is
+
+Ring_Settings:	dc.b ost_id,id_Rings
+		dc.b ost_routine,2
+		dc.b so_write_long,ost_mappings
+		dc.l Map_Ring
+		dc.b so_write_word,ost_tile
+		dc.w $7AA+tile_pal2
+		dc.b ost_render,render_rel
+		dc.b ost_priority,2
+		dc.b ost_col_type,id_col_6x6+id_col_item
+		dc.b ost_actwidth,8
+		dc.b so_inherit_byte,ost_respawn
+		dc.b so_end
+		even
 ; ===========================================================================
 
 Ring_Main:	; Routine 0
@@ -80,18 +94,13 @@ Ring_Main:	; Routine 0
 		bne.s	@fail					; branch if not found
 
 @load_first:
-		move.b	#id_Rings,ost_id(a1)			; load ring object
-		addq.b	#2,ost_routine(a1)			; goto Ring_Animate next
+		move.l	d1,-(sp)
+		lea	Ring_Settings(pc),a2
+		bsr.w	SetupChild
+		move.l	(sp)+,d1
 		move.w	d2,ost_x_pos(a1)			; set x position based on d2
 		move.w	ost_x_pos(a0),ost_ring_x_main(a1)
 		move.w	d3,ost_y_pos(a1)			; set y position based on d3
-		move.l	#Map_Ring,ost_mappings(a1)
-		move.w	#$7AA+tile_pal2,ost_tile(a1)
-		move.b	#render_rel,ost_render(a1)
-		move.b	#2,ost_priority(a1)
-		move.b	#id_col_6x6+id_col_item,ost_col_type(a1) ; goto Ring_Collect when touched
-		move.b	#8,ost_actwidth(a1)
-		move.b	ost_respawn(a0),ost_respawn(a1)
 		move.b	d1,ost_ring_num(a1)			; ring remembers which one in the current batch it is 
 
 @skip_ring:

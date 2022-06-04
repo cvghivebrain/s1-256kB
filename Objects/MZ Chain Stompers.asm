@@ -53,47 +53,53 @@ CStom_Main:	; Routine 0
 		move.w	d2,ost_cstomp_chain_length(a0)		; if subtype is 0, chain starts at max length
 
 	@not_0:
-		lea	(CStom_Var).l,a2
+		lea	(CStom_Var).l,a3
 		movea.l	a0,a1					; first object is parent (block)
-		moveq	#3,d1					; 3 additional objects (chain, spikes, ceiling)
+		moveq	#3,d4					; 3 additional objects (chain, spikes, ceiling)
 		bra.s	CStom_MakeStomper
 ; ===========================================================================
+CStom_Settings:	dc.b ost_id,id_ChainStomp
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_write_long,ost_mappings
+		dc.l Map_CStom
+		dc.b so_write_word,ost_tile
+		dc.w $2F0
+		dc.b ost_render,render_rel
+		dc.b so_inherit_byte,ost_subtype
+		dc.b ost_actwidth,16
+		dc.b ost_priority,4
+		dc.b so_copy_word,ost_y_pos,ost_cstomp_y_start
+		dc.b so_set_parent,ost_cstomp_parent
+		dc.b so_end
+		even
 
 CStom_Loop:
 		bsr.w	FindNextFreeObj				; find free OST slot
 		bne.w	CStom_SetSize				; branch if not found
 
 CStom_MakeStomper:
-		move.b	(a2)+,ost_routine(a1)			; goto CStom_Block/CStom_Spikes/CStom_Chain/CStom_Ceiling next
-		move.b	#id_ChainStomp,ost_id(a1)
-		move.w	ost_x_pos(a0),ost_x_pos(a1)
-		move.b	(a2)+,d0				; get relative y position
+		move.b	(a3)+,ost_routine(a1)			; goto CStom_Block/CStom_Spikes/CStom_Chain/CStom_Ceiling next
+		move.b	(a3)+,d0				; get relative y position
 		ext.w	d0
-		add.w	ost_y_pos(a0),d0			; add to initial y position
-		move.w	d0,ost_y_pos(a1)
-		move.l	#Map_CStom,ost_mappings(a1)
-		move.w	#$2F0,ost_tile(a1)
-		move.b	#render_rel,ost_render(a1)
-		move.w	ost_y_pos(a1),ost_cstomp_y_start(a1)
-		move.b	ost_subtype(a0),ost_subtype(a1)
-		move.b	#$10,ost_actwidth(a1)
+		move.w	ost_y_pos(a0),ost_y_pos(a1)
+		add.w	d0,ost_y_pos(a1)
+		lea	CStom_Settings(pc),a2
+		bsr.w	SetupChild
 		move.w	d2,ost_cstomp_chain_max(a1)
-		move.b	#4,ost_priority(a1)
-		move.b	(a2)+,ost_frame(a1)
+		move.b	(a3)+,ost_frame(a1)
 		cmpi.b	#id_frame_cstomp_spikes,ost_frame(a1)	; is the spikes component being loaded?
 		bne.s	@not_spikes				; if not, branch
-		subq.w	#1,d1
+		subq.w	#1,d4
 		move.b	ost_subtype(a0),d0
 		andi.w	#$F0,d0					; read high nybble of subtype
 		cmpi.w	#$20,d0					; is subtype $2x (no spikes)?
 		beq.s	CStom_MakeStomper			; if yes, branch
 		move.b	#$38,ost_actwidth(a1)
 		move.b	#id_col_40x16+id_col_hurt,ost_col_type(a1) ; make spikes harmful
-		addq.w	#1,d1
+		addq.w	#1,d4
 
 	@not_spikes:
-		move.l	a0,ost_cstomp_parent(a1)
-		dbf	d1,CStom_Loop
+		dbf	d4,CStom_Loop
 
 		move.b	#3,ost_priority(a1)
 

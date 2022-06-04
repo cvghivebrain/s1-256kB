@@ -33,6 +33,18 @@ Orb_Settings:	dc.b so_write_long,ost_mappings
 		dc.b ost_priority,4
 		dc.b ost_col_type,id_col_8x8
 		dc.b ost_actwidth,12
+		dc.b so_render_rel
+		dc.b so_end
+		even
+Orb_Settings2:	dc.b ost_id,id_Orbinaut
+		dc.b ost_routine,id_Orb_MoveOrb
+		dc.b so_inherit_long,ost_mappings
+		dc.b so_inherit_word,ost_tile
+		dc.b ost_priority,4
+		dc.b ost_actwidth,8
+		dc.b ost_frame,id_frame_orb_spikeball
+		dc.b ost_col_type,id_col_4x4+id_col_hurt
+		dc.b so_render_rel
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -45,12 +57,11 @@ Orb_Main:	; Routine 0
 		move.w	#$9600/32,ost_tile(a0)	; LZ specific code
 
 	@notlabyrinth:
-		ori.b	#render_rel,ost_render(a0)
 		moveq	#0,d2
-		lea	ost_orb_child_count(a0),a2
-		movea.l	a2,a3					; (a3) = number of orbs
-		addq.w	#1,a2					; a2 = address of list of orb OST indices
-		moveq	#4-1,d1					; 4 spiked orbs
+		lea	ost_orb_child_count(a0),a4
+		movea.l	a4,a3					; (a3) = number of orbs
+		addq.w	#1,a4					; a4 = address of list of orb OST indices
+		moveq	#4-1,d3					; 4 spiked orbs
 
 @orb_loop:
 		bsr.w	FindNextFreeObj				; find free OST slot
@@ -60,20 +71,13 @@ Orb_Main:	; Routine 0
 		subi.w	#v_ost_all&$FFFF,d5
 		lsr.w	#6,d5
 		andi.w	#$7F,d5					; convert OST RAM address to id
-		move.b	d5,(a2)+				; add to list
-		move.b	ost_id(a0),ost_id(a1)			; load spiked orb object
-		move.b	#id_Orb_MoveOrb,ost_routine(a1)		; goto Orb_MoveOrb next
-		move.l	ost_mappings(a0),ost_mappings(a1)
-		move.w	ost_tile(a0),ost_tile(a1)
-		ori.b	#render_rel,ost_render(a1)
-		move.b	#4,ost_priority(a1)
-		move.b	#8,ost_actwidth(a1)
-		move.b	#id_frame_orb_spikeball,ost_frame(a1)
-		move.b	#id_col_4x4+id_col_hurt,ost_col_type(a1)
+		move.b	d5,(a4)+				; add to list
+		lea	Orb_Settings2(pc),a2
+		bsr.w	SetupChild
 		move.b	d2,ost_angle(a1)			; set position around orbinaut
 		addi.b	#$40,d2					; next orb is a quarter circle ahead
 		move.l	a0,ost_orb_parent(a1)
-		dbf	d1,@orb_loop				; repeat sequence 3 more times
+		dbf	d3,@orb_loop				; repeat sequence 3 more times
 
 	@fail:
 		moveq	#1,d0

@@ -102,7 +102,6 @@ Plasma_MakeBalls:
 		jsr	(FindNextFreeObj).l			; find free OST slot
 		lea	Plasma_Settings2(pc),a2
 		jsr	SetupChild
-		move.l	a0,ost_plasma_parent(a1)		; save launcher OST to plasma ball OST
 		jsr	(RandomNumber).l			; d0 = random number
 		move.w	ost_plasma_count_top(a0),d1		; id of plasma ball (0-3)
 		muls.w	#-$4F,d1				; avg distance between balls
@@ -137,6 +136,7 @@ Plasma_Settings2:
 		dc.b ost_render,render_rel+render_onscreen
 		dc.b so_inherit_word,ost_x_pos
 		dc.b so_inherit_word,ost_y_pos
+		dc.b so_set_parent,ost_plasma_parent
 		dc.b so_end
 		even
 ; ===========================================================================

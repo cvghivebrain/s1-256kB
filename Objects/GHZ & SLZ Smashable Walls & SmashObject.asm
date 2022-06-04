@@ -28,6 +28,7 @@ Smash_Settings:	dc.b ost_routine,2
 		dc.b ost_render,render_rel
 		dc.b ost_actwidth,16
 		dc.b ost_priority,4
+		dc.b so_copy_byte,ost_subtype,ost_frame
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -39,7 +40,6 @@ Smash_Main:	; Routine 0
 		bne.s	@not_slz
 		move.w	#$411+tile_pal3,ost_tile(a0)
 	@not_slz:
-		move.b	ost_subtype(a0),ost_frame(a0)
 
 Smash_Solid:	; Routine 2
 		move.w	(v_ost_player+ost_x_vel).w,ost_smash_x_vel(a0) ; load Sonic's horizontal speed
@@ -78,7 +78,7 @@ Smash_Solid:	; Routine 2
 		move.w	ost_x_vel(a1),ost_inertia(a1)
 		bclr	#status_pushing_bit,ost_status(a0)
 		bclr	#status_pushing_bit,ost_status(a1)
-		moveq	#8-1,d1					; load 8 fragments
+		moveq	#8-1,d3					; load 8 fragments
 		move.w	#$70,d2
 		bsr.s	SmashObject
 
@@ -94,7 +94,7 @@ Smash_FragMove:	; Routine 4
 ; Subroutine to	smash a	block (GHZ walls and MZ	blocks)
 ;
 ; input:
-;	d1 = number of fragments to load, minus 1
+;	d3 = number of fragments to load, minus 1
 ;	d2 = initial gravity (added to y speed of each fragment)
 ; ---------------------------------------------------------------------------
 
@@ -106,8 +106,6 @@ SmashObject:
 		adda.w	(a3,d0.w),a3				; jump to frame
 		addq.w	#1,a3					; use first sprite piece from that frame
 		bset	#render_rawmap_bit,ost_render(a0)	; raw sprite
-		move.b	ost_id(a0),d4
-		move.b	ost_render(a0),d5
 		movea.l	a0,a1
 		bra.s	@loadfrag
 ; ===========================================================================
@@ -118,15 +116,9 @@ SmashObject:
 		addq.w	#5,a3					; next sprite in mappings frame
 
 @loadfrag:
-		move.b	#id_Smash_FragMove,ost_routine(a1)
-		move.b	d4,ost_id(a1)
+		lea	Smash_Settings2(pc),a2
+		bsr.w	SetupChild
 		move.l	a3,ost_mappings(a1)
-		move.b	d5,ost_render(a1)
-		move.w	ost_x_pos(a0),ost_x_pos(a1)
-		move.w	ost_y_pos(a0),ost_y_pos(a1)
-		move.w	ost_tile(a0),ost_tile(a1)
-		move.b	ost_priority(a0),ost_priority(a1)
-		move.b	ost_actwidth(a0),ost_actwidth(a1)
 		move.w	(a4)+,ost_x_vel(a1)
 		move.w	(a4)+,ost_y_vel(a1)
 		cmpa.l	a0,a1					; is parent OST before fragment OST in RAM?
@@ -141,7 +133,7 @@ SmashObject:
 		bsr.w	DisplaySprite_a1
 
 	@parent_earlier:
-		dbf	d1,@loop
+		dbf	d3,@loop
 
 	@playsnd:
 		play.w	1, jmp, sfx_Smash			; play smashing sound
@@ -168,3 +160,15 @@ Smash_FragSpd2:	dc.w -$600, -$600
 		dc.w -$600, -$100
 		dc.w -$600, $100
 		dc.w -$400, $500
+
+Smash_Settings2:
+		dc.b so_inherit_byte,ost_id
+		dc.b so_inherit_byte,ost_render
+		dc.b ost_routine,id_Smash_FragMove
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_inherit_word,ost_y_pos
+		dc.b so_inherit_word,ost_tile
+		dc.b so_inherit_byte,ost_priority
+		dc.b so_inherit_byte,ost_actwidth
+		dc.b so_end
+		even

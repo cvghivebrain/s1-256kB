@@ -32,6 +32,7 @@ Bri_Settings:	dc.b ost_routine,2
 		dc.b ost_render,render_rel
 		dc.b ost_priority,3
 		dc.b ost_actwidth,128
+		dc.b so_copy_word,ost_y_pos,ost_bridge_y_start
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -39,11 +40,9 @@ Bri_Settings:	dc.b ost_routine,2
 Bri_Main:	; Routine 0
 		lea	Bri_Settings(pc),a2
 		bsr.w	SetupObject
-		move.w	ost_y_pos(a0),d2
 		move.w	ost_x_pos(a0),d3
-		move.b	ost_id(a0),d4				; copy object id ($11) to d4
-		lea	ost_subtype+1(a0),a2			; a2 = address of subtype id, followed by child list
-		moveq	#10,d1
+		lea	ost_subtype+1(a0),a3			; a3 = address of subtype id, followed by child list
+		moveq	#10,d4
 		sub.w	#6*16,d3				; d3 = x position of leftmost log
 
 @buildloop:
@@ -53,33 +52,24 @@ Bri_Main:	; Routine 0
 		bne.s	@notmiddle				; if not, branch
 		; treat parent log as though it's the middle child log
 		addi.w	#$10,d3
-		move.w	d2,ost_y_pos(a0)
-		move.w	d2,ost_bridge_y_start(a0)
 		move.w	a0,d5
 		subi.w	#v_ost_all&$FFFF,d5			; get RAM address of parent OST
 		lsr.w	#6,d5					; divide by $40
 		andi.w	#$7F,d5
-		move.b	d5,(a2)+				; add parent OST index to child list
+		move.b	d5,(a3)+				; add parent OST index to child list
 
 	@notmiddle:
 		move.w	a1,d5
 		subi.w	#v_ost_all&$FFFF,d5			; get RAM address of child OST
 		lsr.w	#6,d5					; divide by $40
 		andi.w	#$7F,d5
-		move.b	d5,(a2)+				; save child OST indices as series of bytes
+		move.b	d5,(a3)+				; save child OST indices as series of bytes
 		
-		move.b	#id_Bri_Display,ost_routine(a1)		; child logs goto Bri_Display
-		move.b	d4,ost_id(a1)				; load bridge object (d4 = $11)
-		move.w	d2,ost_y_pos(a1)
-		move.w	d2,ost_bridge_y_start(a1)
+		lea	Bri_Settings2(pc),a2
+		bsr.w	SetupChild
 		move.w	d3,ost_x_pos(a1)
-		move.l	#Map_Bri,ost_mappings(a1)
-		move.w	#$33E+tile_pal3,ost_tile(a1)
-		move.b	#render_rel,ost_render(a1)
-		move.b	#3,ost_priority(a1)
-		move.b	#8,ost_actwidth(a1)
 		addi.w	#$10,d3					; x pos. of next log
-		dbf	d1,@buildloop				; repeat d1 times (length of bridge)
+		dbf	d4,@buildloop				; repeat d4 times (length of bridge)
 
 Bri_Action:	; Routine 2
 		bsr.s	Bri_Detect				; detect collision, goto Bri_Platform next when stood on
@@ -92,6 +82,17 @@ Bri_Action:	; Routine 2
 		bsr.w	DisplaySprite
 		bra.w	Bri_ChkDel
 
+Bri_Settings2:	dc.b ost_routine,id_Bri_Display
+		dc.b so_inherit_byte,ost_id
+		dc.b so_inherit_long,ost_mappings
+		dc.b so_inherit_word,ost_tile
+		dc.b so_inherit_word,ost_y_pos
+		dc.b so_inherit_word,ost_bridge_y_start
+		dc.b ost_render,render_rel
+		dc.b ost_priority,3
+		dc.b ost_actwidth,8
+		dc.b so_end
+		even
 ; ---------------------------------------------------------------------------
 ; Subroutine to detect collision between bridge and Sonic
 ; ---------------------------------------------------------------------------

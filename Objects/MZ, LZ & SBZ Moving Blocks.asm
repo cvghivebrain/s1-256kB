@@ -39,6 +39,9 @@ MBlock_Settings:
 		dc.b so_write_word,ost_tile
 		dc.w $297+tile_pal3
 		dc.b ost_render,render_rel
+		dc.b ost_priority,4
+		dc.b so_copy_word,ost_x_pos,ost_mblock_x_start
+		dc.b so_copy_word,ost_y_pos,ost_mblock_y_start
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -71,9 +74,6 @@ MBlock_Main:	; Routine 0
 		lea	MBlock_Var(pc,d0.w),a2			; get variables
 		move.b	(a2)+,ost_actwidth(a0)
 		move.b	(a2)+,ost_frame(a0)
-		move.b	#4,ost_priority(a0)
-		move.w	ost_x_pos(a0),ost_mblock_x_start(a0)
-		move.w	ost_y_pos(a0),ost_mblock_y_start(a0)
 		andi.b	#$F,ost_subtype(a0)			; clear high nybble of subtype
 
 MBlock_Platform: ; Routine 2

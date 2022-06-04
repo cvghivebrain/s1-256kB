@@ -26,6 +26,15 @@ Gar_Settings:	dc.b ost_routine,2
 		dc.w $2CE+tile_pal3
 		dc.b ost_priority,3
 		dc.b ost_actwidth,16
+		dc.b so_render_rel
+		dc.b so_end
+		even
+Gar_Settings2:	dc.b ost_id,id_Gargoyle
+		dc.b ost_routine,id_Gar_FireBall
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_inherit_word,ost_y_pos
+		dc.b so_inherit_byte,ost_render
+		dc.b so_inherit_byte,ost_status
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -33,7 +42,6 @@ Gar_Settings:	dc.b ost_routine,2
 Gar_Main:	; Routine 0
 		lea	Gar_Settings(pc),a2
 		bsr.w	SetupObject
-		ori.b	#render_rel,ost_render(a0)
 		move.b	ost_subtype(a0),d0			; get object type
 		mulu.w	#30,d0
 		move.b	d0,ost_anim_delay(a0)			; set fireball spit rate
@@ -48,12 +56,8 @@ Gar_MakeFire:	; Routine 2
 		bne.s	@nofire					; branch if off screen
 		bsr.w	FindFreeObj				; find free OST slot
 		bne.s	@nofire					; branch if not found
-		move.b	#id_Gargoyle,ost_id(a1)			; load fireball object
-		addq.b	#id_Gar_FireBall,ost_routine(a1)	; use Gar_FireBall routine
-		move.w	ost_x_pos(a0),ost_x_pos(a1)
-		move.w	ost_y_pos(a0),ost_y_pos(a1)
-		move.b	ost_render(a0),ost_render(a1)
-		move.b	ost_status(a0),ost_status(a1)
+		lea	Gar_Settings2(pc),a2
+		bsr.w	SetupChild
 
 	@nofire:
 		rts	
@@ -69,13 +73,13 @@ GarF_Settings:	dc.b ost_routine,id_Gar_AniFire
 		dc.b ost_col_type,id_col_4x4+id_col_hurt
 		dc.b so_write_word,ost_x_vel
 		dc.w $200
+		dc.b so_render_rel
 		dc.b so_end
 		even
 
 Gar_FireBall:	; Routine 4
 		lea	GarF_Settings(pc),a2
 		bsr.w	SetupObject
-		ori.b	#render_rel,ost_render(a0)
 		addq.w	#8,ost_y_pos(a0)
 		btst	#status_xflip_bit,ost_status(a0)	; is gargoyle facing left?
 		bne.s	@noflip					; if not, branch

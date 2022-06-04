@@ -33,6 +33,7 @@ GFire_Settings:	dc.b ost_routine,2
 		dc.b ost_priority,1
 		dc.b ost_col_type,id_col_8x8+id_col_hurt
 		dc.b ost_actwidth,8
+		dc.b so_copy_word,ost_x_pos,ost_burn_x_start
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -40,7 +41,6 @@ GFire_Settings:	dc.b ost_routine,2
 GFire_Main:	; Routine 0
 		lea	GFire_Settings(pc),a2
 		bsr.w	SetupObject
-		move.w	ost_x_pos(a0),ost_burn_x_start(a0)
 		play.w	1, jsr, sfx_Burning			; play burning sound
 		tst.b	ost_subtype(a0)				; is this the first fireball?
 		beq.s	GFire_Spread				; if yes, branch
@@ -72,16 +72,22 @@ GFire_Spread:	; Routine 2
 		bne.s	@no_fire
 		bsr.w	FindNextFreeObj				; find free OST slot
 		bne.s	@no_fire				; branch if not found
-		move.b	#id_GrassFire,ost_id(a1)		; create another fire
-		move.w	ost_x_pos(a0),ost_x_pos(a1)
+		lea	GFire_Settings2(pc),a2
+		bsr.w	SetupChild
 		move.w	d2,ost_burn_y_start(a1)			; initial y pos (ignores platform sinking)
-		move.w	ost_burn_sink(a0),ost_burn_sink(a1)
-		move.b	#1,ost_subtype(a1)			; child type, doesn't spawn more fire
 		movea.l	ost_burn_parent(a0),a2
 		bsr.w	LGrass_AddChildToList			; add to list in parent's OST
 
 	@no_fire:
 		bra.s	GFire_Animate
+
+GFire_Settings2:
+		dc.b ost_id,id_GrassFire
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_inherit_word,ost_burn_sink
+		dc.b ost_subtype,1
+		dc.b so_end
+		even
 ; ===========================================================================
 
 GFire_Move:	; Routine 4

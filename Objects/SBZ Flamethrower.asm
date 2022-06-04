@@ -27,6 +27,7 @@ Flame_Settings:	dc.b ost_routine,2
 		dc.w $38B+tile_hi
 		dc.b ost_priority,1
 		dc.b ost_actwidth,12
+		dc.b so_render_rel
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -34,7 +35,6 @@ Flame_Settings:	dc.b ost_routine,2
 Flame_Main:	; Routine 0
 		lea	Flame_Settings(pc),a2
 		bsr.w	SetupObject
-		ori.b	#render_rel,ost_render(a0)
 		move.b	ost_subtype(a0),d0
 		andi.w	#$F0,d0					; read 1st digit of object type
 		add.w	d0,d0					; multiply by 2

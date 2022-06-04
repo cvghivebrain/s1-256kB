@@ -35,6 +35,8 @@ LBlk_Settings:	dc.b ost_routine,2
 		dc.w $3C5+tile_pal3
 		dc.b ost_render,render_rel
 		dc.b ost_priority,3
+		dc.b so_copy_word,ost_x_pos,ost_lblock_x_start
+		dc.b so_copy_word,ost_y_pos,ost_lblock_y_start
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -51,8 +53,6 @@ LBlk_Main:	; Routine 0
 		move.b	(a2),ost_height(a0)			; set height
 		lsr.w	#1,d0
 		move.b	d0,ost_frame(a0)
-		move.w	ost_x_pos(a0),ost_lblock_x_start(a0)
-		move.w	ost_y_pos(a0),ost_lblock_y_start(a0)
 		move.b	ost_subtype(a0),d0			; get block type
 		andi.b	#$F,d0					; read only the low nybble
 		beq.s	LBlk_Action				; branch if 0

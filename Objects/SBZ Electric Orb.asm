@@ -23,6 +23,7 @@ Elec_Settings:	dc.b ost_routine,2
 		dc.b so_write_word,ost_tile
 		dc.w $3CD
 		dc.b ost_actwidth,$28
+		dc.b so_render_rel
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -30,7 +31,6 @@ Elec_Settings:	dc.b ost_routine,2
 Elec_Main:	; Routine 0
 		lea	Elec_Settings(pc),a2
 		bsr.w	SetupObject
-		ori.b	#render_rel,ost_render(a0)
 		moveq	#0,d0
 		move.b	ost_subtype(a0),d0			; read object type (2/4/8)
 		lsl.w	#4,d0					; multiply by $10

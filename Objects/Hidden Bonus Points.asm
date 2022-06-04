@@ -27,6 +27,8 @@ Bonus_Settings:	dc.b ost_routine,2
 		dc.b ost_actwidth,16
 		dc.b so_write_word,ost_bonus_wait_time
 		dc.w 119
+		dc.b so_copy_byte,ost_subtype,ost_frame
+		dc.b so_render_rel
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -52,8 +54,6 @@ Bonus_Main:	; Routine 0
 
 		lea	Bonus_Settings(pc),a2
 		bsr.w	SetupObject
-		ori.b	#render_rel,ost_render(a0)
-		move.b	ost_subtype(a0),ost_frame(a0)
 		play.w	1, jsr, sfx_Bonus			; play bonus sound
 		moveq	#0,d0
 		move.b	ost_subtype(a0),d0

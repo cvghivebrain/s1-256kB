@@ -40,6 +40,8 @@ FBlock_Settings:
 		dc.w 0+tile_pal3
 		dc.b ost_render,render_rel
 		dc.b ost_priority,3
+		dc.b so_copy_word,ost_x_pos,ost_fblock_x_start
+		dc.b so_copy_word,ost_y_pos,ost_fblock_y_start
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -61,8 +63,6 @@ FBlock_Main:	; Routine 0
 		move.b	(a2),ost_height(a0)
 		lsr.w	#1,d0
 		move.b	d0,ost_frame(a0)			; set frame as high nybble of subtype
-		move.w	ost_x_pos(a0),ost_fblock_x_start(a0)
-		move.w	ost_y_pos(a0),ost_fblock_y_start(a0)
 		moveq	#0,d0
 		move.b	(a2),d0					; get height from size list
 		add.w	d0,d0

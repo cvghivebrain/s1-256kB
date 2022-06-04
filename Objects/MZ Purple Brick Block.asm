@@ -27,6 +27,7 @@ Brick_Settings:	dc.b ost_routine,2
 		dc.b ost_render,render_rel
 		dc.b ost_priority,3
 		dc.b ost_actwidth,16
+		dc.b so_copy_word,ost_y_pos,ost_brick_y_start
 		dc.b so_end
 		even
 ; ===========================================================================
@@ -34,7 +35,6 @@ Brick_Settings:	dc.b ost_routine,2
 Brick_Main:	; Routine 0
 		lea	Brick_Settings(pc),a2
 		bsr.w	SetupObject
-		move.w	ost_y_pos(a0),ost_brick_y_start(a0)
 
 Brick_Action:	; Routine 2
 		tst.b	ost_render(a0)

@@ -35,40 +35,52 @@ ost_bslz_parent_y_pos:	equ $38					; parent y position (2 bytes)
 ost_bslz_wait_time:	equ $3C					; time to wait between each action
 ost_bslz_flash_num:	equ $3E					; number of times to make boss flash when hit
 ost_bslz_wobble:	equ $3F					; wobble state as Eggman moves back & forth (1 byte incremented every frame & interpreted by CalcSine)
+
+BSLZ_Settings:	dc.b so_write_word,ost_x_pos
+		dc.w $2188
+		dc.b so_write_word,ost_y_pos
+		dc.w $228
+		dc.b so_copy_word,ost_x_pos,ost_bslz_parent_x_pos
+		dc.b so_copy_word,ost_y_pos,ost_bslz_parent_y_pos
+		dc.b ost_col_type,id_col_24x24
+		dc.b ost_col_property,8
+		dc.b so_end
+		even
+BSLZ_Settings2:	dc.b ost_id,id_BossStarLight
+		dc.b so_inherit_word,ost_x_pos
+		dc.b so_inherit_word,ost_y_pos
+		dc.b so_write_long,ost_mappings
+		dc.l Map_Bosses
+		dc.b so_write_word,ost_tile
+		dc.w tile_Nem_Eggman
+		dc.b ost_render,render_rel
+		dc.b ost_actwidth,32
+		dc.b so_set_parent,ost_bslz_parent
+		dc.b so_end
+		even
 ; ===========================================================================
 
 BSLZ_Main:
-		move.w	#$2188,ost_x_pos(a0)
-		move.w	#$228,ost_y_pos(a0)
-		move.w	ost_x_pos(a0),ost_bslz_parent_x_pos(a0)
-		move.w	ost_y_pos(a0),ost_bslz_parent_y_pos(a0)
-		move.b	#id_col_24x24,ost_col_type(a0)
-		move.b	#8,ost_col_property(a0)			; set number of hits to 8
-		lea	BSLZ_ObjData(pc),a2			; get data for routine number, animation & priority
+		lea	BSLZ_Settings(pc),a2
+		jsr	SetupObject
+		lea	BSLZ_ObjData(pc),a3			; get data for routine number, animation & priority
 		movea.l	a0,a1					; replace current object with 1st in list
-		moveq	#3,d1					; 3 additional objects
+		moveq	#3,d2					; 3 additional objects
 		bra.s	@load_boss
 ; ===========================================================================
 
 @loop:
 		jsr	(FindNextFreeObj).l			; find free OST slot
 		bne.s	@fail					; branch if not found
-		move.b	#id_BossStarLight,ost_id(a1)
-		move.w	ost_x_pos(a0),ost_x_pos(a1)
-		move.w	ost_y_pos(a0),ost_y_pos(a1)
 
 @load_boss:
+		lea	BSLZ_Settings2(pc),a2
+		jsr	SetupChild
 		bclr	#status_xflip_bit,ost_status(a0)
-		clr.b	ost_routine2(a1)
-		move.b	(a2)+,ost_routine(a1)			; goto BSLZ_ShipMain/BSLZ_FaceMain/BSLZ_FlameMain/BSLZ_TubeMain next
-		move.b	(a2)+,ost_anim(a1)
-		move.b	(a2)+,ost_priority(a1)
-		move.l	#Map_Bosses,ost_mappings(a1)
-		move.w	#tile_Nem_Eggman,ost_tile(a1)
-		move.b	#render_rel,ost_render(a1)
-		move.b	#$20,ost_actwidth(a1)
-		move.l	a0,ost_bslz_parent(a1)			; save address of OST of parent
-		dbf	d1,@loop				; repeat sequence 3 more times
+		move.b	(a3)+,ost_routine(a1)			; goto BSLZ_ShipMain/BSLZ_FaceMain/BSLZ_FlameMain/BSLZ_TubeMain next
+		move.b	(a3)+,ost_anim(a1)
+		move.b	(a3)+,ost_priority(a1)
+		dbf	d2,@loop				; repeat sequence 3 more times
 
 	@fail:
 		lea	(v_ost_all+sizeof_ost).w,a1		; start at first OST slot after Sonic
